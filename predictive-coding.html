@@ -18,7 +18,6 @@
             --bg:        #faf8f5;
             --accent-bg: #F5F3EF;
             --stone:     #bdb7a2;
-            --cool-grey: #a6aea6;
         }
         * { box-sizing: border-box; }
         body {
@@ -31,8 +30,6 @@
             margin: 0;
             color: var(--text);
         }
-
-        /* ── HEADER ── */
         .header {
             background: var(--accent-bg);
             padding: 14px 20px 12px;
@@ -51,23 +48,17 @@
             background: white; color: var(--text); font-family: 'Nunito Sans', sans-serif;
             font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.25s;
         }
-        .profile-btn:hover          { border-color: var(--grey); }
-        .profile-btn.active-nt      { background: var(--green);  color: white; border-color: var(--green); }
-        .profile-btn.active-adhd    { background: var(--terra);  color: white; border-color: var(--terra); }
-        .profile-btn.active-autism  { background: var(--gold);   color: white; border-color: var(--gold); }
-        .profile-btn.active-audhd   { background: var(--forest); color: white; border-color: var(--forest); }
+        .profile-btn.active-nt     { background: var(--green);  color: white; border-color: var(--green); }
+        .profile-btn.active-adhd   { background: var(--terra);  color: white; border-color: var(--terra); }
+        .profile-btn.active-autism { background: var(--gold);   color: white; border-color: var(--gold); }
+        .profile-btn.active-audhd  { background: var(--forest); color: white; border-color: var(--forest); }
 
-        /* ── MAIN LAYOUT ── */
-        .main-area {
-            display: flex; gap: 12px;
-            width: 100%; max-width: 1100px;
-        }
+        .main-area { display: flex; gap: 12px; width: 100%; max-width: 1100px; min-height: 500px; }
 
-        /* ── SIGNAL PANEL ── */
         .signal-panel {
             background: var(--accent-bg); border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.08);
-            padding: 14px 12px; width: 210px; flex-shrink: 0;
+            padding: 14px 12px; width: 220px; flex-shrink: 0;
         }
         .panel-title {
             font-family: 'Libre Baskerville', serif; font-size: 0.75em;
@@ -76,673 +67,316 @@
         }
         .signal-card {
             background: white; border: 2px solid var(--stone); border-radius: 7px;
-            padding: 6px 8px; margin-bottom: 5px;
-            transition: border-color 0.15s, box-shadow 0.15s;
+            padding: 6px 8px; margin-bottom: 5px; transition: all 0.2s;
         }
-        .signal-card.active {
-            border-color: var(--gold);
-            box-shadow: 0 0 9px rgba(186,148,94,0.5);
-        }
+        .signal-card.active { border-color: var(--gold); transform: translateX(4px); }
         .signal-top { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-        .signal-icon { font-size: 1.05em; }
         .signal-name { font-weight: 700; font-size: 0.77em; flex: 1; }
-        .signal-badge {
-            font-size: 0.78em; font-weight: 700; padding: 1px 5px; border-radius: 3px;
-            background: var(--accent-bg); color: var(--cool-grey);
-            min-width: 24px; text-align: center; transition: color 0.3s;
-        }
-        .signal-bar-track { height: 4px; background: rgba(0,0,0,0.07); border-radius: 2px; overflow: hidden; }
-        .signal-bar { height: 100%; border-radius: 2px; background: var(--stone); transition: width 0.4s ease, background 0.4s; width: 5%; }
+        .signal-badge { font-size: 0.78em; font-weight: 700; padding: 1px 5px; border-radius: 3px; background: var(--bg); }
+        .signal-bar-track { height: 4px; background: rgba(0,0,0,0.07); border-radius: 2px; }
+        .signal-bar { height: 100%; border-radius: 2px; width: 5%; transition: width 0.4s ease; }
 
-        .legend { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
-        .legend-row { display: flex; align-items: center; gap: 6px; }
-        .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-        .legend-text { font-size: 0.71em; color: var(--grey); }
-
-        /* ── CANVAS PANEL ── */
         .filter-panel {
             flex: 1; background: var(--accent-bg); border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.08);
-            padding: 10px 10px 8px; min-width: 0;
-            display: flex; flex-direction: column; align-items: center;
+            padding: 10px; display: flex; flex-direction: column; align-items: center;
+            min-width: 0;
         }
-        #main-canvas { border-radius: 8px; display: block; }
+        canvas {
+            border-radius: 8px;
+            display: block;
+            width: 100%;
+            height: 430px;
+        }
 
-        /* ── METRICS PANEL ── */
         .metrics-panel {
             background: var(--accent-bg); border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.08);
-            padding: 14px 12px; width: 195px; flex-shrink: 0;
-            display: flex; flex-direction: column; gap: 11px;
+            padding: 14px 12px; width: 200px; flex-shrink: 0;
+            display: flex; flex-direction: column; gap: 12px;
         }
-        .metric-block  { display: flex; flex-direction: column; gap: 4px; }
-        .metric-label  { font-size: 0.71em; color: var(--grey); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
-        .metric-value  { font-family: 'Libre Baskerville', serif; font-size: 1.85em; font-weight: 700; line-height: 1; color: var(--green); transition: color 0.4s; }
-        .metric-note   { font-size: 0.69em; color: var(--grey); }
-        .metric-track  { height: 12px; background: rgba(0,0,0,0.08); border-radius: 6px; overflow: hidden; }
-        .metric-fill   { height: 100%; border-radius: 6px; transition: width 0.5s ease, background 0.4s; }
+        .metric-label { font-size: 0.7em; color: var(--grey); text-transform: uppercase; font-weight: 700; }
+        .metric-value { font-family: 'Libre Baskerville', serif; font-size: 1.8em; font-weight: 700; color: var(--green); }
+        .metric-track { height: 10px; background: rgba(0,0,0,0.1); border-radius: 5px; overflow: hidden; }
+        .metric-fill  { height: 100%; transition: width 0.4s; }
 
-        .stability-row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 2px; }
-        .sdot { width: 11px; height: 11px; border-radius: 50%; background: rgba(0,0,0,0.10); transition: background 0.3s; }
-        .sdot.on     { background: var(--green); }
-        .sdot.glitch { background: var(--terra); animation: sdot-jitter 0.25s ease-in-out; }
-        @keyframes sdot-jitter {
-            0%   { transform: translateX(0); }
-            30%  { transform: translateX(2px); }
-            70%  { transform: translateX(-2px); }
-            100% { transform: translateX(0); }
-        }
-
-        .reset-btn {
-            width: 100%; padding: 7px; border-radius: 6px; border: none;
-            background: var(--stone); color: white; font-family: 'Nunito Sans', sans-serif;
-            font-weight: 700; font-size: 12px; cursor: pointer;
-            transition: opacity 0.2s; margin-top: auto;
-        }
-        .reset-btn:hover { opacity: 0.82; }
-
-        /* ── STATUS ── */
         .status-panel {
-            background: var(--accent-bg); border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
-            padding: 12px 20px; width: 100%; max-width: 1100px;
-            margin-top: 12px; text-align: center;
+            background: var(--accent-bg); border-radius: 10px; padding: 15px 25px;
+            width: 100%; max-width: 1100px; margin-top: 12px; text-align: center;
         }
-        #status-main { font-weight: 700; font-size: 0.93em; margin: 0 0 4px; }
-        #status-sub  { color: var(--grey); font-style: italic; font-size: 0.85em; margin: 0; line-height: 1.6; }
+        #status-main { font-weight: 700; font-size: 0.95em; margin-bottom: 5px; }
+        #status-sub  { color: var(--grey); font-style: italic; font-size: 0.85em; line-height: 1.5; }
     </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header">
     <h2>Predictive Coding & The Bayesian Brain</h2>
-    <p>The brain constantly predicts the world and assigns "precision weight" to incoming signals. Watch how each profile's filter determines what reaches conscious attention.</p>
+    <p>How different neurological profiles weight and filter incoming sensory signals</p>
     <div class="profile-buttons">
-        <button class="profile-btn active-nt"  id="btn-nt"     onclick="setProfile('nt',this)">🧠 Neurotypical</button>
-        <button class="profile-btn"            id="btn-adhd"   onclick="setProfile('adhd',this)">⚡ ADHD</button>
-        <button class="profile-btn"            id="btn-autism" onclick="setProfile('autism',this)">🔬 Autism</button>
-        <button class="profile-btn"            id="btn-audhd"  onclick="setProfile('audhd',this)">🌀 AuDHD</button>
+        <button class="profile-btn active-nt" onclick="setProfile('nt',this)">🧠 Neurotypical</button>
+        <button class="profile-btn" onclick="setProfile('adhd',this)">⚡ ADHD</button>
+        <button class="profile-btn" onclick="setProfile('autism',this)">🔬 Autism</button>
+        <button class="profile-btn" onclick="setProfile('audhd',this)">🌀 AuDHD</button>
     </div>
 </div>
 
-<!-- MAIN -->
 <div class="main-area">
-
-    <!-- LEFT: SIGNALS -->
     <div class="signal-panel">
         <p class="panel-title">Incoming Signals</p>
         <div id="signal-list"></div>
-        <div class="legend">
-            <p class="panel-title" style="margin: 8px 0 5px;">Precision Weight</p>
-            <div class="legend-row">
-                <div class="legend-dot" style="background:#b68d76;"></div>
-                <span class="legend-text">8–10: Cannot ignore</span>
-            </div>
-            <div class="legend-row">
-                <div class="legend-dot" style="background:#ba945e;"></div>
-                <span class="legend-text">5–7: Crosses threshold</span>
-            </div>
-            <div class="legend-row">
-                <div class="legend-dot" style="background:#a6aea6;"></div>
-                <span class="legend-text">1–4: Filtered out</span>
-            </div>
-        </div>
     </div>
 
-    <!-- CENTER: CANVAS -->
     <div class="filter-panel">
-        <p class="panel-title" style="margin-bottom:6px;">Precision Weighting Filter</p>
+        <p class="panel-title">Precision Weighting Filter</p>
         <canvas id="main-canvas"></canvas>
     </div>
 
-    <!-- RIGHT: METRICS -->
     <div class="metrics-panel">
-        <p class="panel-title">Brain Metrics</p>
-
-        <div class="metric-block">
-            <span class="metric-label">Prior Stability</span>
-            <div class="stability-row" id="stability-row"></div>
-        </div>
-
-        <div class="metric-block">
-            <span class="metric-label">Prediction Errors</span>
+        <p class="panel-title">Metrics</p>
+        <div>
+            <span class="metric-label">Prediction Errors</span><br>
             <span class="metric-value" id="error-count">0</span>
-            <span class="metric-note">signals past filter</span>
         </div>
-
-        <div class="metric-block">
+        <div>
             <span class="metric-label">Cognitive Load</span>
-            <span class="metric-value" id="load-val" style="font-size:1.4em;">0%</span>
-            <div class="metric-track">
-                <div class="metric-fill" id="load-fill"
-                     style="width:0%; background:linear-gradient(to right,var(--green),#a3d4bc);"></div>
-            </div>
+            <div class="metric-track"><div class="metric-fill" id="load-fill" style="width:0%; background:var(--green);"></div></div>
         </div>
-
-        <div class="metric-block">
-            <span class="metric-label">Filter Accuracy</span>
-            <span class="metric-value" id="acc-val" style="font-size:1.4em;">--</span>
-            <span class="metric-note">correct assignments</span>
+        <div>
+            <span class="metric-label">Filter Accuracy</span><br>
+            <span class="metric-value" id="acc-val">--</span>
         </div>
-
-        <button class="reset-btn" onclick="doReset()">↺ Reset Metrics</button>
+        <button onclick="doReset()" style="margin-top:auto; background:var(--stone); color:white; border:none; padding:8px; border-radius:4px; cursor:pointer; font-family:inherit; font-weight:700;">Reset</button>
     </div>
-
 </div>
 
-<!-- STATUS -->
 <div class="status-panel">
-    <p id="status-main" style="color:var(--green);">🧠 Neurotypical filter active. Strong priors suppress irrelevant data automatically.</p>
-    <p id="status-sub">The Neurotypical brain maintains a stable, narrow prior - a confident internal model of what to expect. Sensory data that matches predictions is compressed and ignored. Only genuine prediction errors reach conscious attention. This is why NT brains can work in a noisy cafe without hearing every conversation.</p>
+    <p id="status-main"></p>
+    <p id="status-sub"></p>
 </div>
 
 <script>
-/* ════════════════════════════════════════════
-   DATA
-════════════════════════════════════════════ */
 const SIGNALS = [
     { id:'email',  icon:'📧', name:'Work Email',    canonical:9 },
     { id:'phone',  icon:'📱', name:'Phone Buzz',    canonical:7 },
-    { id:'idea',   icon:'💡', name:'New Idea',      canonical:6 },
-    { id:'text',   icon:'💬', name:"Friend's Text", canonical:5 },
     { id:'bird',   icon:'🐦', name:'Bird Chirping', canonical:2 },
-    { id:'light',  icon:'🔆', name:'Bright Light',  canonical:2 },
-    { id:'tag',    icon:'🏷️',  name:'Itchy Tag',     canonical:1 },
-    { id:'fridge', icon:'🌡️', name:'Fridge Hum',    canonical:1 },
+    { id:'tag',    icon:'🏷️', name:'Itchy Tag',     canonical:1 },
+    { id:'fridge', icon:'🌡️', name:'Fridge Hum',    canonical:1 }
 ];
 
 const PROFILES = {
-    nt: {
-        label:'Neurotypical', color:'#45735d', cls:'active-nt',
-        stability:10, noiseLevel:0, spawnMs:1400, ordered:true,
-        priorSigma:0.16, priorHeight:0.88,
-        getWeight: c => Math.max(1, Math.min(10, c + (Math.random()-0.5)*2)),
-        priorLabel: 'STABLE / NARROW  —  Strong confident predictions',
-        status:[
-            '🧠 Neurotypical filter active. Strong priors suppress irrelevant data automatically.',
-            'The Neurotypical brain maintains a stable, narrow prior - a confident internal model of what to expect. Sensory data that matches predictions is compressed and ignored. Only genuine prediction errors reach conscious attention. This is why NT brains can work in a noisy cafe without hearing every conversation around them.'
-        ]
-    },
-    adhd: {
-        label:'ADHD', color:'#b68d76', cls:'active-adhd',
-        stability:2, noiseLevel:0.30, spawnMs:900, ordered:false,
-        priorSigma:0.52, priorHeight:0.30,
-        getWeight: _ => Math.max(1, Math.min(10, 1 + Math.random()*9)),
-        priorLabel: 'FLAT / UNSTABLE  —  Weak, drifting predictions',
-        status:[
-            '⚡ ADHD filter active. Weak, unstable priors - the dopamine signal is erratic.',
-            'Without a stable world model, the ADHD brain cannot reliably predict what matters. Precision weights are assigned unpredictably: a bird chirping may suddenly register as more important than a work deadline. This is not a choice or a character flaw - it is the inevitable consequence of a filter with no stable baseline to compare incoming data against.'
-        ]
-    },
-    autism: {
-        label:'Autism', color:'#ba945e', cls:'active-autism',
-        stability:9, noiseLevel:0, spawnMs:1200, ordered:true,
-        priorSigma:0.09, priorHeight:0.97,
-        getWeight: c => Math.max(7, Math.min(10, c + (Math.random()-0.5)*0.6)),
-        priorLabel: 'HYPER-PRECISE / RIGID  —  Everything surprises equally',
-        status:[
-            '🔬 Autism filter active. Hyper-precise weighting - no signal can be safely dismissed.',
-            'The Autistic brain does not "predict away" sensory data. Everything is processed at maximum statistical precision. A minimum weight floor of 7/10 means the fridge hum is treated with near the same urgency as the work email. This is not sensory sensitivity as a personality trait - it is the predictive filter refusing to compress any input as "probably unimportant."'
-        ]
-    },
-    audhd: {
-        label:'AuDHD', color:'#35361c', cls:'active-audhd',
-        stability:1, noiseLevel:0.38, spawnMs:740, ordered:false,
-        priorSigma:0.56, priorHeight:0.28,
-        getWeight: _ => Math.max(7, Math.min(10, 1 + Math.random()*9)),
-        priorLabel: 'FLAT + ERRATIC SPIKES  —  No stable model, maximum sensitivity',
-        status:[
-            '🌀 AuDHD filter: Both systems failing simultaneously. Sensory flood + priority paralysis.',
-            'The AuDHD brain inherits both deficits at once: the ADHD weak prior (cannot identify what matters) AND the Autistic high-precision floor (cannot suppress anything). Every signal demands attention at high intensity while no stable model exists to help sort signal from noise. This is the neurological basis of AuDHD overwhelm-paralysis: not laziness - a routing conflict with no clean resolution.'
-        ]
-    }
+    nt:     { sigma:0.15, height:0.8,  status:['🧠 Neurotypical','Strong, stable priors filter most background noise. Only high-relevance signals pass through.'],           weight: c => Math.max(1, c + (Math.random()-0.5)*2) },
+    adhd:   { sigma:0.5,  height:0.3,  status:['⚡ ADHD','Weak or inconsistent priors. Signal priority is erratic - anything novel can break through.'],                    weight: _ => 1 + Math.random()*9 },
+    autism: { sigma:0.08, height:0.95, status:['🔬 Autism','High-precision weighting applied to all inputs. The brain treats every signal as potentially important.'],        weight: c => 7 + (Math.random()*3) },
+    audhd:  { sigma:0.55, height:0.25, status:['🌀 AuDHD','Sensory flood meets erratic prioritization. High-precision AND unstable priors create a double load.'],          weight: _ => 6 + Math.random()*4 }
 };
 
-/* ════════════════════════════════════════════
-   STATE
-════════════════════════════════════════════ */
-let profile     = 'nt';
-let particles   = [];
-let signalIdx   = 0;
-let errorCount  = 0;
-let loadVal     = 0;
-let totalSig    = 0;
-let correctSig  = 0;
-let spawnHandle = null;
+let profile = 'nt';
+let particles = [];
+let errorCount = 0;
+let load = 0;
+let total = 0, correct = 0;
+let animRunning = false;
 
-/* ════════════════════════════════════════════
-   CANVAS
-════════════════════════════════════════════ */
 const canvas = document.getElementById('main-canvas');
-const ctx    = canvas.getContext('2d');
+const ctx = canvas.getContext('2d');
 
+// ── FIX 1: Robust canvas sizing ──────────────────────────────────────────────
 function resizeCanvas() {
-    const W = Math.max(300, canvas.parentElement.clientWidth - 20);
-    canvas.width  = W;
-    canvas.height = 430;
+    const parent = canvas.parentElement;
+    let w = 0;
+
+    // getBoundingClientRect is the most reliable after layout
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width > 0) {
+        w = rect.width;
+    } else if (parent) {
+        // Fall back to parent's computed width minus padding
+        w = parent.clientWidth - 24;
+    }
+    if (w <= 0) w = 500; // hard fallback
+
+    const h = 430;
+    canvas.width  = Math.floor(w);
+    canvas.height = h;
 }
-window.addEventListener('resize', resizeCanvas);
 
-const PRIOR_FRAC  = 0.24;
-const THRESH_FRAC = 0.56;
-function pH()  { return canvas.height * PRIOR_FRAC; }
-function tY()  { return pH() + (canvas.height - pH()) * THRESH_FRAC; }
+function init() {
+    resizeCanvas();
+    buildCards();
+    setProfile('nt', document.querySelector('.active-nt'));
 
-/* ════════════════════════════════════════════
-   PARTICLE
-════════════════════════════════════════════ */
-class Particle {
-    constructor(sig, w) {
-        this.sig  = sig;
-        this.w    = w;
-        this.x    = 38 + Math.random() * (canvas.width - 76);
-        this.y    = pH() + 10;
-        this.vy   = 0.65 + Math.random() * 0.45;
-        this.r    = 8 + w * 2.5;
-        this.a    = 1;
-        this.thru = false;
-        this.diss = false;
-        this.gone = false;
-        this.col  = w >= 8 ? '#b68d76' : w >= 5 ? '#ba945e' : '#6d7873';
+    if (!animRunning) {
+        animRunning = true;
+        requestAnimationFrame(animate);
     }
 
-    update() {
-        if (this.diss) {
-            this.a   = Math.max(0, this.a - 0.032);
-            this.vy *= 0.90;
-            if (this.a <= 0) this.gone = true;
-            return;
-        }
-        this.y += this.vy;
-        if (!this.thru && this.y + this.r >= tY()) {
-            this.thru = true;
-            if (this.w >= 5) {
-                // Prediction error - crosses threshold
-                errorCount++;
-                loadVal = Math.min(100, loadVal + this.w * 2.1);
-                totalSig++;
-                if (this.sig.canonical >= 5) correctSig++;
-                flashCard(this.sig.id);
-                refreshMetrics();
-            } else {
-                // Correctly filtered - dissolves
-                totalSig++;
-                if (this.sig.canonical < 5) correctSig++;
-                this.diss = true;
-            }
-        }
-        if (this.y > canvas.height + this.r + 10) this.gone = true;
-    }
-
-    draw() {
-        ctx.save();
-        ctx.globalAlpha = this.a;
-
-        if (this.thru && !this.diss) {
-            ctx.shadowColor = this.col;
-            ctx.shadowBlur  = 16;
-        }
-
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        ctx.fillStyle   = this.col + 'bb';
-        ctx.fill();
-        ctx.strokeStyle = this.col;
-        ctx.lineWidth   = 2;
-        ctx.stroke();
-        ctx.shadowBlur  = 0;
-
-        // Emoji
-        const fs = Math.max(11, this.r * 0.9);
-        ctx.font         = `${fs}px serif`;
-        ctx.textAlign    = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle    = 'rgba(255,255,255,0.93)';
-        ctx.fillText(this.sig.icon, this.x, this.y + 1);
-
-        // Weight badge on large particles
-        if (this.r > 15) {
-            ctx.font         = `bold 8px Nunito Sans`;
-            ctx.fillStyle    = 'rgba(255,255,255,0.75)';
-            ctx.textBaseline = 'top';
-            ctx.fillText(Math.round(this.w), this.x + this.r - 8, this.y - this.r + 4);
-        }
-
-        ctx.restore();
+    // Keep canvas sized correctly on window resize
+    window.addEventListener('resize', resizeCanvas);
+    if (window.ResizeObserver) {
+        new ResizeObserver(resizeCanvas).observe(canvas.parentElement);
     }
 }
 
-/* ════════════════════════════════════════════
-   DRAW LOOP
-════════════════════════════════════════════ */
-function drawFrame(ts) {
-    const W  = canvas.width;
-    const H  = canvas.height;
-    const pH = pH();
-    const tYv = tY();
-    const P  = PROFILES[profile];
-
-    /* ── Background ── */
-    ctx.fillStyle = '#19201d';
-    ctx.fillRect(0, 0, W, H);
-
-    /* ── Prior zone bg ── */
-    ctx.fillStyle = 'rgba(69,115,93,0.07)';
-    ctx.fillRect(0, 0, W, pH);
-
-    /* ── ADHD/AuDHD background noise ── */
-    if (P.noiseLevel > 0) {
-        const nd = Math.floor(P.noiseLevel * 1000);
-        for (let i = 0; i < nd; i++) {
-            ctx.beginPath();
-            ctx.arc(Math.random()*W, pH + Math.random()*(H-pH), Math.random()*1.3, 0, Math.PI*2);
-            ctx.fillStyle = `rgba(190,178,162,${Math.random()*P.noiseLevel*0.42})`;
-            ctx.fill();
-        }
-    }
-
-    /* ── Prior curve ── */
-    drawPrior(P, W, pH, ts);
-
-    /* ── Prior zone border ── */
-    ctx.setLineDash([3,4]);
-    ctx.strokeStyle = 'rgba(69,115,93,0.20)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(0, pH);
-    ctx.lineTo(W, pH);
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    /* ── Attention zone tint ── */
-    const azG = ctx.createLinearGradient(0, tYv, 0, H);
-    azG.addColorStop(0, 'rgba(186,148,94,0.13)');
-    azG.addColorStop(1, 'rgba(186,148,94,0.03)');
-    ctx.fillStyle = azG;
-    ctx.fillRect(0, tYv, W, H - tYv);
-
-    /* ── Threshold line ── */
-    const tlG = ctx.createLinearGradient(0, 0, W, 0);
-    tlG.addColorStop(0,    'rgba(186,148,94,0)');
-    tlG.addColorStop(0.07, 'rgba(186,148,94,0.92)');
-    tlG.addColorStop(0.93, 'rgba(186,148,94,0.92)');
-    tlG.addColorStop(1,    'rgba(186,148,94,0)');
-    ctx.strokeStyle = tlG;
-    ctx.lineWidth = 2;
-    ctx.setLineDash([8,5]);
-    ctx.beginPath();
-    ctx.moveTo(0, tYv);
-    ctx.lineTo(W, tYv);
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    /* ── Canvas labels ── */
-    ctx.font = '9px Nunito Sans';
-    ctx.textBaseline = 'top';
-
-    ctx.fillStyle = 'rgba(175,165,152,0.50)';
-    ctx.textAlign = 'left';
-    ctx.fillText('WORLD MODEL — PRIOR', 10, 8);
-
-    ctx.fillStyle = 'rgba(175,165,152,0.38)';
-    ctx.fillText('↓  SENSORY INPUT STREAM', 10, pH + 8);
-
-    ctx.fillStyle = 'rgba(186,148,94,0.80)';
-    ctx.textAlign = 'right';
-    ctx.fillText('ATTENTION THRESHOLD  ▼', W - 10, tYv - 13);
-
-    ctx.fillStyle = 'rgba(186,148,94,0.38)';
-    ctx.textAlign = 'left';
-    ctx.fillText('▲  PREDICTION ERROR ZONE', 10, H - 14);
-
-    /* ── Particles ── */
-    particles.forEach(p => p.update());
-    particles = particles.filter(p => !p.gone);
-    particles.forEach(p => p.draw());
-
-    /* ── Cognitive load decay ── */
-    loadVal = Math.max(0, loadVal - 0.016);
-
-    requestAnimationFrame(drawFrame);
-}
-
-/* ── Prior Curve ── */
-function drawPrior(P, W, pHv, ts) {
-    const isADHD = profile === 'adhd' || profile === 'audhd';
-
-    // Drifting center for ADHD/AuDHD
-    let cx = 0.5;
-    if (isADHD) {
-        cx += Math.sin(ts * 0.0026) * 0.11 + Math.sin(ts * 0.0069) * 0.055;
-    }
-
-    // Main Gaussian fill
-    ctx.beginPath();
-    for (let px = 0; px <= W; px++) {
-        const nx = (px/W) - cx;
-        const y  = P.priorHeight * Math.exp(-(nx*nx)/(2*P.priorSigma*P.priorSigma));
-        const cy = pHv - 5 - y * (pHv - 14);
-        if (px === 0) ctx.moveTo(px, cy); else ctx.lineTo(px, cy);
-    }
-    ctx.lineTo(W, pHv - 2);
-    ctx.lineTo(0, pHv - 2);
-    ctx.closePath();
-    ctx.fillStyle = P.color + '1c';
-    ctx.fill();
-
-    // Main Gaussian stroke
-    ctx.beginPath();
-    for (let px = 0; px <= W; px++) {
-        const nx = (px/W) - cx;
-        const y  = P.priorHeight * Math.exp(-(nx*nx)/(2*P.priorSigma*P.priorSigma));
-        const cy = pHv - 5 - y * (pHv - 14);
-        if (px === 0) ctx.moveTo(px, cy); else ctx.lineTo(px, cy);
-    }
-    ctx.strokeStyle = P.color + 'dd';
-    ctx.lineWidth   = 2.5;
-    ctx.stroke();
-
-    // AuDHD: two roaming precision spikes
-    if (profile === 'audhd') {
-        for (let s = 0; s < 2; s++) {
-            const spkX  = 0.18 + ((s * 0.45 + ts * 0.000085) % 0.66);
-            const spkSig = 0.038;
-            ctx.beginPath();
-            for (let px = 0; px <= W; px++) {
-                const nx = (px/W) - spkX;
-                const y  = 0.70 * Math.exp(-(nx*nx)/(2*spkSig*spkSig));
-                const cy = pHv - 5 - y * (pHv - 14);
-                if (px === 0) ctx.moveTo(px, cy); else ctx.lineTo(px, cy);
-            }
-            ctx.strokeStyle = '#b68d76' + '6a';
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-        }
-    }
-
-    // Prior label
-    ctx.font         = '8.5px Nunito Sans';
-    ctx.textAlign    = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle    = P.color + '88';
-    ctx.fillText(P.priorLabel, W/2, pHv * 0.80);
-}
-
-/* ════════════════════════════════════════════
-   SPAWNING
-════════════════════════════════════════════ */
-function spawnParticle() {
-    const P   = PROFILES[profile];
-    const sig = P.ordered
-        ? SIGNALS[signalIdx++ % SIGNALS.length]
-        : SIGNALS[Math.floor(Math.random() * SIGNALS.length)];
-    const w = P.getWeight(sig.canonical);
-
-    setCardWeight(sig.id, w);
-    particles.push(new Particle(sig, w));
-
-    const delay = P.spawnMs + (Math.random()-0.5)*380;
-    spawnHandle = setTimeout(spawnParticle, delay);
-}
-
-function startSpawning() {
-    if (spawnHandle) clearTimeout(spawnHandle);
-    spawnParticle();
-}
-
-/* ════════════════════════════════════════════
-   SIGNAL CARDS
-════════════════════════════════════════════ */
 function buildCards() {
     const list = document.getElementById('signal-list');
     list.innerHTML = '';
-    SIGNALS.forEach(sig => {
-        const d = document.createElement('div');
-        d.className = 'signal-card';
-        d.id = `card-${sig.id}`;
-        d.innerHTML = `
-            <div class="signal-top">
-                <span class="signal-icon">${sig.icon}</span>
-                <span class="signal-name">${sig.name}</span>
-                <span class="signal-badge" id="badge-${sig.id}">—</span>
-            </div>
-            <div class="signal-bar-track">
-                <div class="signal-bar" id="bar-${sig.id}"></div>
-            </div>`;
-        list.appendChild(d);
-    });
-}
-
-function setCardWeight(id, w) {
-    const badge = document.getElementById(`badge-${id}`);
-    const bar   = document.getElementById(`bar-${id}`);
-    if (!badge || !bar) return;
-    const col = w >= 8 ? '#b68d76' : w >= 5 ? '#ba945e' : '#a6aea6';
-    badge.innerText      = Math.round(w);
-    badge.style.color    = col;
-    bar.style.width      = `${(w/10)*100}%`;
-    bar.style.background = col;
-}
-
-function flashCard(id) {
-    const c = document.getElementById(`card-${id}`);
-    if (!c) return;
-    c.classList.add('active');
-    setTimeout(() => c.classList.remove('active'), 700);
-}
-
-function resetCards() {
     SIGNALS.forEach(s => {
-        const badge = document.getElementById(`badge-${s.id}`);
-        const bar   = document.getElementById(`bar-${s.id}`);
-        if (badge) { badge.innerText = '—'; badge.style.color = 'var(--cool-grey)'; }
-        if (bar)   { bar.style.width = '3%'; bar.style.background = 'var(--stone)'; }
+        list.innerHTML += `
+        <div class="signal-card" id="card-${s.id}">
+            <div class="signal-top">
+                <span class="signal-name">${s.icon} ${s.name}</span>
+                <span class="signal-badge" id="b-${s.id}">-</span>
+            </div>
+            <div class="signal-bar-track"><div class="signal-bar" id="bar-${s.id}"></div></div>
+        </div>`;
     });
 }
 
-/* ════════════════════════════════════════════
-   STABILITY DOTS
-════════════════════════════════════════════ */
-function buildDots() {
-    const row = document.getElementById('stability-row');
-    row.innerHTML = '';
-    for (let i = 0; i < 10; i++) {
-        const d = document.createElement('div');
-        d.className = 'sdot';
-        d.id = `sdot-${i}`;
-        row.appendChild(d);
-    }
+function setProfile(p, btn) {
+    profile = p;
+    document.querySelectorAll('.profile-btn').forEach(b =>
+        b.classList.remove('active-nt','active-adhd','active-autism','active-audhd'));
+    btn.classList.add(`active-${p}`);
+    document.getElementById('status-main').innerText = PROFILES[p].status[0];
+    document.getElementById('status-sub').innerText  = PROFILES[p].status[1];
+    doReset();
+    spawn();
 }
 
-function refreshDots() {
-    const stab     = PROFILES[profile].stability;
-    const unstable = profile === 'adhd' || profile === 'audhd';
-    for (let i = 0; i < 10; i++) {
-        const dot = document.getElementById(`sdot-${i}`);
-        if (!dot) continue;
-        dot.classList.remove('on', 'glitch');
-        if (i < stab) {
-            dot.classList.add('on');
-        } else if (unstable && Math.random() > 0.62) {
-            dot.classList.add('glitch');
+function spawn() {
+    clearTimeout(window.spawnT);
+    const s = SIGNALS[Math.floor(Math.random() * SIGNALS.length)];
+    const w = PROFILES[profile].weight(s.canonical);
+
+    particles.push({
+        x: 20 + Math.random() * (canvas.width - 40),
+        y: 30,
+        w: w,
+        sig: s,
+        vy: 1.2 + w * 0.12,
+        a: 1,
+        scored: false,
+        fade: false
+    });
+
+    const badge = document.getElementById(`b-${s.id}`);
+    const bar   = document.getElementById(`bar-${s.id}`);
+    const card  = document.getElementById(`card-${s.id}`);
+    if (badge) badge.innerText = Math.round(w);
+    if (bar)   { bar.style.width = (w * 10) + '%'; bar.style.background = w > 7 ? '#b68d76' : '#ba945e'; }
+    if (card)  { card.classList.add('active'); setTimeout(() => card.classList.remove('active'), 600); }
+
+    window.spawnT = setTimeout(spawn, 900 + Math.random() * 1400);
+}
+
+// ── FIX 2: globalAlpha reset every frame ─────────────────────────────────────
+function animate() {
+    // Always start with a clean alpha - this prevents faded particles from
+    // bleeding their alpha into the background, curve, and threshold line
+    ctx.globalAlpha = 1;
+
+    // Background
+    ctx.fillStyle = '#19201d';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Prior strength curve (bell curve near top)
+    const P = PROFILES[profile];
+    ctx.beginPath();
+    ctx.strokeStyle = '#45735d';
+    ctx.lineWidth = 3;
+    for (let x = 0; x < canvas.width; x++) {
+        const nx = (x / canvas.width) - 0.5;
+        const y = 85 - (P.height * 65 * Math.exp(-(nx * nx) / (2 * P.sigma * P.sigma)));
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Curve label
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = '#45735d';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('▲ Prior Strength', 8, 100);
+    ctx.globalAlpha = 1;
+
+    // Attention threshold line
+    ctx.setLineDash([6, 4]);
+    ctx.strokeStyle = '#ba945e99';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, 300);
+    ctx.lineTo(canvas.width, 300);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Threshold label
+    ctx.globalAlpha = 0.6;
+    ctx.fillStyle = '#ba945e';
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText('Attention Threshold ▼', canvas.width - 6, 294);
+    ctx.globalAlpha = 1;
+
+    // Particles
+    particles.forEach(p => {
+        p.y += p.vy;
+
+        if (p.y > 300 && !p.scored) {
+            p.scored = true;
+            errorCount++;
+            total++;
+            if (p.sig.canonical > 5) correct++;
+            load = Math.min(100, load + 8);
         }
-    }
+
+        if (p.fade) p.a = Math.max(0, p.a - 0.06);
+
+        // Check if filtered out (low weight, hasn't crossed threshold yet)
+        if (!p.scored && p.y > 120 && p.w <= 5 && !p.fade) {
+            p.fade = true;
+        }
+
+        ctx.globalAlpha = p.a;
+        const radius = 9 + p.w * 1.8;
+        ctx.fillStyle = p.w > 7 ? '#b68d76' : (p.w > 4 ? '#ba945e' : '#45735d');
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Icon
+        ctx.font = `${Math.floor(10 + p.w)}px Arial`;
+        ctx.textAlign = 'center';
+        ctx.fillStyle = 'white';
+        ctx.fillText(p.sig.icon, p.x, p.y + 5);
+    });
+
+    // CRITICAL: reset alpha after particle loop so it never bleeds into next frame
+    ctx.globalAlpha = 1;
+
+    particles = particles.filter(p => p.y < canvas.height + 20 && p.a > 0);
+
+    // Update metrics
+    document.getElementById('error-count').innerText = errorCount;
+    const loadEl = document.getElementById('load-fill');
+    loadEl.style.width = load + '%';
+    loadEl.style.background = load > 70 ? '#b68d76' : load > 40 ? '#ba945e' : '#45735d';
+    document.getElementById('acc-val').innerText = total > 0 ? Math.round((correct / total) * 100) + '%' : '--';
+
+    load = Math.max(0, load - 0.08);
+
+    requestAnimationFrame(animate);
 }
-setInterval(refreshDots, 750);
-
-/* ════════════════════════════════════════════
-   METRICS
-════════════════════════════════════════════ */
-function refreshMetrics() {
-    const errEl  = document.getElementById('error-count');
-    const loadEl = document.getElementById('load-val');
-    const fillEl = document.getElementById('load-fill');
-    const accEl  = document.getElementById('acc-val');
-
-    const load = Math.round(loadVal);
-    const acc  = totalSig > 0 ? Math.round((correctSig/totalSig)*100) : null;
-
-    errEl.innerText   = errorCount;
-    errEl.style.color = errorCount < 5 ? 'var(--green)' : errorCount < 20 ? 'var(--gold)' : 'var(--terra)';
-
-    const lc = load < 40 ? 'var(--green)' : load < 70 ? 'var(--gold)' : 'var(--terra)';
-    const lg = load < 40
-        ? 'linear-gradient(to right,var(--green),#a3d4bc)'
-        : load < 70
-            ? 'linear-gradient(to right,var(--gold),#d4c0a0)'
-            : 'linear-gradient(to right,var(--terra),#d4a090)';
-    loadEl.innerText      = `${load}%`;
-    loadEl.style.color    = lc;
-    fillEl.style.width    = `${load}%`;
-    fillEl.style.background = lg;
-
-    accEl.innerText   = acc !== null ? `${acc}%` : '--';
-    accEl.style.color = acc === null ? 'var(--cool-grey)'
-                      : acc > 70 ? 'var(--green)'
-                      : acc > 45 ? 'var(--gold)'
-                      : 'var(--terra)';
-}
-setInterval(refreshMetrics, 420);
 
 function doReset() {
-    errorCount = 0; loadVal = 0; totalSig = 0; correctSig = 0;
-    particles  = [];
-    refreshMetrics();
+    clearTimeout(window.spawnT);
+    errorCount = 0; load = 0; total = 0; correct = 0;
+    particles = [];
+    spawn();
 }
 
-/* ════════════════════════════════════════════
-   PROFILE SWITCHER
-════════════════════════════════════════════ */
-function setProfile(p, btnEl) {
-    profile = p;
-    document.querySelectorAll('.profile-btn').forEach(b => b.className = 'profile-btn');
-    btnEl.className = `profile-btn ${PROFILES[p].cls}`;
-
-    const [main, sub] = PROFILES[p].status;
-    document.getElementById('status-main').style.color = PROFILES[p].color;
-    document.getElementById('status-main').innerText   = main;
-    document.getElementById('status-sub').innerText    = sub;
-
-    doReset();
-    resetCards();
-    signalIdx = 0;
-    startSpawning();
-    refreshDots();
-}
-
-/* ════════════════════════════════════════════
-   INIT
-════════════════════════════════════════════ */
-buildCards();
-buildDots();
-refreshDots();
-
-setTimeout(() => {
-    resizeCanvas();
-    requestAnimationFrame(drawFrame);
-    startSpawning();
-}, 90);
+// ── FIX 3: Delay init so flex layout is fully computed before reading canvas size
+window.onload = () => setTimeout(init, 80);
 </script>
 </body>
 </html>
