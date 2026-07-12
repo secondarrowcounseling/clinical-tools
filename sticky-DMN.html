@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autistic Inertia & The Sticky DMN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green:     #45735d;
+            --gold:      #ba945e;
+            --terra:     #b68d76;
+            --forest:    #35361c;
+            --text:      #222a26;
+            --grey:      #6d7873;
+            --bg:        #faf8f5;
+            --accent-bg: #F5F3EF;
+            --stone:     #bdb7a2;
+            --cool-grey: #a6aea6;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px;
+            margin: 0;
+            color: var(--text);
+        }
+
+        /* ── BRAND BAR ── */
+        .sac-topbar {
+            width: 100%; max-width: 1100px;
+            padding: 0 4px 8px;
+            text-align: left;
+        }
+        .sac-toplink {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.05em; font-weight: 700;
+            color: var(--forest);
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+            letter-spacing: 0.01em;
+        }
+        .sac-toplink:hover { opacity: 1; }
+
+        /* ── HEADER ── */
+        .header {
+            background: var(--accent-bg);
+            padding: 14px 20px 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .header h2 {
+            font-family: 'Libre Baskerville', serif;
+            margin: 0 0 4px;
+            font-size: 1.3em;
+        }
+        .header p { color: var(--grey); margin: 0 0 12px; font-size: 0.9em; }
+
+        .profile-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+        .profile-btn {
+            padding: 7px 18px;
+            border-radius: 6px;
+            border: 2px solid var(--stone);
+            background: white;
+            color: var(--text);
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+        .profile-btn:hover { border-color: var(--grey); }
+        .profile-btn.active-nt       { background: var(--green);  color: white; border-color: var(--green); }
+        .profile-btn.active-autistic { background: var(--terra);  color: white; border-color: var(--terra); }
+        .profile-btn.active-inertia  { background: var(--forest); color: white; border-color: var(--forest); }
+
+        /* ── MAIN LAYOUT ── */
+        .main-area {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        /* ── LEFT: CONTROL PANEL ── */
+        .control-panel {
+            background: var(--accent-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 16px 14px;
+            width: 250px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+        }
+
+        .panel-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.78em;
+            color: var(--grey);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin: 0;
+            text-align: center;
+        }
+
+        .slider-section { display: flex; flex-direction: column; gap: 7px; }
+
+        .slider-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slider-label-text { font-weight: 700; font-size: 0.83em; }
+
+        .slider-val-badge {
+            font-size: 0.78em;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: white;
+            color: var(--green);
+            transition: color 0.3s;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+            accent-color: var(--green);
+        }
+
+        .stickiness-desc {
+            font-size: 0.77em;
+            color: var(--grey);
+            font-style: italic;
+            text-align: center;
+            min-height: 40px;
+            line-height: 1.55;
+            margin: 0;
+        }
+
+        /* Legend */
+        .legend { display: flex; flex-direction: column; gap: 6px; }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 6px 9px;
+            background: white;
+            border-radius: 7px;
+        }
+
+        .legend-dot { width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0; }
+        .legend-name { font-weight: 700; font-size: 0.78em; color: var(--text); }
+        .legend-sub  { font-size: 0.71em; color: var(--grey); }
+
+        /* Switch button */
+        .switch-btn {
+            background: var(--green);
+            font-family: 'Nunito Sans', sans-serif;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: opacity 0.2s, transform 0.1s;
+            width: 100%;
+            line-height: 1.4;
+            text-align: center;
+        }
+        .switch-btn:hover    { opacity: 0.9; }
+        .switch-btn:active   { transform: scale(0.98); }
+        .switch-btn:disabled { background: var(--cool-grey); cursor: not-allowed; }
+
+        /* Energy section */
+        .energy-section { display: flex; flex-direction: column; gap: 6px; }
+
+        .energy-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .energy-pct {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--green);
+            transition: color 0.4s;
+        }
+
+        .energy-track {
+            width: 100%;
+            height: 14px;
+            background: rgba(0,0,0,0.08);
+            border-radius: 7px;
+            overflow: hidden;
+        }
+
+        .energy-fill {
+            height: 100%;
+            border-radius: 7px;
+            background: linear-gradient(to right, var(--green), #a3d4bc);
+            transition: width 0.6s ease, background 0.4s;
+            width: 100%;
+        }
+
+        .energy-note {
+            font-size: 0.71em;
+            color: var(--grey);
+            font-style: italic;
+            text-align: center;
+            margin: 0;
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 6px;
+            border-radius: 6px;
+            border: none;
+            background: var(--stone);
+            color: white;
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .reset-btn:hover { opacity: 0.82; }
+
+        /* ── RIGHT: SIM PANEL ── */
+        .sim-panel {
+            flex: 1;
+            background: var(--accent-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 14px 10px 10px;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sim-svg { width: 100%; height: 430px; }
+
+        /* ── STATUS ── */
+        .status-panel {
+            background: var(--accent-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 12px 20px;
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 12px;
+            text-align: center;
+        }
+        #status-main { font-weight: 700; font-size: 0.93em; margin: 0 0 4px; color: var(--green); }
+        #status-sub  { color: var(--grey); font-style: italic; font-size: 0.85em; margin: 0; line-height: 1.6; }
+
+        /* ── DISCLAIMER ── */
+        .disclaimer {
+            width: 100%; max-width: 1100px;
+            margin-top: 10px; padding: 10px 16px;
+            text-align: center; color: var(--grey);
+            font-size: 0.74em; line-height: 1.6;
+        }
+
+        /* ── SVG ANIMATIONS ── */
+        @keyframes particle-ring-pulse {
+            0%   { r: 22; opacity: 0.22; }
+            50%  { r: 30; opacity: 0.10; }
+            100% { r: 22; opacity: 0.22; }
+        }
+        .particle-ring { animation: particle-ring-pulse 2s ease-in-out infinite; }
+
+        @keyframes link-throb {
+            0%   { opacity: 0.75; }
+            50%  { opacity: 1; }
+            100% { opacity: 0.75; }
+        }
+        .link-sticky { animation: link-throb 1.1s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+
+<!-- BRAND BAR -->
+<div class="sac-topbar"><a href="https://www.secondarrow.net" target="_blank" rel="noopener" class="sac-toplink">Second Arrow Counseling</a></div>
+
+<!-- HEADER -->
+<div class="header">
+    <h2>Autistic Inertia &amp; The "Sticky" DMN</h2>
+    <p>Explore how DMN loop strength determines the metabolic cost of switching to the Task Positive Network.</p>
+    <div class="profile-buttons">
+        <button class="profile-btn active-nt"  id="btn-nt"       onclick="setPreset('nt', this)">🧠 Neurotypical</button>
+        <button class="profile-btn"            id="btn-autistic" onclick="setPreset('autistic', this)">🔄 Autistic</button>
+        <button class="profile-btn"            id="btn-inertia"  onclick="setPreset('inertia', this)">🧲 Autistic Inertia</button>
+    </div>
+</div>
+
+<!-- MAIN AREA -->
+<div class="main-area">
+
+    <!-- LEFT: CONTROLS -->
+    <div class="control-panel">
+        <p class="panel-title">Simulation Controls</p>
+
+        <div class="slider-section">
+            <div class="slider-label-row">
+                <span class="slider-label-text">DMN Loop Strength</span>
+                <span class="slider-val-badge" id="sticky-badge">1 / 10</span>
+            </div>
+            <input type="range" id="stickiness" min="1" max="10" value="1">
+            <p class="stickiness-desc" id="sticky-desc">Low resistance. Attention disengages from the DMN effortlessly.</p>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot" style="background: var(--gold);"></div>
+                <div>
+                    <div class="legend-name">TPN - Task Positive</div>
+                    <div class="legend-sub">External world, goal execution</div>
+                </div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: var(--green);"></div>
+                <div>
+                    <div class="legend-name">DMN - Default Mode</div>
+                    <div class="legend-sub">Inward focus, self-referential</div>
+                </div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: var(--terra);"></div>
+                <div>
+                    <div class="legend-name">Predictive Loop</div>
+                    <div class="legend-sub">Pattern completion, special interest</div>
+                </div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #f59e0b;"></div>
+                <div>
+                    <div class="legend-name">Attention (particle)</div>
+                    <div class="legend-sub">Where cognitive resources flow</div>
+                </div>
+            </div>
+        </div>
+
+        <button class="switch-btn" id="switch-btn">
+            ⚡ Switch to Task
+            <div style="font-weight:400; font-size:0.84em; margin-top:2px;">(Activate TPN)</div>
+        </button>
+
+        <div class="energy-section">
+            <div class="energy-label-row">
+                <span class="panel-title" style="margin:0;">Cognitive Energy</span>
+                <span class="energy-pct" id="energy-pct">100%</span>
+            </div>
+            <div class="energy-track">
+                <div class="energy-fill" id="energy-fill"></div>
+            </div>
+            <p class="energy-note" id="energy-note">Full capacity. No transitions yet.</p>
+            <button class="reset-btn" onclick="resetEnergy()">↺ Reset Energy</button>
+        </div>
+    </div>
+
+    <!-- RIGHT: SIMULATION -->
+    <div class="sim-panel">
+        <p class="panel-title" style="margin-bottom:6px;">Network Activity</p>
+
+        <!--
+            Node centers (r=62):
+              TPN:  cx=280, cy=80
+              DMN:  cx=95,  cy=305
+              PL:   cx=465, cy=305
+            Invisible flow-dot paths mirror edge geometry.
+        -->
+        <svg id="sim-svg" class="sim-svg" viewBox="0 0 560 430">
+            <defs>
+                <filter id="glow-amber" x="-60%" y="-60%" width="220%" height="220%">
+                    <feGaussianBlur stdDeviation="7" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+
+            <!-- Invisible paths for flow-dot animateMotion -->
+            <!-- DMN right edge → PL left edge (left-to-right) -->
+            <path id="path-dmn-pl"  d="M 157 305 L 403 305" stroke="none" fill="none"/>
+            <!-- PL left edge → DMN right edge (right-to-left, for inertia counter-flow) -->
+            <path id="path-pl-dmn"  d="M 403 305 L 157 305" stroke="none" fill="none"/>
+
+            <!-- DMN↔PL sticky link bar (visual weight indicator) -->
+            <rect id="dmn-link-rect"
+                  x="157" y="298" width="246" height="14" rx="6"
+                  fill="#bdb7a2"/>
+
+            <!-- DMN(95,305) → TPN(280,80): start=(134,257) end=(241,128) -->
+            <path id="path-dmn-tpn"
+                  d="M 134 257 C 134 190, 241 145, 241 128"
+                  stroke="#45735d" stroke-width="3" fill="none"/>
+
+            <!-- PL(465,305) → TPN(280,80): start=(426,257) end=(319,128) -->
+            <path id="path-pl-tpn"
+                  d="M 426 257 C 426 190, 319 145, 319 128"
+                  stroke="#45735d" stroke-width="3" fill="none"/>
+
+            <!-- Flow dots layer (rendered above paths, below nodes) -->
+            <g id="flow-dots"></g>
+
+            <!-- TPN node: cx=280, cy=80, r=62 -->
+            <g id="node-tpn">
+                <circle cx="280" cy="80"  r="74" fill="#ba945e" opacity="0.10"/>
+                <circle cx="280" cy="80"  r="62" fill="#ba945e"/>
+                <text x="280" y="73"  text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">TPN</text>
+                <text x="280" y="88"  text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">(Outside World)</text>
+                <text x="280" y="103" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Task Positive Network</text>
+            </g>
+
+            <!-- DMN node: cx=95, cy=305, r=62 -->
+            <g id="node-dmn">
+                <circle cx="95"  cy="305" r="74" fill="#45735d" opacity="0.10"/>
+                <circle cx="95"  cy="305" r="62" fill="#45735d"/>
+                <text x="95"  y="298" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">DMN</text>
+                <text x="95"  y="313" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Default Mode</text>
+                <text x="95"  y="326" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Self-Referential</text>
+            </g>
+
+            <!-- PL node: cx=465, cy=305, r=62 -->
+            <g id="node-pl">
+                <circle cx="465" cy="305" r="74" fill="#b68d76" opacity="0.10"/>
+                <circle cx="465" cy="305" r="62" fill="#b68d76"/>
+                <text x="465" y="298" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">Predictive</text>
+                <text x="465" y="313" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">Loop</text>
+                <text x="465" y="328" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Pattern / Interest</text>
+            </g>
+
+            <!-- Attention particle (CSS transform for smooth transitions) -->
+            <g id="svg-particle" style="transform: translate(95px, 305px);">
+                <circle class="particle-ring" cx="0" cy="0" r="22" fill="#f59e0b" opacity="0.22"/>
+                <circle cx="0" cy="0" r="14" fill="#f59e0b" filter="url(#glow-amber)"/>
+            </g>
+
+            <!-- Ripple injection point -->
+            <g id="ripple-group"></g>
+
+            <text x="280" y="13" text-anchor="middle" fill="#a6aea6" font-size="9.5" font-family="Nunito Sans" font-style="italic">
+                Adjust DMN Loop Strength, then press "Switch to Task" to simulate a network transition
+            </text>
+        </svg>
+    </div>
+
+</div>
+
+<!-- STATUS -->
+<div class="status-panel">
+    <p id="status-main">🔄 Attention is cycling in the Default Mode Network...</p>
+    <p id="status-sub">The DMN and Predictive Loop form a self-sustaining circuit. In Autism, heightened connectivity between these nodes creates a "stickier" loop - harder to disengage from, even when a task demands attention.</p>
+</div>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer">
+    <strong>Psychoeducational Tool Only.</strong> This simulator is designed for educational purposes to illustrate neurobiological concepts. It does not constitute medical advice, diagnosis, or treatment. Content developed by <a href="https://www.secondarrow.net" target="_blank" rel="noopener" style="color:var(--grey);">Second Arrow Counseling</a>. For clinical concerns, consult a qualified healthcare provider.
+</div>
+
+<script>
+    /* ================================================================
+       FLOW DOT SYSTEM
+    ================================================================ */
+    const DOT_CONFIGS = {
+        // NT: weak PL coupling (exists, not a meaningful circuit), direct DMN→TPN is the whole story
+        nt: [
+            { pathId: 'path-dmn-pl',  color: '#bdb7a2', r: 3,   dur: 3.5, opacity: 0.35, count: 1 },
+            { pathId: 'path-dmn-tpn', color: '#45735d', r: 4,   dur: 1.8, opacity: 0.85, count: 1 },
+        ],
+        // Autistic: stronger circular loop, more friction to TPN
+        autistic: [
+            { pathId: 'path-dmn-pl',  color: '#b68d76', r: 4,   dur: 1.4, opacity: 0.85, count: 2, spacing: 0.5 },
+            { pathId: 'path-pl-dmn',  color: '#b68d76', r: 4,   dur: 1.4, opacity: 0.65, count: 1 },
+            { pathId: 'path-dmn-tpn', color: '#45735d', r: 3.5, dur: 3.2, opacity: 0.55, count: 1 },
+            { pathId: 'path-pl-tpn',  color: '#45735d', r: 3.5, dur: 3.2, opacity: 0.55, count: 1 },
+        ],
+        // Inertia: locked loop with rapid dark dots both ways, TPN nearly inaccessible
+        inertia: [
+            { pathId: 'path-dmn-pl',  color: '#35361c', r: 4.5, dur: 1.0, opacity: 0.95, count: 3, spacing: 0.37 },
+            { pathId: 'path-pl-dmn',  color: '#35361c', r: 4.5, dur: 1.0, opacity: 0.85, count: 2, spacing: 0.5 },
+            { pathId: 'path-dmn-tpn', color: '#bdb7a2', r: 3,   dur: 6.5, opacity: 0.32, count: 1 },
+            { pathId: 'path-pl-tpn',  color: '#bdb7a2', r: 3,   dur: 6.5, opacity: 0.32, count: 1 },
+        ],
+    };
+
+    function updateFlowDots(preset) {
+        const NS  = 'http://www.w3.org/2000/svg';
+        const XL  = 'http://www.w3.org/1999/xlink';
+        const grp = document.getElementById('flow-dots');
+        grp.innerHTML = '';
+
+        (DOT_CONFIGS[preset] || []).forEach(cfg => {
+            const count   = cfg.count   || 1;
+            const spacing = cfg.spacing || 0;
+
+            for (let i = 0; i < count; i++) {
+                const begin = (i * cfg.dur * spacing).toFixed(3) + 's';
+
+                // Glow halo
+                const glow = document.createElementNS(NS, 'circle');
+                glow.setAttribute('r',       cfg.r + 3);
+                glow.setAttribute('fill',    cfg.color);
+                glow.setAttribute('opacity', (cfg.opacity * 0.28).toFixed(2));
+                const ga = document.createElementNS(NS, 'animateMotion');
+                ga.setAttribute('dur',         cfg.dur + 's');
+                ga.setAttribute('repeatCount', 'indefinite');
+                ga.setAttribute('begin',       begin);
+                const gm = document.createElementNS(NS, 'mpath');
+                gm.setAttribute('href',              '#' + cfg.pathId);
+                gm.setAttributeNS(XL, 'xlink:href', '#' + cfg.pathId);
+                ga.appendChild(gm);
+                glow.appendChild(ga);
+                grp.appendChild(glow);
+
+                // Core dot
+                const dot = document.createElementNS(NS, 'circle');
+                dot.setAttribute('r',       cfg.r);
+                dot.setAttribute('fill',    cfg.color);
+                dot.setAttribute('opacity', cfg.opacity);
+                const da = document.createElementNS(NS, 'animateMotion');
+                da.setAttribute('dur',         cfg.dur + 's');
+                da.setAttribute('repeatCount', 'indefinite');
+                da.setAttribute('begin',       begin);
+                const dm = document.createElementNS(NS, 'mpath');
+                dm.setAttribute('href',              '#' + cfg.pathId);
+                dm.setAttributeNS(XL, 'xlink:href', '#' + cfg.pathId);
+                da.appendChild(dm);
+                dot.appendChild(da);
+                grp.appendChild(dot);
+            }
+        });
+    }
+
+    /* ================================================================
+       EXISTING SIMULATION LOGIC
+    ================================================================ */
+    const slider      = document.getElementById('stickiness');
+    const stickyBadge = document.getElementById('sticky-badge');
+    const stickyDesc  = document.getElementById('sticky-desc');
+    const switchBtn   = document.getElementById('switch-btn');
+    const dmnLinkRect = document.getElementById('dmn-link-rect');
+    const statusMain  = document.getElementById('status-main');
+    const statusSub   = document.getElementById('status-sub');
+    const energyFill  = document.getElementById('energy-fill');
+    const energyPct   = document.getElementById('energy-pct');
+    const energyNote  = document.getElementById('energy-note');
+    const svgParticle = document.getElementById('svg-particle');
+    const rippleGroup = document.getElementById('ripple-group');
+    const pathDmnTpn  = document.getElementById('path-dmn-tpn');
+    const pathPlTpn   = document.getElementById('path-pl-tpn');
+
+    // SVG node centers
+    const posDMNA = { x: 95,  y: 305 };
+    const posDMNB = { x: 465, y: 305 };
+    const posTPN  = { x: 280, y: 80  };
+
+    let inTPN = false;
+    let dmnTarget = posDMNB;
+    let loopInterval;
+    let energy = 100;
+    let currentPreset = 'nt';
+
+    /* ── DMN loop animation ── */
+    function runDMNLoop() {
+        if (inTPN) return;
+        const stickiness = parseInt(slider.value);
+        const speedMs = Math.max(200, 1100 - (stickiness * 90));
+
+        svgParticle.style.transition = `transform ${speedMs}ms linear`;
+        svgParticle.style.transform  = `translate(${dmnTarget.x}px, ${dmnTarget.y}px)`;
+
+        dmnTarget = (dmnTarget === posDMNA) ? posDMNB : posDMNA;
+        loopInterval = setTimeout(runDMNLoop, speedMs);
+    }
+
+    runDMNLoop();
+    updateFlowDots('nt'); // initialise dots for NT preset
+
+    /* ── Slider update ── */
+    slider.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        stickyBadge.innerText = `${val} / 10`;
+
+        if (val <= 3) {
+            stickyBadge.style.color = 'var(--green)';
+            stickyDesc.innerText = 'Low resistance. Attention disengages from the DMN effortlessly.';
+            pathDmnTpn.setAttribute('stroke', '#45735d');
+            pathPlTpn.setAttribute('stroke', '#45735d');
+            pathDmnTpn.setAttribute('stroke-width', '3');
+            pathPlTpn.setAttribute('stroke-width',  '3');
+            dmnLinkRect.classList.remove('link-sticky');
+        } else if (val <= 7) {
+            stickyBadge.style.color = 'var(--terra)';
+            stickyDesc.innerText = 'Moderate loop strength. Switching requires deliberate effort and increased metabolic cost.';
+            pathDmnTpn.setAttribute('stroke', '#6d7873');
+            pathPlTpn.setAttribute('stroke', '#6d7873');
+            pathDmnTpn.setAttribute('stroke-width', '2.5');
+            pathPlTpn.setAttribute('stroke-width',  '2.5');
+            dmnLinkRect.classList.remove('link-sticky');
+        } else {
+            stickyBadge.style.color = 'var(--forest)';
+            stickyDesc.innerText = 'Maximum stickiness. The DMN-Predictive circuit is locked. Switching demands extreme energy expenditure.';
+            pathDmnTpn.setAttribute('stroke', '#bdb7a2');
+            pathPlTpn.setAttribute('stroke', '#bdb7a2');
+            pathDmnTpn.setAttribute('stroke-width', '1.5');
+            pathPlTpn.setAttribute('stroke-width',  '1.5');
+            dmnLinkRect.classList.add('link-sticky');
+        }
+
+        // Thicken the DMN link rect
+        const thickness = 10 + (val * 4);
+        dmnLinkRect.setAttribute('y',      305 - thickness / 2);
+        dmnLinkRect.setAttribute('height', thickness);
+        dmnLinkRect.setAttribute('fill',   val > 6 ? '#35361c' : '#bdb7a2');
+        dmnLinkRect.setAttribute('rx',     val > 6 ? '3' : '6');
+    });
+
+    /* ── Ripple effect ── */
+    function fireRipple(x, y, color) {
+        for (let i = 0; i < 3; i++) {
+            setTimeout(() => {
+                const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                c.setAttribute('cx', x);
+                c.setAttribute('cy', y);
+                c.setAttribute('r',  '10');
+                c.setAttribute('fill', 'none');
+                c.setAttribute('stroke', color);
+                c.setAttribute('stroke-width', '3');
+                c.setAttribute('opacity', '1');
+                rippleGroup.appendChild(c);
+                let r = 10, op = 1;
+                const anim = setInterval(() => {
+                    r  += 4;
+                    op -= 0.055;
+                    c.setAttribute('r', r);
+                    c.setAttribute('opacity', Math.max(0, op).toFixed(2));
+                    if (op <= 0) { clearInterval(anim); c.remove(); }
+                }, 30);
+            }, i * 210);
+        }
+    }
+
+    /* ── Energy meter ── */
+    function drainEnergy(cost) {
+        energy = Math.max(0, energy - cost);
+        const pct = Math.round(energy);
+        energyFill.style.width = `${pct}%`;
+        const grad = energy > 60
+            ? 'linear-gradient(to right, var(--green), #a3d4bc)'
+            : energy > 30
+                ? 'linear-gradient(to right, var(--gold), #d4c0a0)'
+                : 'linear-gradient(to right, var(--terra), #d4a090)';
+        energyFill.style.background = grad;
+        energyPct.innerText    = `${pct}%`;
+        energyPct.style.color  = energy > 60 ? 'var(--green)' : energy > 30 ? 'var(--gold)' : 'var(--terra)';
+    }
+
+    function resetEnergy() {
+        energy = 100;
+        energyFill.style.width      = '100%';
+        energyFill.style.background = 'linear-gradient(to right, var(--green), #a3d4bc)';
+        energyPct.innerText   = '100%';
+        energyPct.style.color = 'var(--green)';
+        energyNote.innerText  = 'Reset. Full capacity restored.';
+    }
+
+    /* ── Switch button ── */
+    switchBtn.addEventListener('click', () => {
+        if (inTPN) {
+            inTPN = false;
+            switchBtn.innerHTML = '⚡ Switch to Task<div style="font-weight:400; font-size:0.84em; margin-top:2px;">(Activate TPN)</div>';
+            statusMain.style.color = 'var(--green)';
+            statusMain.innerText   = '🔄 Attention returned to the Default Mode Network.';
+            statusSub.innerText    = 'Notice how returning to DMN requires no effort - the brain slides back immediately. The asymmetry between cost-to-leave and cost-to-return is the whole story of inertia.';
+            updateFlowDots(currentPreset); // restore loop dots
+            runDMNLoop();
+            return;
+        }
+
+        clearTimeout(loopInterval);
+        switchBtn.disabled = true;
+        const stickiness = parseInt(slider.value);
+
+        if (stickiness <= 3) {
+            const cost = 5 + Math.round(stickiness * 1.5);
+            drainEnergy(cost);
+            energyNote.innerText   = `Transition cost: ~${cost}%. ${Math.round(energy)}% remaining.`;
+            statusMain.style.color = 'var(--green)';
+            statusMain.innerText   = '✅ Smooth transition. TPN activated.';
+            statusSub.innerText    = `Low DMN loop strength allows efficient switching. This transition cost ~${cost}% cognitive energy - a routine, manageable effort that doesn't require urgency or crisis to initiate.`;
+
+            svgParticle.style.transition = 'transform 0.55s ease-out';
+            svgParticle.style.transform  = `translate(${posTPN.x}px, ${posTPN.y}px)`;
+            fireRipple(posTPN.x, posTPN.y, '#45735d');
+            document.getElementById('flow-dots').innerHTML = ''; // clear dots during TPN
+            finishSwitch();
+
+        } else {
+            const cost = Math.round(stickiness * 7);
+            statusMain.style.color = 'var(--terra)';
+            statusMain.innerText   = '⚠️ High metabolic friction! Fighting to disengage...';
+            statusSub.innerText    = 'The attention particle is being snapped back by the DMN-Predictive circuit. This is autistic inertia in action - not a lack of effort or willpower, but a neurological tax on switching. The brain must override its own gravity.';
+
+            let struggles = stickiness;
+            let currentStruggle = 0;
+            svgParticle.style.transition = 'transform 0.22s ease-in-out';
+
+            const midY = 192; // halfway between y=305 and y=80
+
+            const struggleInterval = setInterval(() => {
+                if (currentStruggle % 2 === 0) {
+                    svgParticle.style.transform = `translate(${posTPN.x}px, ${midY}px)`;
+                } else {
+                    svgParticle.style.transform = `translate(${dmnTarget.x}px, ${dmnTarget.y}px)`;
+                }
+                currentStruggle++;
+
+                if (currentStruggle >= struggles) {
+                    clearInterval(struggleInterval);
+                    drainEnergy(cost);
+                    energyNote.innerText   = `Transition cost: ~${cost}%. ${Math.round(energy)}% remaining.`;
+                    statusMain.style.color = 'var(--forest)';
+                    statusMain.innerText   = '🔴 Finally broke free. Massive energy expenditure.';
+                    statusSub.innerText    = `This switch cost ~${cost}% cognitive energy - vs ~7% for a neurotypical brain on the same task. This is why "just start" fails as advice. It ignores the real neurological price of breaking a sticky DMN loop. This is not procrastination. It is physics.`;
+
+                    svgParticle.style.transition = 'transform 0.9s ease-out';
+                    svgParticle.style.transform  = `translate(${posTPN.x}px, ${posTPN.y}px)`;
+                    fireRipple(posTPN.x, posTPN.y, '#ba945e');
+                    document.getElementById('flow-dots').innerHTML = ''; // clear dots during TPN
+                    finishSwitch();
+                }
+            }, 320);
+        }
+    });
+
+    function finishSwitch() {
+        setTimeout(() => {
+            inTPN = true;
+            switchBtn.disabled = false;
+            switchBtn.innerHTML = '↩ Release Attention<div style="font-weight:400; font-size:0.84em; margin-top:2px;">(Return to DMN)</div>';
+        }, 900);
+    }
+
+    /* ── Profile presets ── */
+    function setPreset(preset, btnEl) {
+        currentPreset = preset;
+        document.querySelectorAll('.profile-btn').forEach(b => b.className = 'profile-btn');
+        btnEl.className = `profile-btn active-${preset}`;
+        const targets = { nt: 1, autistic: 6, inertia: 10 };
+        animateSlider(targets[preset]);
+        updateFlowDots(preset);
+    }
+
+    function animateSlider(target) {
+        const start = parseInt(slider.value);
+        const t0    = performance.now();
+        const dur   = 600;
+
+        function step(now) {
+            const t     = Math.min(1, (now - t0) / dur);
+            const eased = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+            slider.value = Math.round(start + (target - start) * eased);
+            slider.dispatchEvent(new Event('input'));
+            if (t < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+    }
+</script>
+</body>
+</html>
