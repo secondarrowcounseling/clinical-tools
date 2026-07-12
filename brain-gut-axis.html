@@ -256,7 +256,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.08);
             padding: 14px 12px;
-            width: 210px;
+            width: 230px; /* INCREASED from 210px */
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
@@ -504,13 +504,16 @@
                 <circle id="brain-glow" cx="200" cy="80" r="60" fill="url(#brain-glow)"/>
                 <ellipse cx="200" cy="80" rx="50" ry="45" fill="#45735d" opacity="0.7"/>
                 
-                <!-- Amygdala -->
-                <circle id="amygdala" cx="185" cy="85" r="12" fill="#b68d76" opacity="0.6"/>
-                <text x="185" y="110" text-anchor="middle" font-size="8" fill="#6d7873" font-family="Nunito Sans">Amygdala</text>
+                <!-- Amygdala - CHANGED: darker color, white stroke -->
+                <circle id="amygdala" cx="185" cy="85" r="12" fill="#35361c" opacity="0.85" stroke="white" stroke-width="1.5"/>
+                <text x="185" y="110" text-anchor="middle" font-size="8" fill="#35361c" font-family="Nunito Sans" font-weight="700">Amygdala</text>
                 
-                <!-- Insula -->
-                <circle id="insula" cx="215" cy="85" r="12" fill="#ba945e" opacity="0.6"/>
-                <text x="215" y="110" text-anchor="middle" font-size="8" fill="#6d7873" font-family="Nunito Sans">Insula</text>
+                <!-- Insula - CHANGED: darker color, white stroke -->
+                <circle id="insula" cx="215" cy="85" r="12" fill="#35361c" opacity="0.85" stroke="white" stroke-width="1.5"/>
+                <text x="215" y="110" text-anchor="middle" font-size="8" fill="#35361c" font-family="Nunito Sans" font-weight="700">Insula</text>
+
+                <!-- CHANGED: Added & between labels -->
+                <text x="200" y="125" text-anchor="middle" font-size="7.5" fill="#6d7873" font-family="Nunito Sans" font-style="italic">Amygdala & Insula</text>
 
                 <text x="200" y="75" text-anchor="middle" font-size="10" fill="white" font-family="Nunito Sans" font-weight="700">BRAIN</text>
             </g>
@@ -572,10 +575,11 @@
             <!-- Signal particles container -->
             <g id="signal-particles"></g>
 
-            <!-- Alarm indicator -->
+            <!-- Alarm indicator - CHANGED: white background, darker text, thicker stroke -->
             <g id="alarm-indicator" opacity="0">
-                <circle cx="200" cy="80" r="55" fill="none" stroke="#b68d76" stroke-width="3" opacity="0.6"/>
-                <text x="200" y="50" text-anchor="middle" font-size="10" fill="#b68d76" font-family="Nunito Sans" font-weight="700">⚠️ ALARM ACTIVE</text>
+                <circle cx="200" cy="80" r="58" fill="rgba(255,255,255,0.9)" stroke="#35361c" stroke-width="3" opacity="0.95"/>
+                <text x="200" y="77" text-anchor="middle" font-size="11" fill="#35361c" font-family="Nunito Sans" font-weight="700">⚠️ ALARM</text>
+                <text x="200" y="90" text-anchor="middle" font-size="11" fill="#35361c" font-family="Nunito Sans" font-weight="700">ACTIVE</text>
             </g>
         </svg>
 
@@ -706,7 +710,7 @@
             serotoninBadge.style.color = 'var(--gold)';
         } else {
             serotoninBadge.textContent = 'Variant';
-            serotoninBadge.style.color = 'var(--terra)';
+ serotoninBadge.style.color = 'var(--terra)';
         }
 
         if (microbiomeLevel < 30) {
@@ -723,7 +727,7 @@
 
     function updateGutVisuals() {
         // Gut color changes with dysregulation
- const gutColor = serotoninLevel < 30 
+        const gutColor = serotoninLevel < 30 
             ? '#ba945e' 
             : serotoninLevel < 70 
                 ? '#b68d76' 
@@ -863,14 +867,14 @@
             amygdala.style.animation = 'brain-alarm 1s ease-in-out infinite';
             insula.style.animation = 'brain-alarm 1.2s ease-in-out infinite';
         } else if (threatLevel > 40) {
-            amygdala.setAttribute('opacity', '0.8');
-            insula.setAttribute('opacity', '0.8');
+            amygdala.setAttribute('opacity', '0.9');
+            insula.setAttribute('opacity', '0.9');
             alarmIndicator.setAttribute('opacity', '0');
             amygdala.style.animation = 'none';
             insula.style.animation = 'none';
         } else {
-            amygdala.setAttribute('opacity', '0.6');
-            insula.setAttribute('opacity', '0.6');
+            amygdala.setAttribute('opacity', '0.85');
+            insula.setAttribute('opacity', '0.85');
             alarmIndicator.setAttribute('opacity', '0');
             amygdala.style.animation = 'none';
             insula.style.animation = 'none';
