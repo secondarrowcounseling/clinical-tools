@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMN vs TPN Simulation</title>
+    <style>
+        /* 
+         * BRAND PALETTE & STYLING 
+         */
+        :root {
+            --dmn-pcc: #46745e;          /* Hub A */
+            --predictive-loop: #c5826b;  /* Predictive Loop / Special Interest */
+            --tpn: #C4A484;              /* TPN */
+            --link: #cbd5e1;
+            --text-dark: #5C4033;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #FAF8F5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+            max-width: 650px;
+            box-sizing: border-box;
+        }
+
+        .slider-container { margin: 20px 0; }
+        input[type="range"] { width: 80%; cursor: pointer; }
+        
+        button {
+            background-color: var(--dmn-pcc);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s, opacity 0.2s;
+        }
+        button:hover { opacity: 0.9; }
+        button:disabled { background-color: #94a3b8; cursor: not-allowed; }
+
+        /* 
+         * SIMULATION AREA & NODES (Updated for 130px size)
+         */
+        .simulation-area {
+            position: relative;
+            width: 650px;
+            height: 450px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .node {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            box-sizing: border-box;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            z-index: 2; /* Keeps nodes above the line */
+            width: 130px; 
+            height: 130px;
+            font-size: 0.95em;
+            line-height: 1.3;
+        }
+
+        /* Mathematically Centered Coordinates */
+        #node-tpn     { top: 40px;  left: 260px; background: var(--tpn); }
+        #node-dmn-a   { top: 260px; left: 80px;  background: var(--dmn-pcc); }
+        #node-dmn-b   { top: 260px; left: 440px; background: var(--predictive-loop); }
+
+        /* Background Connecting Line */
+        .dmn-link {
+            position: absolute;
+            top: 319px; /* Centered between the 130px nodes */
+            left: 145px;
+            width: 360px;
+            height: 12px;
+            background: var(--link);
+            z-index: 1; /* Keeps line behind the nodes */
+            transition: height 0.3s, background 0.3s, top 0.3s;
+        }
+
+        /* Attention Particle */
+        #particle {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: #f59e0b;
+            border-radius: 50%;
+            top: 313px;
+            left: 133px;
+            z-index: 3; /* Keeps particle above everything */
+            box-shadow: 0 0 10px 4px rgba(245, 158, 11, 0.6);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <h2 style="color: var(--text-dark); margin-top: 0;">Autistic Inertia & The "Sticky" DMN</h2>
+        <p style="color: #475569;">Observe how metabolic friction changes when the brain tries to switch to the Task Positive Network.</p>
+        
+        <div class="slider-container">
+            <label for="stickiness" style="color: var(--text-dark);">
+                <strong>DMN Loop Strength:</strong> 
+                <span id="stickiness-val" style="font-weight: bold; color: #059669;">Neurotypical (Low)</span>
+            </label><br><br>
+            <input type="range" id="stickiness" min="1" max="10" value="1">
+        </div>
+        
+        <button id="switch-btn">Switch to Task (Activate TPN)</button>
+        <p id="status-text" style="color: var(--text-dark); font-style: italic; height: 20px; font-weight: 500;">Attention is wandering in the Default Mode Network...</p>
+    </div>
+
+    <div class="simulation-area">
+        <div class="dmn-link" id="dmn-link"></div>
+        
+        <div class="node" id="node-tpn">TPN<br>(Outside World)</div>
+        <div class="node" id="node-dmn-a">DMN</div>
+        <div class="node" id="node-dmn-b">Predictive<br>Loop</div>
+        
+        <div id="particle"></div>
+    </div>
+
+    <script>
+        const particle = document.getElementById('particle');
+        const slider = document.getElementById('stickiness');
+        const sliderLabel = document.getElementById('stickiness-val');
+        const switchBtn = document.getElementById('switch-btn');
+        const dmnLink = document.getElementById('dmn-link');
+        const statusText = document.getElementById('status-text');
+
+        // Perfected Coordinates for 130px nodes on a 650x450 canvas
+        const posDMNA = { top: 313, left: 133 };
+        const posDMNB = { top: 313, left: 493 };
+        const posTPN  = { top: 93,  left: 313 };
+
+        let inTPN = false;
+        let dmnTarget = posDMNB;
+        let loopInterval;
+
+        // 1. Fluid DMN Wandering Logic
+        function runDMNLoop() {
+            if (inTPN) return;
+            
+            const stickiness = parseInt(slider.value);
+            const speedMs = Math.max(200, 1100 - (stickiness * 90)); // Faster when stickier
+            
+            particle.style.transition = `top ${speedMs}ms linear, left ${speedMs}ms linear`;
+            particle.style.top = `${dmnTarget.top}px`;
+            particle.style.left = `${dmnTarget.left}px`;
+
+            dmnTarget = (dmnTarget === posDMNA) ? posDMNB : posDMNA;
+            loopInterval = setTimeout(runDMNLoop, speedMs);
+        }
+
+        // Start animation immediately
+        runDMNLoop();
+
+        // 2. Slider & Label Update Logic
+        slider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            
+            if (val <= 3) {
+                sliderLabel.innerText = "Neurotypical (Low)";
+                sliderLabel.style.color = "#059669"; // Green
+            } else if (val <= 7) {
+                sliderLabel.innerText = "Autistic (Medium)";
+                sliderLabel.style.color = "#c5826b"; // Brand color
+            } else {
+                sliderLabel.innerText = "Autistic Inertia (Max)";
+                sliderLabel.style.color = "#46745e"; // Brand color
+            }
+
+            // Thicken the connection line
+            const thickness = 10 + (val * 3);
+            dmnLink.style.height = `${thickness}px`;
+            dmnLink.style.top = `${325 - (thickness/2)}px`; // Keeps it centered vertically
+            
+            if (val > 6) {
+                dmnLink.style.background = '#765937'; // Highlighted color
+            } else {
+                dmnLink.style.background = '#cbd5e1'; // Muted color
+            }
+        });
+
+        // 3. Switch Task (Autistic Inertia "Struggle") Logic
+        switchBtn.addEventListener('click', () => {
+            if (inTPN) {
+                // Return to DMN
+                inTPN = false;
+                switchBtn.innerText = "Switch to Task (Activate TPN)";
+                statusText.innerText = "Attention returned to the Default Mode Network.";
+                runDMNLoop();
+                return;
+            }
+
+            clearTimeout(loopInterval);
+            switchBtn.disabled = true;
+            const stickiness = parseInt(slider.value);
+            
+            if (stickiness <= 3) {
+                // Easy switch (Neurotypical)
+                statusText.innerText = "Smooth transition. TPN activated.";
+                particle.style.transition = `top 0.5s ease-out, left 0.5s ease-out`;
+                particle.style.top = `${posTPN.top}px`;
+                particle.style.left = `${posTPN.left}px`;
+                finishSwitch();
+            } else {
+                // Autistic Inertia Struggle Animation
+                statusText.innerText = `High metabolic friction! Struggling to break free of DMN loop...`;
+                
+                let struggles = stickiness; 
+                let currentStruggle = 0;
+                particle.style.transition = `top 0.2s ease-in-out, left 0.2s ease-in-out`;
+
+                const struggleInterval = setInterval(() => {
+                    if (currentStruggle % 2 === 0) {
+                        // Jerk upward toward TPN
+                        particle.style.top = '220px';
+                        particle.style.left = '313px';
+                    } else {
+                        // Snapped back down to DMN loop
+                        particle.style.top = '313px';
+                        particle.style.left = `${dmnTarget.left}px`;
+                    }
+                    
+                    currentStruggle++;
+                    
+                    if (currentStruggle >= struggles) {
+                        clearInterval(struggleInterval);
+                        statusText.innerText = "Finally broke free. Massive energy expended.";
+                        particle.style.transition = `top 0.8s ease-out, left 0.8s ease-out`;
+                        particle.style.top = `${posTPN.top}px`;
+                        particle.style.left = `${posTPN.left}px`;
+                        finishSwitch();
+                    }
+                }, 300);
+            }
+        });
+
+        function finishSwitch() {
+            setTimeout(() => {
+                inTPN = true;
+                switchBtn.disabled = false;
+                switchBtn.innerText = "Release Attention (Return to DMN)";
+            }, 800);
+        }
+    </script>
+</body>
+</html>
