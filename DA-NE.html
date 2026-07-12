@@ -3,291 +3,656 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signal and Noise: Dopamine & Norepinephrine Simulator</title>
+    <title>Signal-to-Noise Tuner - The DA/NE Ratio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --green:     #45735d;
+            --gold:      #ba945e;
+            --terra:     #b68d76;
+            --forest:    #35361c;
+            --text:      #222a26;
+            --grey:      #6d7873;
+            --bg:        #faf8f5;
+            --accent-bg: #F5F3EF;
+            --stone:     #bdb7a2;
+            --cool-grey: #a6aea6;
+        }
+        * { box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1a1a1a;
-            color: #f0f0f0;
+            font-family: 'Nunito Sans', sans-serif;
+            background: var(--bg);
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-        .simulator-container {
-            background-color: #2a2a2a;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-            max-width: 800px;
-            width: 100%;
-        }
-        h2 {
-            margin-top: 0;
-            color: #4da6ff;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .canvas-container {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            background-color: #000;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 2px solid #444;
-            margin-bottom: 20px;
-        }
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-        .controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        .control-group {
-            background: #333;
-            padding: 15px;
-            border-radius: 8px;
-        }
-        .control-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-        input[type="range"] {
-            width: 100%;
-            cursor: pointer;
-        }
-        .profiles {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        button {
-            flex: 1;
             padding: 12px;
-            background-color: #4da6ff;
-            color: #000;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
+            margin: 0; color: var(--text);
         }
-        button:hover {
-            background-color: #3388dd;
+        .header {
+            background: var(--accent-bg);
+            padding: 14px 20px 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            width: 100%; max-width: 1100px;
+            margin-bottom: 12px;
+            text-align: center;
         }
-        .status-box {
-            background: #111;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #4da6ff;
-            font-size: 0.95em;
-            line-height: 1.5;
+        .header h2 {
+            font-family: 'Libre Baskerville', serif;
+            margin: 0 0 5px; font-size: 1.3em; color: var(--forest);
         }
-        
-        /* Highlight colors for specific neurotransmitters */
-        .da-label { color: #ff6b6b; }
-        .ne-label { color: #4dd2ff; }
+        .header p {
+            color: var(--grey); margin: 0 auto; font-size: 0.87em;
+            max-width: 640px; line-height: 1.55;
+        }
+        .profile-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+        .profile-btn {
+            padding: 7px 18px; border-radius: 6px; border: 2px solid var(--stone);
+            background: white; color: var(--text); font-family: 'Nunito Sans', sans-serif;
+            font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.25s;
+        }
+        .profile-btn:hover { transform: translateY(-1px); }
+        .profile-btn.active-nt     { background: var(--green);  color: white; border-color: var(--green); }
+        .profile-btn.active-adhd   { background: var(--terra);  color: white; border-color: var(--terra); }
+        .profile-btn.active-autism { background: var(--gold);   color: white; border-color: var(--gold); }
+        .profile-btn.active-audhd  { background: var(--forest); color: white; border-color: var(--forest); }
+        .main-area {
+            display: flex; gap: 12px;
+            width: 100%; max-width: 1100px;
+            align-items: stretch;
+        }
+        .panel-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.74em; color: var(--grey);
+            text-transform: uppercase; letter-spacing: 0.07em;
+            margin: 0 0 9px; text-align: center;
+        }
+        .controls-panel {
+            background: var(--accent-bg); border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 13px 11px 12px; width: 245px; flex-shrink: 0;
+            display: flex; flex-direction: column; gap: 6px;
+        }
+        .slider-block {
+            background: white; border: 2px solid var(--stone);
+            border-radius: 7px; padding: 9px 10px; margin-bottom: 3px;
+        }
+        .slider-header {
+            display: flex; justify-content: space-between;
+            align-items: baseline; margin-bottom: 6px;
+        }
+        .slider-name { font-weight: 700; font-size: 1.3em; color: var(--forest); }
+        .slider-val  { font-family: 'Libre Baskerville', serif; font-size: 1.1em; font-weight: 700; }
+        .slider-sub  { font-size: 0.71em; color: var(--grey); margin-bottom: 7px; line-height: 1.4; }
+        input[type="range"].tuner-slider {
+            -webkit-appearance: none; appearance: none;
+            width: 100%; height: 7px; border-radius: 4px;
+            background: rgba(0,0,0,0.09); outline: none;
+            cursor: pointer; display: block;
+        }
+        input[type="range"].tuner-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px; height: 16px; border-radius: 50%;
+            cursor: pointer; border: 2px solid white;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.28);
+        }
+        input[type="range"].tuner-slider::-moz-range-thumb {
+            width: 16px; height: 16px; border-radius: 50%;
+            cursor: pointer; border: 2px solid white;
+        }
+        .da-slider::-webkit-slider-thumb { background: var(--gold); }
+        .da-slider::-moz-range-thumb     { background: var(--gold); }
+        .ne-slider::-webkit-slider-thumb { background: var(--green); }
+        .ne-slider::-moz-range-thumb     { background: var(--green); }
+        .legend-block { padding: 7px 9px; margin-top: 2px; }
+        .legend-row {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.72em; color: var(--grey); margin-bottom: 4px;
+        }
+        .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .canvas-panel {
+            flex: 1; background: var(--accent-bg); border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 10px; display: flex; flex-direction: column;
+            align-items: center; min-width: 0;
+        }
+        canvas { border-radius: 8px; display: block; width: 100%; }
+        .status-panel {
+            background: var(--accent-bg); border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 13px 11px 12px; width: 235px; flex-shrink: 0;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .zone-badge {
+            text-align: center; padding: 10px 9px;
+            border-radius: 8px; background: white;
+            border: 2px solid var(--stone); transition: all 0.4s;
+        }
+        .zone-name {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.92em; font-weight: 700;
+            color: var(--forest); margin-bottom: 4px;
+        }
+        .zone-sub { font-size: 0.72em; color: var(--grey); line-height: 1.45; }
+        .metric-block { flex-shrink: 0; }
+        .met-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+        .met-label { font-size: 0.69em; color: var(--grey); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+        .met-val   { font-family: 'Libre Baskerville', serif; font-size: 1.25em; font-weight: 700; }
+        .met-track { height: 7px; background: rgba(0,0,0,0.09); border-radius: 4px; overflow: hidden; margin-bottom: 7px; }
+        .met-fill  { height: 100%; border-radius: 4px; transition: width 0.4s ease, background 0.4s; }
+        .state-desc {
+            padding: 8px 10px; background: white;
+            border-radius: 6px; border: 1px solid var(--stone);
+            font-size: 0.76em; color: var(--grey); line-height: 1.55; flex-shrink: 0;
+        }
+        .reset-btn {
+            background: var(--stone); color: white; border: none;
+            padding: 9px; border-radius: 6px; cursor: pointer;
+            font-family: 'Nunito Sans', sans-serif; font-weight: 700;
+            font-size: 0.84em; margin-top: auto; transition: background 0.2s; flex-shrink: 0;
+        }
+        .reset-btn:hover { background: var(--grey); }
+        .map-area {
+            width: 100%; max-width: 1100px; margin-top: 12px;
+            background: var(--accent-bg); border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 14px 14px 10px;
+        }
+        .map-area .panel-title { margin-bottom: 3px; }
+        .map-subtitle { text-align: center; font-size: 0.75em; color: var(--grey); margin: 0 0 8px; }
+        .map-wrap { display: flex; justify-content: center; }
+        #map-canvas { border-radius: 8px; display: block; }
+        .bottom-status {
+            width: 100%; max-width: 1100px; margin-top: 12px;
+            background: var(--accent-bg); border-radius: 10px;
+            padding: 14px 25px; text-align: center;
+        }
+        #bottom-main { font-weight: 700; font-size: 0.94em; margin: 0 0 5px; color: var(--forest); }
+        #bottom-sub  { color: var(--grey); font-style: italic; font-size: 0.84em; line-height: 1.55; margin: 0; }
     </style>
 </head>
 <body>
 
-<div class="simulator-container">
-    <h2>The "Signal & Noise" Tuner</h2>
-    
-    <div class="profiles">
-        <button onclick="setProfile('neurotypical')">Neurotypical (Optimal)</button>
-        <button onclick="setProfile('adhd')">ADHD (Under-aroused)</button>
-        <button onclick="setProfile('audhd')">AuDHD (Overstimulated)</button>
-    </div>
-
-    <div class="canvas-container">
-        <canvas id="tunerCanvas"></canvas>
-    </div>
-
-    <div class="controls">
-        <div class="control-group">
-            <label class="da-label">Dopamine (Signal Clarity): <span id="daValue">50</span></label>
-            <input type="range" id="daSlider" min="0" max="100" value="50" oninput="updateManual()">
-        </div>
-        <div class="control-group">
-            <label class="ne-label">Norepinephrine (Arousal/Noise): <span id="neValue">50</span></label>
-            <input type="range" id="neSlider" min="0" max="100" value="50" oninput="updateManual()">
-        </div>
-    </div>
-
-    <div class="status-box" id="statusText">
-        Adjust the dials to manually tune the neurotransmitter balance, or select a profile above to see how structural differences affect perception.
+<div class="header">
+    <h2>The Neurobiological Radio Tuner</h2>
+    <p>Dopamine shapes the <strong>Signal</strong> (task precision) and Norepinephrine controls the <strong>Gain</strong> (systemic arousal). Together they determine what the brain actually perceives.</p>
+    <div class="profile-buttons">
+        <button class="profile-btn active-nt" onclick="setProfile('nt',this)">&#129504; Neurotypical</button>
+        <button class="profile-btn" onclick="setProfile('adhd',this)">&#9889; ADHD</button>
+        <button class="profile-btn" onclick="setProfile('autism',this)">&#128300; Autism</button>
+        <button class="profile-btn" onclick="setProfile('audhd',this)">&#127744; AuDHD</button>
     </div>
 </div>
 
+<div class="main-area">
+
+    <div class="controls-panel">
+        <p class="panel-title">Tuner Controls</p>
+        <div class="slider-block">
+            <div class="slider-header">
+                <span class="slider-name">&#128161; Dopamine</span>
+                <span class="slider-val" id="da-val" style="color:var(--gold)">50</span>
+            </div>
+            <p class="slider-sub">The <strong>Signal</strong> — precision weighting for the task. How brightly does the target stand out?</p>
+            <input type="range" class="tuner-slider da-slider" min="1" max="100" value="50" id="da-slider"
+                   oninput="updateDA(this.value)">
+        </div>
+        <div class="slider-block">
+            <div class="slider-header">
+                <span class="slider-name">&#9889; Norepinephrine</span>
+                <span class="slider-val" id="ne-val" style="color:var(--green)">45</span>
+            </div>
+            <p class="slider-sub">The <strong>Gain</strong> — systemic arousal. Low = brain fog. Medium = optimal. High = sensory flood.</p>
+            <input type="range" class="tuner-slider ne-slider" min="1" max="100" value="45" id="ne-slider"
+                   oninput="updateNE(this.value)">
+        </div>
+        <div class="legend-block">
+            <div class="legend-row"><div class="legend-dot" style="background:var(--gold)"></div> Target Task (Dopamine)</div>
+            <div class="legend-row"><div class="legend-dot" style="background:#a6aea6"></div> Background Noise</div>
+            <div class="legend-row"><div class="legend-dot" style="background:#45735d40"></div> Fog Overlay (low NE)</div>
+            <div class="legend-row"><div class="legend-dot" style="background:var(--terra)"></div> Sensory Flood (high NE)</div>
+        </div>
+    </div>
+
+    <div class="canvas-panel">
+        <p class="panel-title">Perceptual Field</p>
+        <canvas id="spotlight-canvas"></canvas>
+    </div>
+
+    <div class="status-panel">
+        <p class="panel-title">Current State</p>
+        <div class="zone-badge" id="zone-badge">
+            <div class="zone-name" id="zone-name">Goldilocks Focus</div>
+            <div class="zone-sub"  id="zone-sub">Optimal signal-to-noise ratio</div>
+        </div>
+        <div class="metric-block">
+            <div class="met-row">
+                <span class="met-label">SNR Ratio</span>
+                <span class="met-val" id="snr-val" style="color:var(--green)">--</span>
+            </div>
+            <div class="met-track"><div class="met-fill" id="snr-fill" style="width:0%;background:var(--green)"></div></div>
+            <div class="met-row">
+                <span class="met-label">Focus Quality</span>
+                <span class="met-val" id="focus-val" style="color:var(--green)">--%</span>
+            </div>
+            <div class="met-track"><div class="met-fill" id="focus-fill" style="width:0%;background:var(--green)"></div></div>
+            <div class="met-row">
+                <span class="met-label">Background Noise</span>
+                <span class="met-val" id="noise-val" style="color:var(--grey)">--%</span>
+            </div>
+            <div class="met-track"><div class="met-fill" id="noise-fill" style="width:0%;background:var(--stone)"></div></div>
+        </div>
+        <div class="state-desc" id="state-desc">
+            Adjust the sliders or select a neurological profile above to begin.
+        </div>
+        <button class="reset-btn" onclick="doReset()">Reset Tuner</button>
+    </div>
+</div>
+
+<div class="map-area">
+    <p class="panel-title">The DA/NE Landscape</p>
+    <p class="map-subtitle">Your position in the signal-to-arousal space. Profiles are regions, not fixed points.</p>
+    <div class="map-wrap"><canvas id="map-canvas"></canvas></div>
+</div>
+
+<div class="bottom-status">
+    <p id="bottom-main">Neurotypical focus: the brain can lock onto a mundane task because dopamine highlights it just enough, and norepinephrine provides steady energy without amplifying background noise.</p>
+    <p id="bottom-sub">Try moving the sliders to experience how different DA/NE combinations create the phenomenological signatures of ADHD fog, autistic sensory flood, and AuDHD paradox.</p>
+</div>
+
 <script>
-    const canvas = document.getElementById('tunerCanvas');
-    const ctx = canvas.getContext('2d');
-    const daSlider = document.getElementById('daSlider');
-    const neSlider = document.getElementById('neSlider');
-    const daValueLabel = document.getElementById('daValue');
-    const neValueLabel = document.getElementById('neValue');
-    const statusText = document.getElementById('statusText');
+/* ─── DATA ──────────────────────────────────────────────────────────────── */
+const PROFILES = {
+    nt:     { da: 65, ne: 45,
+              main: 'Neurotypical focus: the brain can lock onto a mundane task because dopamine highlights it just enough, and norepinephrine provides steady energy without amplifying background noise.',
+              sub:  'The Goldilocks Zone. Dopamine precision and moderate arousal converge.' },
+    adhd:   { da: 25, ne: 20,
+              main: 'ADHD fog: chronically low norepinephrine means the brain lacks activation energy. Even if dopamine signals intent, the signal is lost in a lethargic haze.',
+              sub:  'The brain relies on panic, urgency, or extreme novelty to trigger a massive chemical spike just to get things done.' },
+    autism: { da: 70, ne: 82,
+              main: 'Autistic hyper-arousal: the sensory gain is turned up to maximum. A humming refrigerator is processed with the same intensity as a fire alarm.',
+              sub:  'Dopamine spikes for predictable, pattern-based tasks (special interests), creating deep attention tunnels to escape the noise.' },
+    audhd:  { da: 28, ne: 78,
+              main: 'AuDHD paradox: the under-aroused, dopamine-starved engine of ADHD meets the hyper-aroused sensory gates of Autism.',
+              sub:  'Metabolically exhausted and profoundly bored (ADHD), while simultaneously intensely overstimulated and overwhelmed by the environment (Autism).' }
+};
 
-    // Make canvas resize correctly
-    function resizeCanvas() {
-        canvas.width = canvas.parentElement.clientWidth;
-        canvas.height = canvas.parentElement.clientHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+// 2D map blob positions — cy = 1 - (NE/100), so high NE profiles appear near the top
+const MAP_BLOBS = {
+    nt:     { cx: 0.65, cy: 0.55, rx: 0.18, ry: 0.14, col: '#45735d', label: 'NT' },
+    adhd:   { cx: 0.25, cy: 0.80, rx: 0.16, ry: 0.12, col: '#b68d76', label: 'ADHD' },
+    autism: { cx: 0.70, cy: 0.18, rx: 0.18, ry: 0.12, col: '#ba945e', label: 'Autism' },
+    audhd:  { cx: 0.28, cy: 0.22, rx: 0.16, ry: 0.14, col: '#35361c', label: 'AuDHD' }
+};
 
-    // Particle System (The "Noise")
-    const particles = [];
-    const numParticles = 150;
+/* ─── STATE ─────────────────────────────────────────────────────────────── */
+let curDA = 50, curNE = 45;
+let targetDA = 50, targetNE = 45;
+let particles = [];
+const N_PARTICLES = 70;
+let frame = 0;
 
-    for (let i = 0; i < numParticles; i++) {
+const sCanvas = document.getElementById('spotlight-canvas');
+const sCtx    = sCanvas.getContext('2d');
+const mCanvas = document.getElementById('map-canvas');
+const mCtx    = mCanvas.getContext('2d');
+
+/* ─── CANVAS SIZING ─────────────────────────────────────────────────────── */
+function resizeCanvases() {
+    const rect = sCanvas.parentElement.getBoundingClientRect();
+    sCanvas.width  = Math.max(300, rect.width - 20);
+    sCanvas.height = 430;
+    mCanvas.width  = Math.min(640, Math.max(500, sCanvas.width * 0.72));
+    mCanvas.height = 260;
+}
+
+/* ─── PARTICLES ─────────────────────────────────────────────────────────── */
+function initParticles() {
+    particles = [];
+    for (let i = 0; i < N_PARTICLES; i++) {
         particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            vx: (Math.random() - 0.5) * 2,
-            vy: (Math.random() - 0.5) * 2,
-            size: Math.random() * 3 + 1
+            x: Math.random() * sCanvas.width,
+            y: Math.random() * sCanvas.height,
+            vx: (Math.random() - 0.5) * 0.8,
+            vy: (Math.random() - 0.5) * 0.8,
+            size: 2 + Math.random() * 2.5,
+            phase: Math.random() * Math.PI * 2
         });
     }
+}
 
-    // Profiles Configuration
-    const profiles = {
-        neurotypical: {
-            da: 75,
-            ne: 55,
-            text: "<strong>Neurotypical (Optimal):</strong> Signal is clear, background noise is suppressed. The brain has enough Dopamine to lock onto the target and just enough Norepinephrine to maintain energy without amplifying background static."
-        },
-        adhd: {
-            da: 80,
-            ne: 15,
-            text: "<strong>ADHD (Under-aroused):</strong> High intention (Dopamine) but low activation energy (Norepinephrine). The signal is there, but the brain lacks the systemic arousal to execute it. The target is lost in a thick, lethargic brain fog."
-        },
-        audhd: {
-            da: 25,
-            ne: 90,
-            text: "<strong>AuDHD (Overstimulated):</strong> Low task signal (Dopamine) overwhelmed by hyper-arousal (Norepinephrine). The background static becomes deafening, and the brain frantically processes every irrelevant detail at maximum volume."
-        }
+/* ─── MATH ──────────────────────────────────────────────────────────────── */
+function neOptimality(ne) {
+    return Math.exp(-Math.pow(ne - 42, 2) / (2 * 28 * 28));
+}
+function fogAlpha(ne) {
+    if (ne >= 35) return 0;
+    return (1 - ne / 35) * 0.55;
+}
+function noiseIntensity(ne) {
+    return 0.08 + (ne / 100) * 0.92;
+}
+function taskVisibility(da, ne) {
+    const base = da / 100;
+    const neBoost = 0.5 + 0.5 * neOptimality(ne);
+    return Math.min(1, base * neBoost * 1.4);
+}
+function computeSNR(da, ne) {
+    const signal = taskVisibility(da, ne);
+    const noise  = noiseIntensity(ne);
+    if (noise < 0.001) return 99;
+    return Math.min(10, Math.max(1, (signal / noise) * 4.5));
+}
+function focusQuality(da, ne) {
+    return Math.min(100, (computeSNR(da, ne) / 10) * 100);
+}
+
+/* ─── ZONE TEXT ─────────────────────────────────────────────────────────── */
+function getZoneInfo(da, ne) {
+    const snr   = computeSNR(da, ne);
+    const neOpt = neOptimality(ne);
+    if (ne < 28) return {
+        name: 'Cognitive Fog', col: '#a6aea6', badgeBg: '#a6aea610',
+        sub:  'Under-arousal. The brain lacks energy to process anything.',
+        desc: 'Low norepinephrine means the entire nervous system is under-activated. Even if dopamine highlights a task, there is simply insufficient "power" to execute. The mind feels sluggish, heavy, and detached.'
     };
+    if (ne > 72) return {
+        name: 'Sensory Flood', col: '#b68d76', badgeBg: '#b68d7610',
+        sub:  'Hyper-arousal. Every input processed at equal intensity.',
+        desc: 'The locus coeruleus is firing at maximum. All sensory gates are open. Background noise is so intense that figure-ground distinction collapses. Everything is equally loud, bright, and urgent.'
+    };
+    if (da < 35 && snr < 1.8) return {
+        name: 'Weak Signal', col: '#bdb7a2', badgeBg: '#bdb7a210',
+        sub:  'Adequate arousal but poor task precision.',
+        desc: 'The brain has enough norepinephrine to function, but dopamine is not effectively weighting any particular task. Scattered, directionless energy — "I have energy but nothing feels important."'
+    };
+    if (snr >= 2.5 && neOpt > 0.6) return {
+        name: 'Goldilocks Focus', col: '#45735d', badgeBg: '#45735d10',
+        sub:  'Optimal signal-to-noise ratio.',
+        desc: 'Dopamine successfully highlights the target task, and norepinephrine provides balanced arousal without amplifying background noise. The neurotypical ideal — though individual variation means this is a zone, not a single point.'
+    };
+    return {
+        name: 'Functional Focus', col: '#ba945e', badgeBg: '#ba945e10',
+        sub:  'Task-directed but not optimal.',
+        desc: 'Either dopamine or norepinephrine is slightly off-ideal. The brain can direct attention but with noticeable effort, compensatory strategies, or background interference.'
+    };
+}
 
-    function setProfile(profileName) {
-        const p = profiles[profileName];
-        daSlider.value = p.da;
-        neSlider.value = p.ne;
-        daValueLabel.innerText = p.da;
-        neValueLabel.innerText = p.ne;
-        statusText.innerHTML = p.text;
+/* ─── UI ────────────────────────────────────────────────────────────────── */
+function updateDA(v) {
+    targetDA = parseInt(v);
+    document.getElementById('da-val').innerText = targetDA;
+    updateTrack('da-slider', targetDA, '#ba945e');
+}
+function updateNE(v) {
+    targetNE = parseInt(v);
+    document.getElementById('ne-val').innerText = targetNE;
+    updateTrack('ne-slider', targetNE, '#45735d');
+}
+function updateTrack(id, val, col) {
+    const el = document.getElementById(id);
+    el.style.background = `linear-gradient(to right,${col} ${val}%,rgba(0,0,0,0.09) ${val}%)`;
+}
+function setProfile(p, btn) {
+    const d = PROFILES[p];
+    targetDA = d.da; targetNE = d.ne;
+    document.getElementById('da-slider').value = d.da;
+    document.getElementById('ne-slider').value = d.ne;
+    document.getElementById('da-val').innerText = d.da;
+    document.getElementById('ne-val').innerText = d.ne;
+    updateTrack('da-slider', d.da, '#ba945e');
+    updateTrack('ne-slider', d.ne, '#45735d');
+    document.querySelectorAll('.profile-btn').forEach(b =>
+        b.classList.remove('active-nt','active-adhd','active-autism','active-audhd'));
+    btn.classList.add(`active-${p}`);
+    document.getElementById('bottom-main').innerText = d.main;
+    document.getElementById('bottom-sub').innerText  = d.sub;
+}
+function refreshMetrics() {
+    const snr  = computeSNR(curDA, curNE);
+    const fq   = focusQuality(curDA, curNE);
+    const nse  = noiseIntensity(curNE) * 100;
+    const zone = getZoneInfo(curDA, curNE);
+    document.getElementById('snr-val').innerText   = snr.toFixed(1) + ':1';
+    document.getElementById('focus-val').innerText = Math.round(fq) + '%';
+    document.getElementById('noise-val').innerText = Math.round(nse) + '%';
+    const sf = document.getElementById('snr-fill');
+    sf.style.width = Math.min(100, (snr / 10) * 100) + '%';
+    sf.style.background = snr > 2.5 ? 'var(--green)' : snr > 1.5 ? 'var(--gold)' : 'var(--terra)';
+    const ff = document.getElementById('focus-fill');
+    ff.style.width = Math.round(fq) + '%';
+    ff.style.background = fq > 60 ? 'var(--green)' : fq > 35 ? 'var(--gold)' : 'var(--terra)';
+    document.getElementById('noise-fill').style.width = Math.round(nse) + '%';
+    const badge = document.getElementById('zone-badge');
+    badge.style.borderColor = zone.col;
+    badge.style.background  = zone.badgeBg;
+    document.getElementById('zone-name').innerText  = zone.name;
+    document.getElementById('zone-sub').innerText   = zone.sub;
+    document.getElementById('state-desc').innerText = zone.desc;
+}
+
+/* ─── SPOTLIGHT RENDER ──────────────────────────────────────────────────── */
+function drawSpotlight() {
+    sCtx.globalAlpha = 1;
+    const w = sCanvas.width, h = sCanvas.height;
+    const cx = w / 2, cy = h / 2;
+    const da = curDA / 100, ne = curNE / 100;
+
+    sCtx.fillStyle = '#19201d';
+    sCtx.fillRect(0, 0, w, h);
+
+    // Fog overlay
+    const fa = fogAlpha(curNE);
+    if (fa > 0) {
+        sCtx.globalAlpha = fa;
+        sCtx.fillStyle = '#6d7873';
+        sCtx.fillRect(0, 0, w, h);
+        sCtx.globalAlpha = 1;
     }
 
-    function updateManual() {
-        daValueLabel.innerText = daSlider.value;
-        neValueLabel.innerText = neSlider.value;
-        statusText.innerHTML = "<strong>Manual Tuning:</strong> You are manually adjusting the chemical balance. Notice how dropping NE creates fog, while cranking it creates frantic static.";
+    // Background particles (noise)
+    const noiseInt = noiseIntensity(curNE);
+    const speedMult = 0.3 + ne * 9;
+    const pAlpha = Math.min(0.95, Math.max(0.05, 0.04 + noiseInt * 0.86));
+    particles.forEach(p => {
+        p.x += p.vx * speedMult;
+        p.y += p.vy * speedMult;
+        if (p.x < -5) p.x = w + 5;
+        if (p.x > w + 5) p.x = -5;
+        if (p.y < -5) p.y = h + 5;
+        if (p.y > h + 5) p.y = -5;
+        const sz = p.size * (1 + Math.sin(frame * 0.03 + p.phase) * 0.15);
+        sCtx.globalAlpha = pAlpha;
+        sCtx.fillStyle = curNE > 72 ? '#b68d76' : '#a6aea6';
+        sCtx.beginPath();
+        sCtx.arc(p.x, p.y, sz, 0, Math.PI * 2);
+        sCtx.fill();
+    });
+    sCtx.globalAlpha = 1;
+
+    // Target task (signal)
+    const tVis  = taskVisibility(curDA, curNE);
+    const tBaseR = 10 + da * 14;
+    const tGlowR = tBaseR * (2.2 + tVis * 1.8);
+
+    if (tVis > 0.05) {
+        const g1 = sCtx.createRadialGradient(cx, cy, 0, cx, cy, tGlowR);
+        g1.addColorStop(0, `rgba(186,148,94,${0.35 * tVis})`);
+        g1.addColorStop(1, 'rgba(186,148,94,0)');
+        sCtx.fillStyle = g1;
+        sCtx.beginPath(); sCtx.arc(cx, cy, tGlowR, 0, Math.PI * 2); sCtx.fill();
+    }
+    const g2 = sCtx.createRadialGradient(cx - tBaseR*0.3, cy - tBaseR*0.3, 0, cx, cy, tBaseR);
+    g2.addColorStop(0, `rgba(245,235,210,${0.9 * tVis})`);
+    g2.addColorStop(1, `rgba(186,148,94,${0.6 * tVis})`);
+    sCtx.fillStyle = g2;
+    sCtx.beginPath(); sCtx.arc(cx, cy, tBaseR, 0, Math.PI * 2); sCtx.fill();
+
+    sCtx.globalAlpha = 0.5 + tVis * 0.4;
+    sCtx.strokeStyle = '#ba945e';
+    sCtx.lineWidth = 2 + da * 2;
+    sCtx.beginPath(); sCtx.arc(cx, cy, tBaseR + 6 + da * 8, 0, Math.PI * 2); sCtx.stroke();
+    sCtx.globalAlpha = 1;
+
+    sCtx.fillStyle = 'white';
+    sCtx.font = `bold ${Math.floor(10 + da * 5)}px sans-serif`;
+    sCtx.textAlign = 'center';
+    sCtx.fillText('TARGET TASK', cx, cy + 4);
+    sCtx.globalAlpha = 0.7;
+    sCtx.font = `${Math.floor(8 + da * 3)}px sans-serif`;
+    sCtx.fillText('(Dopamine-weighted)', cx, cy + 18);
+    sCtx.globalAlpha = 1;
+
+    if (curNE > 68 && curDA < 45) {
+        sCtx.globalAlpha = 0.55 + Math.sin(frame * 0.06) * 0.2;
+        sCtx.fillStyle = '#b68d76';
+        sCtx.font = 'bold 11px sans-serif';
+        sCtx.textAlign = 'center';
+        sCtx.fillText('SIGNAL LOST IN NOISE', cx, cy - tBaseR - 20);
+        sCtx.globalAlpha = 1;
+    }
+    if (curNE < 28) {
+        sCtx.globalAlpha = 0.35 + (28 - curNE) / 28 * 0.4;
+        sCtx.fillStyle = '#a6aea6';
+        sCtx.font = 'bold 11px sans-serif';
+        sCtx.textAlign = 'center';
+        sCtx.fillText('COGNITIVE FOG', cx, cy + tBaseR + 28);
+        sCtx.globalAlpha = 1;
     }
 
-    // Main Render Loop
-    function draw() {
-        // Read current slider states
-        const da = parseInt(daSlider.value);
-        const ne = parseInt(neSlider.value);
+    const neLabel = curNE < 28 ? 'Low Gain → Fog' : curNE <= 58 ? 'Optimal Gain' : 'High Gain → Flood';
+    sCtx.globalAlpha = 0.45;
+    sCtx.fillStyle = 'white';
+    sCtx.font = '9px sans-serif';
+    sCtx.textAlign = 'left';
+    sCtx.fillText(neLabel, 12, h - 14);
+    sCtx.globalAlpha = 1;
+}
 
-        // Calculate Physics based on NE
-        // Low NE = slow, High NE = frantic
-        let speedMultiplier = 1;
-        let noiseOpacity = 0.5;
-        let fogOpacity = 0;
-        let jitter = 0;
+/* ─── 2D MAP RENDER ─────────────────────────────────────────────────────── */
+function drawMap() {
+    mCtx.globalAlpha = 1;
+    const w = mCanvas.width, h = mCanvas.height;
+    const pad = 36, plotW = w - pad*2, plotH = h - pad*2;
 
-        if (ne < 35) {
-            // Under-aroused
-            speedMultiplier = ne / 35; // Slows down to near 0
-            fogOpacity = 1 - (ne / 35); // Max fog at 0
-            noiseOpacity = 0.2;
-        } else if (ne <= 65) {
-            // Goldilocks zone
-            speedMultiplier = 1;
-            noiseOpacity = 0.15; // Gentle background noise
-        } else {
-            // Over-aroused / Hyper-vigilant
-            speedMultiplier = 1 + ((ne - 65) / 35) * 4; // Speeds up significantly
-            noiseOpacity = 0.15 + ((ne - 65) / 35) * 0.85; // Becomes very visible
-            jitter = ((ne - 65) / 35) * 5; // Screen shake effect
-        }
+    mCtx.fillStyle = '#19201d';
+    mCtx.fillRect(0, 0, w, h);
 
-        // Clear canvas
-        ctx.fillStyle = '#000000';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Apply Jitter (Hyper-arousal simulation)
-        const jx = (Math.random() - 0.5) * jitter;
-        const jy = (Math.random() - 0.5) * jitter;
-        ctx.save();
-        ctx.translate(jx, jy);
-
-        // Draw Particles (Norepinephrine Noise)
-        ctx.fillStyle = `rgba(150, 200, 255, ${noiseOpacity})`;
-        particles.forEach(p => {
-            p.x += p.vx * speedMultiplier;
-            p.y += p.vy * speedMultiplier;
-
-            // Wrap around edges
-            if (p.x < 0) p.x = canvas.width;
-            if (p.x > canvas.width) p.x = 0;
-            if (p.y < 0) p.y = canvas.height;
-            if (p.y > canvas.height) p.y = 0;
-
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fill();
-        });
-
-        // Draw Target Signal (Dopamine Focus)
-        // High DA = clear, large signal. Low DA = transparent, small signal.
-        const signalOpacity = da / 100;
-        const signalSize = 40 + (da / 100) * 40;
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-
-        ctx.fillStyle = `rgba(255, 107, 107, ${signalOpacity})`;
-        ctx.shadowBlur = 20 * signalOpacity;
-        ctx.shadowColor = '#ff6b6b';
-        
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, signalSize, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Inner core of the signal
-        ctx.fillStyle = `rgba(255, 255, 255, ${signalOpacity})`;
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, signalSize * 0.3, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.shadowBlur = 0; // reset shadow
-
-        ctx.restore(); // remove jitter translation
-
-        // Draw Fog Overlay (Low Norepinephrine / Under-arousal)
-        if (fogOpacity > 0) {
-            ctx.fillStyle = `rgba(20, 20, 25, ${fogOpacity * 0.85})`;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-
-        requestAnimationFrame(draw);
+    mCtx.strokeStyle = 'rgba(255,255,255,0.06)';
+    mCtx.lineWidth = 1;
+    for (let i = 1; i < 4; i++) {
+        const x = pad + (plotW / 4) * i, y = pad + (plotH / 4) * i;
+        mCtx.beginPath(); mCtx.moveTo(x, pad); mCtx.lineTo(x, h-pad); mCtx.stroke();
+        mCtx.beginPath(); mCtx.moveTo(pad, y); mCtx.lineTo(w-pad, y); mCtx.stroke();
     }
 
-    // Start the animation loop
-    draw();
+    mCtx.fillStyle = 'rgba(255,255,255,0.45)';
+    mCtx.font = '10px sans-serif';
+    mCtx.textAlign = 'center';
+    mCtx.fillText('Dopamine (Signal Precision) \u2192', w/2, h-10);
+    mCtx.save();
+    mCtx.translate(12, h/2);
+    mCtx.rotate(-Math.PI/2);
+    mCtx.fillText('\u2190 Norepinephrine (Systemic Gain)', 0, 0);
+    mCtx.restore();
+    mCtx.textAlign = 'center';
+    mCtx.fillText('0', pad, h-pad+16);
+    mCtx.fillText('50', pad+plotW/2, h-pad+16);
+    mCtx.fillText('100', w-pad, h-pad+16);
+    mCtx.textAlign = 'right';
+    mCtx.fillText('High', pad-6, pad+4);
+    mCtx.fillText('Low',  pad-6, h-pad);
+
+    // Goldilocks sweet-spot glow (NE ~42 → cy = 1-0.42 = 0.58 from top)
+    const sCx = pad + 0.55*plotW, sCy = pad + 0.58*plotH;
+    const sg = mCtx.createRadialGradient(sCx, sCy, 0, sCx, sCy, plotW*0.33);
+    sg.addColorStop(0,   'rgba(69,115,93,0.18)');
+    sg.addColorStop(0.5, 'rgba(69,115,93,0.08)');
+    sg.addColorStop(1,   'rgba(69,115,93,0.0)');
+    mCtx.fillStyle = sg;
+    mCtx.beginPath();
+    mCtx.ellipse(sCx, sCy, plotW*0.33, plotH*0.26, 0, 0, Math.PI*2);
+    mCtx.fill();
+
+    // Profile region blobs
+    Object.values(MAP_BLOBS).forEach(b => {
+        const bx = pad+b.cx*plotW, by = pad+b.cy*plotH;
+        const brx = b.rx*plotW, bry = b.ry*plotH;
+        mCtx.globalAlpha = 0.12;
+        mCtx.fillStyle = b.col;
+        mCtx.beginPath(); mCtx.ellipse(bx, by, brx, bry, 0, 0, Math.PI*2); mCtx.fill();
+        mCtx.globalAlpha = 0.35;
+        mCtx.strokeStyle = b.col;
+        mCtx.lineWidth = 1.5;
+        mCtx.beginPath(); mCtx.ellipse(bx, by, brx, bry, 0, 0, Math.PI*2); mCtx.stroke();
+        mCtx.globalAlpha = 0.9;
+        mCtx.fillStyle = b.col;
+        mCtx.font = 'bold 10px sans-serif';
+        mCtx.textAlign = 'center';
+        mCtx.fillText(b.label, bx, by+4);
+        mCtx.globalAlpha = 1;
+    });
+
+    // Current position dot
+    const dotX = pad + (curDA/100)*plotW;
+    const dotY = pad + (1 - curNE/100)*plotH;
+    const dg = mCtx.createRadialGradient(dotX, dotY, 0, dotX, dotY, 14);
+    dg.addColorStop(0, 'rgba(186,148,94,0.7)');
+    dg.addColorStop(1, 'rgba(186,148,94,0)');
+    mCtx.fillStyle = dg;
+    mCtx.beginPath(); mCtx.arc(dotX, dotY, 14, 0, Math.PI*2); mCtx.fill();
+    mCtx.fillStyle = '#ba945e';
+    mCtx.beginPath(); mCtx.arc(dotX, dotY, 5, 0, Math.PI*2); mCtx.fill();
+    mCtx.strokeStyle = 'white'; mCtx.lineWidth = 2; mCtx.stroke();
+    mCtx.setLineDash([3,3]);
+    mCtx.strokeStyle = 'rgba(186,148,94,0.35)'; mCtx.lineWidth = 1;
+    mCtx.beginPath(); mCtx.moveTo(dotX,dotY); mCtx.lineTo(dotX,h-pad); mCtx.stroke();
+    mCtx.beginPath(); mCtx.moveTo(dotX,dotY); mCtx.lineTo(pad,dotY); mCtx.stroke();
+    mCtx.setLineDash([]);
+}
+
+/* ─── LOOP ──────────────────────────────────────────────────────────────── */
+function animate() {
+    frame++;
+    curDA += (targetDA - curDA) * 0.12;
+    curNE += (targetNE - curNE) * 0.12;
+    drawSpotlight();
+    drawMap();
+    refreshMetrics();
+    requestAnimationFrame(animate);
+}
+
+/* ─── RESET ─────────────────────────────────────────────────────────────── */
+function doReset() {
+    targetDA = 50; targetNE = 45;
+    document.getElementById('da-slider').value = 50;
+    document.getElementById('ne-slider').value = 45;
+    document.getElementById('da-val').innerText = '50';
+    document.getElementById('ne-val').innerText = '45';
+    updateTrack('da-slider', 50, '#ba945e');
+    updateTrack('ne-slider', 45, '#45735d');
+    document.querySelectorAll('.profile-btn').forEach(b =>
+        b.classList.remove('active-nt','active-adhd','active-autism','active-audhd'));
+    document.querySelector('.profile-btn').classList.add('active-nt');
+    document.getElementById('bottom-main').innerText = PROFILES.nt.main;
+    document.getElementById('bottom-sub').innerText  = PROFILES.nt.sub;
+}
+
+/* ─── INIT ──────────────────────────────────────────────────────────────── */
+function init() {
+    resizeCanvases();
+    initParticles();
+    updateTrack('da-slider', 50, '#ba945e');
+    updateTrack('ne-slider', 45, '#45735d');
+    requestAnimationFrame(animate);
+    window.addEventListener('resize', () => { resizeCanvases(); initParticles(); });
+    if (window.ResizeObserver)
+        new ResizeObserver(resizeCanvases).observe(sCanvas.parentElement);
+}
+
+window.onload = () => setTimeout(init, 80);
 </script>
-
 </body>
 </html>
