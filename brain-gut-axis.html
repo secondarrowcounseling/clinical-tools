@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Vagus Nerve Fire Alarm</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        html { zoom: 0.90; }
+        :root {
+            --green:#45735d; --gold:#ba945e; --terra:#b68d76;
+            --forest:#35361c; --text:#222a26; --grey:#6d7873;
+            --bg:#faf8f5; --accent-bg:#F5F3EF; --stone:#bdb7a2; --cool-grey:#a6aea6;
+        }
+        * { box-sizing: border-box; }
+        body { font-family:'Nunito Sans',sans-serif; background:var(--bg);
+               display:flex; flex-direction:column; align-items:center;
+               padding:12px; margin:0; color:var(--text); }
+
+        /* ── HEADER ── */
+        .header { background:var(--accent-bg); padding:14px 20px 12px;
+                  border-radius:10px; box-shadow:0 3px 6px rgba(0,0,0,.07);
+                  width:100%; max-width:1100px; margin-bottom:12px; text-align:center; }
+        .header h2 { font-family:'Libre Baskerville',serif; margin:0 0 4px;
+                     font-size:1.3em; color:var(--forest); }
+        .header p { color:var(--grey); margin:0 0 12px; font-size:.88em;
+                    line-height:1.55; max-width:800px; margin-left:auto; margin-right:auto; }
+        .profile-buttons { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+        .profile-btn { padding:6px 18px; border-radius:20px;
+                       border:1.5px solid var(--stone); background:#fff;
+                       color:var(--forest); font-family:'Nunito Sans',sans-serif;
+                       font-weight:700; font-size:.83em; cursor:pointer; transition:all .2s; }
+        .profile-btn:hover { border-color:var(--grey); }
+        .profile-btn.active-nt       { background:var(--green); color:#fff; border-color:var(--green); }
+        .profile-btn.active-moderate { background:var(--gold);  color:#fff; border-color:var(--gold); }
+        .profile-btn.active-high     { background:var(--terra); color:#fff; border-color:var(--terra); }
+
+        /* ── LAYOUT ── */
+        .main-area { display:flex; gap:12px; width:100%; max-width:1100px; }
+
+        /* ── LEFT: CONTROLS ── */
+        .control-panel { background:var(--accent-bg); border-radius:10px;
+                         box-shadow:0 3px 6px rgba(0,0,0,.07); padding:16px 14px;
+                         width:245px; flex-shrink:0; display:flex;
+                         flex-direction:column; gap:12px; }
+        .panel-title { font-family:'Libre Baskerville',serif; font-size:.76em;
+                       color:var(--grey); text-transform:uppercase;
+                       letter-spacing:.07em; margin:0; text-align:center; }
+        .control-section { background:#fff; border:1.5px solid var(--stone);
+                           border-radius:8px; padding:10px; }
+        .control-label { font-weight:700; font-size:.83em; margin-bottom:4px;
+                         display:block; color:var(--forest); }
+        .control-sublabel { font-size:.72em; color:var(--grey); font-style:italic;
+                            margin-bottom:8px; display:block; line-height:1.4; }
+        .slider-row { display:flex; justify-content:space-between;
+                      align-items:center; margin-bottom:5px; }
+        .slider-val-badge { font-size:.76em; font-weight:700; padding:2px 8px;
+                            border-radius:10px; background:var(--accent-bg);
+                            color:var(--green); transition:color .3s, background .3s; }
+        input[type="range"] { width:100%; cursor:pointer; accent-color:var(--green); }
+        .stressor-btn { width:100%; padding:9px; border-radius:20px;
+                        border:1.5px solid var(--terra); background:#fff;
+                        color:var(--terra); font-family:'Nunito Sans',sans-serif;
+                        font-weight:700; font-size:.83em; cursor:pointer; transition:all .2s; }
+        .stressor-btn:hover, .stressor-btn.active { background:var(--terra); color:#fff; }
+        .legend { display:flex; flex-direction:column; gap:5px; }
+        .legend-item { display:flex; align-items:center; gap:8px;
+                       font-size:.76em; color:var(--grey); }
+        .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+        .reset-btn { width:100%; padding:7px; border-radius:20px; border:none;
+                     background:var(--stone); color:#fff; font-family:'Nunito Sans',sans-serif;
+                     font-weight:700; font-size:.78em; cursor:pointer;
+                     transition:opacity .2s; margin-top:auto; }
+        .reset-btn:hover { opacity:.82; }
+
+        /* ── CENTER ── */
+        .viz-panel { flex:1; background:var(--accent-bg); border-radius:10px;
+                     box-shadow:0 3px 6px rgba(0,0,0,.07); padding:14px 10px 10px;
+                     min-width:0; display:flex; flex-direction:column; align-items:center; }
+        .viz-svg { width:100%; height:500px; }
+
+        /* ── RIGHT: METRICS ── */
+        .metrics-panel { background:var(--accent-bg); border-radius:10px;
+                         box-shadow:0 3px 6px rgba(0,0,0,.07); padding:14px 12px;
+                         width:230px; flex-shrink:0; display:flex;
+                         flex-direction:column; gap:11px; }
+        .metric-block { background:#fff; border:1.5px solid var(--stone);
+                        border-radius:8px; padding:8px 10px; }
+        .metric-label { font-size:.70em; color:var(--grey); text-transform:uppercase;
+                        letter-spacing:.06em; font-weight:700; margin-bottom:3px; }
+        .metric-value { font-family:'Libre Baskerville',serif; font-size:1.45em;
+                        font-weight:700; line-height:1; color:var(--green);
+                        transition:color .4s; margin-bottom:5px; }
+        .metric-track { height:9px; background:rgba(0,0,0,.07); border-radius:5px;
+                        overflow:hidden; margin-bottom:4px; }
+        .metric-fill { height:100%; border-radius:5px; transition:width .5s ease, background .4s; }
+        .metric-note { font-size:.69em; color:var(--grey); line-height:1.4; }
+        .insight-box { background:rgba(186,148,94,.10); border:1.5px solid var(--gold);
+                       border-radius:8px; padding:10px; font-size:.76em;
+                       line-height:1.5; color:var(--text); }
+        .insight-title { font-weight:700; color:var(--gold); margin-bottom:4px; font-size:.9em; }
+
+        /* ── STATUS ── */
+        .status-panel { background:var(--accent-bg); border-radius:10px;
+                        box-shadow:0 3px 6px rgba(0,0,0,.07); padding:12px 20px;
+                        width:100%; max-width:1100px; margin-top:12px; text-align:center; }
+        #status-main { font-family:'Libre Baskerville',serif; font-weight:700;
+                       font-size:.93em; margin:0 0 4px; color:var(--green); }
+        #status-sub { color:var(--grey); font-style:italic; font-size:.84em;
+                      margin:0; line-height:1.6; max-width:900px;
+                      margin-left:auto; margin-right:auto; }
+
+        /* ── SVG ANIMATIONS ── */
+        @keyframes wave-flow { 0% { transform:translateX(0); } 100% { transform:translateX(-40px); } }
+        .peristalsis-wave { animation:wave-flow 2s linear infinite; }
+        @keyframes brain-alarm { 0%,100% { opacity:.2; } 50% { opacity:.8; } }
+        .citation { font-size:.68em; color:var(--cool-grey); font-style:italic;
+                    text-align:center; margin-top:8px; }
+    </style>
+</head>
+<body>
+
+<!-- Brand bar -->
+<div style="width:100%;max-width:1100px;display:flex;justify-content:flex-start;align-items:center;padding:0 4px 10px;margin:0 auto;">
+    <a href="https://www.secondarrow.net" target="_blank" rel="noopener"
+       style="font-family:'Libre Baskerville',serif;font-size:20px;color:#35361c;text-decoration:none;letter-spacing:.01em;opacity:.9;">
+        Second Arrow Counseling
+    </a>
+</div>
+
+<div class="header">
+    <h2>The Vagus Nerve Fire Alarm</h2>
+    <p>The vagus nerve is a bidirectional highway. Gut dysregulation sends inflammatory signals to the brain that register as <em>threat</em> before reaching conscious awareness. This is why you can feel anxious without knowing why &mdash; the alarm is coming from inside your body.</p>
+    <div class="profile-buttons">
+        <button class="profile-btn active-nt" id="btn-nt" onclick="setProfile('nt',this)">&#x1F9E0; Neurotypical</button>
+        <button class="profile-btn" id="btn-moderate" onclick="setProfile('moderate',this)">&#x26A0;&#xFE0F; Moderate Dysregulation</button>
+        <button class="profile-btn" id="btn-high" onclick="setProfile('high',this)">&#x1F534; High Dysregulation</button>
+    </div>
+</div>
+
+<div class="main-area">
+
+    <!-- LEFT -->
+    <div class="control-panel">
+        <p class="panel-title">System Controls</p>
+        <div class="control-section">
+            <label class="control-label">Serotonin Regulation</label>
+            <span class="control-sublabel">5-HT receptor sensitivity &amp; signaling pattern</span>
+            <div class="slider-row">
+                <span style="font-size:.74em;color:var(--grey)">NT</span>
+                <span class="slider-val-badge" id="serotonin-badge">Stable</span>
+                <span style="font-size:.74em;color:var(--grey)">Variant</span>
+            </div>
+            <input type="range" id="serotonin-slider" min="0" max="100" value="0">
+        </div>
+        <div class="control-section">
+            <label class="control-label">Microbiome State</label>
+            <span class="control-sublabel">Inflammatory cytokine production</span>
+            <div class="slider-row">
+                <span style="font-size:.74em;color:var(--grey)">Balanced</span>
+                <span class="slider-val-badge" id="microbiome-badge">Healthy</span>
+                <span style="font-size:.74em;color:var(--grey)">Dysbiotic</span>
+            </div>
+            <input type="range" id="microbiome-slider" min="0" max="100" value="0">
+        </div>
+        <button class="stressor-btn" id="stressor-btn" onclick="toggleStressor()">&#x26A1; Add Environmental Stressor</button>
+        <div class="legend">
+            <p class="panel-title" style="margin-bottom:5px">Signal Key</p>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div><span>Descending (brain &rarr; gut)</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--terra)"></div><span>Ascending alarm (gut &rarr; brain)</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div><span>Inflammatory cytokines</span></div>
+        </div>
+        <button class="reset-btn" onclick="resetSystem()">&#8635; Reset System</button>
+    </div>
+
+    <!-- CENTER -->
+    <div class="viz-panel">
+        <p class="panel-title" style="margin-bottom:8px">Gut-Brain Interoceptive Loop</p>
+        <svg id="viz-svg" class="viz-svg" viewBox="0 0 400 500">
+            <defs>
+                <radialGradient id="brain-glow">
+                    <stop offset="0%" style="stop-color:#45735d;stop-opacity:.35"/>
+                    <stop offset="100%" style="stop-color:#45735d;stop-opacity:0"/>
+                </radialGradient>
+                <radialGradient id="gut-glow">
+                    <stop offset="0%" style="stop-color:#ba945e;stop-opacity:.28"/>
+                    <stop offset="100%" style="stop-color:#ba945e;stop-opacity:0"/>
+                </radialGradient>
+                <marker id="arrow-up" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L8,3 Z" fill="#b68d76"/>
+                </marker>
+                <marker id="arrow-down" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L8,3 Z" fill="#45735d"/>
+                </marker>
+                <pattern id="wave-pattern" x="0" y="0" width="40" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M0,10 Q10,5 20,10 T40,10" stroke="#ba945e" stroke-width="2" fill="none" opacity=".4"/>
+                </pattern>
+            </defs>
+
+            <!-- ══ BRAIN ZONE ══ -->
+            <rect x="0" y="0" width="400" height="165" fill="rgba(69,115,93,.06)" rx="8"/>
+            <text x="200" y="14" text-anchor="middle" font-size="10" fill="#6d7873"
+                  font-family="Nunito Sans,sans-serif" font-weight="700">BRAIN  ·  THREAT DETECTION SYSTEM</text>
+
+            <g id="brain-group">
+                <!-- SAC brain illustration — larger for visual balance -->
+                <image href="https://raw.githubusercontent.com/secondarrowcounseling/clinical-tools/main/sac-brain.png"
+                       x="122" y="14" width="155" height="143"
+                       style="mix-blend-mode:multiply" opacity="0.95"/>
+
+                <!-- Amygdala — line only, no filled node -->
+                <circle id="amygdala" cx="168" cy="95" r="4" fill="none"
+                        stroke="#45735d" stroke-width="1.5" opacity="0.7"/>
+                <line x1="164" y1="92" x2="110" y2="68" stroke="#45735d" stroke-width="1.4" opacity="0.7"/>
+                <text x="106" y="65" text-anchor="end" font-size="10.5" fill="#222a26"
+                      font-family="Nunito Sans,sans-serif" font-weight="700">Amygdala</text>
+
+                <!-- Insula — line only, no filled node -->
+                <circle id="insula" cx="218" cy="80" r="4" fill="none"
+                        stroke="#45735d" stroke-width="1.5" opacity="0.7"/>
+                <line x1="222" y1="77" x2="278" y2="58" stroke="#45735d" stroke-width="1.4" opacity="0.7"/>
+                <text x="282" y="55" text-anchor="start" font-size="10.5" fill="#222a26"
+                      font-family="Nunito Sans,sans-serif" font-weight="700">Insula</text>
+
+                <text x="200" y="165" text-anchor="middle" font-size="8"
+                      fill="#a6aea6" font-family="Nunito Sans,sans-serif" font-style="italic">threat detection system</text>
+            </g>
+
+            <!-- ══ VAGUS NERVE ══ -->
+            <g id="vagus-group">
+                <path id="vagus-descending"
+                      d="M 193 158 C 190 220 190 280 193 352"
+                      stroke="#45735d" stroke-width="4" fill="none" opacity=".50"
+                      marker-end="url(#arrow-down)"/>
+                <path id="vagus-ascending"
+                      d="M 207 352 C 210 280 210 220 207 158"
+                      stroke="#b68d76" stroke-width="4" fill="none" opacity=".50"
+                      marker-end="url(#arrow-up)"/>
+                <text x="228" y="258" font-size="10" fill="#6d7873"
+                      font-family="Nunito Sans,sans-serif" font-weight="700">VAGUS NERVE</text>
+                <text x="228" y="272" font-size="8.5" fill="#a6aea6"
+                      font-family="Nunito Sans,sans-serif" font-style="italic">80&#x2013;90% ascending</text>
+                <line x1="227" y1="262" x2="212" y2="262" stroke="#bdb7a2" stroke-width=".8"/>
+            </g>
+
+            <!-- ══ GUT ZONE ══ -->
+            <g id="gut-group">
+                <rect x="0" y="357" width="400" height="143" fill="rgba(186,148,94,.06)" rx="8"/>
+                <text x="200" y="372" text-anchor="middle" font-size="10" fill="#6d7873"
+                      font-family="Nunito Sans,sans-serif" font-weight="700">GUT  ·  ENTERIC NERVOUS SYSTEM</text>
+
+                <circle cx="200" cy="430" r="60" fill="url(#gut-glow)"/>
+                <ellipse cx="200" cy="430" rx="72" ry="40" fill="#ba945e" opacity=".18"/>
+                <rect id="gut-tract" x="132" y="410" width="136" height="42" rx="21"
+                      fill="#ba945e" opacity=".45"/>
+
+                <g id="peristalsis-group">
+                    <rect class="peristalsis-wave" x="132" y="410" width="136" height="42"
+                          rx="21" fill="url(#wave-pattern)"/>
+                </g>
+
+                <g id="microbiome-group">
+                    <circle cx="155" cy="430" r="4" fill="#45735d" opacity=".6" class="microbe"/>
+                    <circle cx="175" cy="423" r="3" fill="#45735d" opacity=".6" class="microbe"/>
+                    <circle cx="200" cy="434" r="4" fill="#45735d" opacity=".6" class="microbe"/>
+                    <circle cx="225" cy="423" r="3" fill="#45735d" opacity=".6" class="microbe"/>
+                    <circle cx="245" cy="430" r="4" fill="#45735d" opacity=".6" class="microbe"/>
+                </g>
+
+                <text x="200" y="468" text-anchor="middle" font-size="10" fill="#6d7873"
+                      font-family="Nunito Sans,sans-serif" font-weight="700">DIGESTIVE TRACT</text>
+                <text x="200" y="482" text-anchor="middle" font-size="8.5" fill="#a6aea6"
+                      font-family="Nunito Sans,sans-serif" font-style="italic">95% of body's serotonin</text>
+            </g>
+
+            <!-- Signal particles (populated by JS) -->
+            <g id="signal-particles"></g>
+
+            <!-- Alarm badge — lower-right of brain, no overlay -->
+            <g id="alarm-indicator" opacity="0">
+                <rect x="262" y="120" width="82" height="36" rx="7"
+                      fill="rgba(182,141,118,.15)" stroke="#b68d76" stroke-width="1.5"/>
+                <text x="303" y="135" text-anchor="middle" font-size="11" fill="#b68d76"
+                      font-family="Nunito Sans,sans-serif" font-weight="700">&#x26A0; ALARM</text>
+                <text x="303" y="149" text-anchor="middle" font-size="10" fill="#35361c"
+                      font-family="Nunito Sans,sans-serif" font-weight="700">ACTIVE</text>
+            </g>
+        </svg>
+        <p class="citation">Berthoud &amp; Neuhuber (2000); Gershon (1999); McElhanon et al. (2014)</p>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="metrics-panel">
+        <p class="panel-title">System Metrics</p>
+        <div class="metric-block">
+            <div class="metric-label">Vagal Tone Balance</div>
+            <div class="metric-value" id="vagal-value">Balanced</div>
+            <div class="metric-track"><div class="metric-fill" id="vagal-fill" style="width:50%;background:var(--green)"></div></div>
+            <div class="metric-note" id="vagal-note">Bidirectional flow stable</div>
+        </div>
+        <div class="metric-block">
+            <div class="metric-label">Inflammatory Load</div>
+            <div class="metric-value" id="inflam-value">Low</div>
+            <div class="metric-track"><div class="metric-fill" id="inflam-fill" style="width:10%;background:var(--green)"></div></div>
+            <div class="metric-note" id="inflam-note">Cytokine levels normal</div>
+        </div>
+        <div class="metric-block">
+            <div class="metric-label">Threat System</div>
+            <div class="metric-value" id="threat-value">Calm</div>
+            <div class="metric-track"><div class="metric-fill" id="threat-fill" style="width:5%;background:var(--green)"></div></div>
+            <div class="metric-note" id="threat-note">Amygdala baseline</div>
+        </div>
+        <div class="metric-block">
+            <div class="metric-label">Interoceptive Accuracy</div>
+            <div class="metric-value" id="intero-value">High</div>
+            <div class="metric-note" id="intero-note">Can identify gut signals consciously</div>
+        </div>
+        <div class="insight-box">
+            <div class="insight-title">&#x1F4A1; Clinical Insight</div>
+            <div id="insight-text">Balanced system allows accurate interoception. You can feel and name gut discomfort before it becomes an alarm.</div>
+        </div>
+    </div>
+
+</div>
+
+<div class="status-panel">
+    <p id="status-main">&#x1F9E0; Neurotypical Profile: Balanced gut-brain communication</p>
+    <p id="status-sub">Stable serotonin signaling maintains regular gut motility. Vagal communication is bidirectional and balanced. Interoceptive signals are accurately processed. The brain receives gut information as data, not danger.</p>
+</div>
+
+<script>
+    let serotoninLevel = 0, microbiomeLevel = 0, stressorActive = false, particleInterval = null;
+
+    const serotoninSlider  = document.getElementById('serotonin-slider');
+    const microbiomeSlider = document.getElementById('microbiome-slider');
+    const serotoninBadge   = document.getElementById('serotonin-badge');
+    const microbiomeBadge  = document.getElementById('microbiome-badge');
+    const stressorBtn      = document.getElementById('stressor-btn');
+    const vagalValue  = document.getElementById('vagal-value');
+    const vagalFill   = document.getElementById('vagal-fill');
+    const vagalNote   = document.getElementById('vagal-note');
+    const inflamValue = document.getElementById('inflam-value');
+    const inflamFill  = document.getElementById('inflam-fill');
+    const inflamNote  = document.getElementById('inflam-note');
+    const threatValue = document.getElementById('threat-value');
+    const threatFill  = document.getElementById('threat-fill');
+    const threatNote  = document.getElementById('threat-note');
+    const interoValue = document.getElementById('intero-value');
+    const interoNote  = document.getElementById('intero-note');
+    const insightText = document.getElementById('insight-text');
+    const statusMain  = document.getElementById('status-main');
+    const statusSub   = document.getElementById('status-sub');
+    const gutTract        = document.getElementById('gut-tract');
+    const peristalsis     = document.getElementById('peristalsis-group');
+    const microbiomeGroup = document.getElementById('microbiome-group');
+    const amygdala        = document.getElementById('amygdala');
+    const insula          = document.getElementById('insula');
+    const alarmIndicator  = document.getElementById('alarm-indicator');
+    const signalParticles = document.getElementById('signal-particles');
+    const vagusAscending  = document.getElementById('vagus-ascending');
+    const vagusDescending = document.getElementById('vagus-descending');
+
+    function updateSystem() {
+        serotoninLevel = parseInt(serotoninSlider.value);
+        microbiomeLevel = parseInt(microbiomeSlider.value);
+        const dysregulation = (serotoninLevel + microbiomeLevel) / 2;
+        const totalLoad = Math.min(100, dysregulation * (stressorActive ? 1.5 : 1));
+        updateBadges(); updateGutVisuals(); updateVagusActivity();
+        updateMetrics(totalLoad); updateParticles(totalLoad); updateStatus(totalLoad);
+    }
+
+    function updateBadges() {
+        if (serotoninLevel < 30)      { serotoninBadge.textContent = 'Stable';   serotoninBadge.style.color = 'var(--green)'; }
+        else if (serotoninLevel < 70) { serotoninBadge.textContent = 'Altered';  serotoninBadge.style.color = 'var(--gold)'; }
+        else                          { serotoninBadge.textContent = 'Variant';  serotoninBadge.style.color = 'var(--terra)'; }
+        if (microbiomeLevel < 30)      { microbiomeBadge.textContent = 'Healthy';   microbiomeBadge.style.color = 'var(--green)'; }
+        else if (microbiomeLevel < 70) { microbiomeBadge.textContent = 'Shifting';  microbiomeBadge.style.color = 'var(--gold)'; }
+        else                           { microbiomeBadge.textContent = 'Dysbiotic'; microbiomeBadge.style.color = 'var(--terra)'; }
+    }
+
+    function updateGutVisuals() {
+        gutTract.setAttribute('fill', serotoninLevel < 30 ? '#ba945e' : serotoninLevel < 70 ? '#b68d76' : '#35361c');
+        const spd = serotoninLevel < 30 ? '2s' : serotoninLevel < 70 ? '4s' : '0.8s';
+        peristalsis.querySelectorAll('.peristalsis-wave').forEach(w => w.style.animationDuration = spd);
+        microbiomeGroup.querySelectorAll('.microbe').forEach((m, i) => {
+            m.setAttribute('fill', microbiomeLevel < 30 ? '#45735d' : microbiomeLevel < 70 ? '#ba945e' : '#b68d76');
+            if (microbiomeLevel > 50) m.setAttribute('cx', [155,175,200,225,245][i] + Math.random()*6-3);
+        });
+    }
+
+    function updateVagusActivity() {
+        const asc = (serotoninLevel + microbiomeLevel) / 2, desc = stressorActive ? 70 : 30;
+        vagusAscending.setAttribute('opacity',  0.3 + (asc/100)*0.7);
+        vagusAscending.setAttribute('stroke-width', 3 + (asc/100)*5);
+        vagusDescending.setAttribute('opacity', 0.3 + (desc/100)*0.5);
+        vagusDescending.setAttribute('stroke-width', 3 + (desc/100)*3);
+    }
+
+    function updateMetrics(totalLoad) {
+        vagalFill.style.width = Math.max(10, 50-(totalLoad*0.4)) + '%';
+        if (totalLoad < 30)      { vagalValue.textContent='Balanced';    vagalValue.style.color='var(--green)'; vagalFill.style.background='var(--green)'; vagalNote.textContent='Bidirectional flow stable'; }
+        else if (totalLoad < 70) { vagalValue.textContent='Ascending \u2191'; vagalValue.style.color='var(--gold)';  vagalFill.style.background='var(--gold)';  vagalNote.textContent='Alarm signals increasing'; }
+        else                     { vagalValue.textContent='Overwhelmed'; vagalValue.style.color='var(--terra)'; vagalFill.style.background='var(--terra)'; vagalNote.textContent='Ascending signals dominate'; }
+
+        const il = microbiomeLevel + (stressorActive ? 30 : 0);
+        inflamFill.style.width = Math.min(100, il) + '%';
+        if (il < 30)      { inflamValue.textContent='Low';      inflamValue.style.color='var(--green)'; inflamFill.style.background='var(--green)'; inflamNote.textContent='Cytokine levels normal'; }
+        else if (il < 70) { inflamValue.textContent='Moderate'; inflamValue.style.color='var(--gold)';  inflamFill.style.background='var(--gold)';  inflamNote.textContent='IL-6, TNF-\u03B1 elevated'; }
+        else              { inflamValue.textContent='High';     inflamValue.style.color='var(--terra)'; inflamFill.style.background='var(--terra)'; inflamNote.textContent='Inflammatory cascade active'; }
+
+        const tl = Math.min(100, totalLoad*1.2);
+        threatFill.style.width = tl + '%';
+        if (tl < 30)      { threatValue.textContent='Calm';     threatValue.style.color='var(--green)'; threatFill.style.background='var(--green)'; threatNote.textContent='Amygdala baseline'; }
+        else if (tl < 70) { threatValue.textContent='Elevated'; threatValue.style.color='var(--gold)';  threatFill.style.background='var(--gold)';  threatNote.textContent='Threat detection active'; }
+        else              { threatValue.textContent='ALARM';    threatValue.style.color='var(--terra)'; threatFill.style.background='var(--terra)'; threatNote.textContent='Meltdown threshold crossed'; }
+
+        const acc = 100 - (serotoninLevel*0.8);
+        if (acc > 70)      { interoValue.textContent='High';    interoValue.style.color='var(--green)'; interoNote.textContent='Can identify gut signals consciously'; }
+        else if (acc > 40) { interoValue.textContent='Reduced'; interoValue.style.color='var(--gold)';  interoNote.textContent='Vague discomfort, hard to name'; }
+        else               { interoValue.textContent='Low';     interoValue.style.color='var(--terra)'; interoNote.textContent='Alexithymia overlap - alarm without awareness'; }
+
+        if (tl > 70) {
+            amygdala.setAttribute('opacity','1'); insula.setAttribute('opacity','1');
+            alarmIndicator.setAttribute('opacity','1');
+            amygdala.style.animation='brain-alarm 1s ease-in-out infinite';
+            insula.style.animation='brain-alarm 1.2s ease-in-out infinite';
+        } else if (tl > 40) {
+            amygdala.setAttribute('opacity','0.9'); insula.setAttribute('opacity','0.9');
+            alarmIndicator.setAttribute('opacity','0');
+            amygdala.style.animation='none'; insula.style.animation='none';
+        } else {
+            amygdala.setAttribute('opacity','0.85'); insula.setAttribute('opacity','0.85');
+            alarmIndicator.setAttribute('opacity','0');
+            amygdala.style.animation='none'; insula.style.animation='none';
+        }
+
+        if (totalLoad < 30) insightText.textContent = 'Balanced system allows accurate interoception. You can feel and name gut discomfort before it becomes an alarm.';
+        else if (totalLoad < 70) insightText.textContent = "Reduced interoceptive accuracy means you may feel \u2018off\u2019 or anxious without knowing the source is visceral. The alarm is real - you just can\u2019t name it.";
+        else insightText.textContent = "Low interoceptive accuracy \u2260 no gut distress. You can have severe GI inflammation without consciously feeling \u2018stomach pain\u2019 - but your brain still receives the alarm signal as existential threat.";
+    }
+
+    function updateParticles(totalLoad) {
+        if (particleInterval) clearInterval(particleInterval);
+        const rate = totalLoad < 20 ? 3000 : totalLoad < 50 ? 1500 : totalLoad < 80 ? 800 : 400;
+        const intensity = totalLoad < 20 ? 'low' : totalLoad < 50 ? 'moderate' : totalLoad < 80 ? 'high' : 'critical';
+        particleInterval = setInterval(() => spawnParticle(intensity), rate);
+    }
+
+    function spawnParticle(intensity) {
+        const p = document.createElementNS('http://www.w3.org/2000/svg','circle');
+        p.setAttribute('cx', 195 + Math.random()*10); p.setAttribute('cy','390');
+        p.setAttribute('r', intensity==='critical'?'5':'3'); p.setAttribute('opacity','0');
+        p.setAttribute('fill', intensity==='low'?'#ba945e':'#b68d76');
+        signalParticles.appendChild(p);
+        let cy=390, opacity=0;
+        const speed = intensity==='critical'?3:intensity==='high'?2.5:2;
+        const animate = () => {
+            cy -= speed;
+            if (cy>300) opacity=Math.min(1,opacity+0.1); else if (cy<150) opacity=Math.max(0,opacity-0.05); else opacity=1;
+            p.setAttribute('cy',cy); p.setAttribute('opacity',opacity);
+            if (cy>130) requestAnimationFrame(animate); else p.remove();
+        };
+        requestAnimationFrame(animate);
+    }
+
+    function updateStatus(totalLoad) {
+        if (totalLoad < 30) {
+            statusMain.style.color='var(--green)';
+            statusMain.textContent='\u{1F9E0} Neurotypical Profile: Balanced gut-brain communication';
+            statusSub.textContent='Stable serotonin signaling maintains regular gut motility. Vagal communication is bidirectional and balanced. Interoceptive signals are accurately processed. The brain receives gut information as data, not danger.';
+        } else if (totalLoad < 70) {
+            statusMain.style.color='var(--gold)';
+            statusMain.textContent='\u26A0\uFE0F Moderate Dysregulation: Altered 5-HT signaling disrupts gut-brain loop';
+            statusSub.textContent="Altered serotonin receptor sensitivity disrupts motility rhythm. Microbiome shifts generate low-grade inflammation. Vagal afferents send threat signals the brain interprets as anxiety - but the source is visceral, not cognitive. This is why 'calming down' doesn't work.";
+        } else {
+            statusMain.style.color='var(--terra)';
+            statusMain.textContent='\u{1F534} High Dysregulation: Inflammatory cascade triggering threat system';
+            statusSub.textContent='\u26A0\uFE0F Inflammatory cascade active. Ascending vagal signals overwhelm threat detection systems. Amygdala interprets gut distress as existential danger. Meltdown threshold crossed - but the trigger is interoceptive, not environmental. This is why you feel anxious "for no reason."';
+        }
+    }
+
+    serotoninSlider.addEventListener('input', updateSystem);
+    microbiomeSlider.addEventListener('input', updateSystem);
+
+    function toggleStressor() {
+        stressorActive = !stressorActive;
+        stressorBtn.classList.toggle('active', stressorActive);
+        stressorBtn.textContent = stressorActive ? '\u26A1 Stressor Active' : '\u26A1 Add Environmental Stressor';
+        updateSystem();
+    }
+
+    function resetSystem() {
+        serotoninSlider.value=0; microbiomeSlider.value=0;
+        stressorActive=false; stressorBtn.classList.remove('active');
+        stressorBtn.textContent='\u26A1 Add Environmental Stressor';
+        signalParticles.innerHTML=''; if (particleInterval) clearInterval(particleInterval);
+        updateSystem();
+    }
+
+    function setProfile(profile, btnEl) {
+        document.querySelectorAll('.profile-btn').forEach(b => b.className='profile-btn');
+        btnEl.className='profile-btn active-'+profile;
+        const presets={nt:{serotonin:0,microbiome:0,stressor:false},moderate:{serotonin:55,microbiome:45,stressor:false},high:{serotonin:85,microbiome:80,stressor:true}};
+        const t=presets[profile];
+        animateSlider(serotoninSlider,t.serotonin); animateSlider(microbiomeSlider,t.microbiome);
+        setTimeout(()=>{ if(t.stressor&&!stressorActive)toggleStressor(); else if(!t.stressor&&stressorActive)toggleStressor(); },600);
+    }
+
+    function animateSlider(slider, target) {
+        const start=parseInt(slider.value), t0=performance.now(), dur=800;
+        function go(t) {
+            const p=Math.min((t-t0)/dur,1), e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+            slider.value=Math.round(start+(target-start)*e); updateSystem();
+            if(p<1) requestAnimationFrame(go);
+        }
+        requestAnimationFrame(go);
+    }
+
+    updateSystem();
+</script>
+
+<p style="max-width:1100px;width:100%;text-align:center;font-size:.71em;color:#a6aea6;
+           font-family:'Nunito Sans',sans-serif;line-height:1.55;margin:14px auto 6px;
+           padding:0 12px;">
+    This tool is intended for psychoeducational purposes only. It does not constitute medical
+    advice, diagnosis, or treatment. The information presented is a simplified representation
+    of complex neurobiological processes and should not replace consultation with a licensed
+    healthcare or mental health professional. If you have concerns about your health,
+    please speak with a qualified clinician.
+</p>
+</body>
+</html>
