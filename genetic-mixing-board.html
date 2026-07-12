@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polygenic Architecture - Neurodivergent Profile Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green:     #45735d;
+            --gold:      #ba945e;
+            --terra:     #b68d76;
+            --forest:    #35361c;
+            --text:      #222a26;
+            --grey:      #6d7873;
+            --bg:        #faf8f5;
+            --accent-bg: #F5F3EF;
+            --stone:     #bdb7a2;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px;
+            margin: 0;
+            color: var(--text);
+        }
+
+        /* ── Header ─────────────────────────────────────────────── */
+        .header {
+            background: var(--accent-bg);
+            padding: 14px 20px 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            width: 100%; max-width: 1100px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .header h2 {
+            font-family: 'Libre Baskerville', serif;
+            margin: 0 0 5px; font-size: 1.3em; color: var(--forest);
+        }
+        .header p {
+            color: var(--grey); margin: 0 auto; font-size: 0.87em;
+            max-width: 640px; line-height: 1.55;
+        }
+
+        /* ── Main layout ─────────────────────────────────────────── */
+        .main-area {
+            display: flex; gap: 12px;
+            width: 100%; max-width: 1100px;
+            align-items: stretch;
+        }
+
+        .panel-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.74em; color: var(--grey);
+            text-transform: uppercase; letter-spacing: 0.07em;
+            margin: 0 0 9px; text-align: center;
+        }
+
+        /* ── Left: cluster sliders ───────────────────────────────── */
+        .cluster-panel {
+            background: var(--accent-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 13px 11px 12px;
+            width: 248px; flex-shrink: 0;
+            display: flex; flex-direction: column;
+        }
+        .cluster-card {
+            background: white; border: 2px solid var(--stone);
+            border-radius: 7px; padding: 6px 9px; margin-bottom: 4px;
+            transition: border-color 0.25s;
+        }
+        .cluster-card.active { border-color: var(--gold); }
+        .cluster-header {
+            display: flex; justify-content: space-between;
+            align-items: baseline; margin-bottom: 1px;
+        }
+        .cluster-name { font-weight: 700; font-size: 0.76em; }
+        .cluster-subtitle { font-weight: 400; color: var(--grey); }
+        .cluster-val { font-weight: 700; font-size: 0.76em; min-width: 16px; text-align: right; }
+        .cluster-genes { font-size: 0.67em; color: var(--stone); margin-bottom: 4px; font-style: italic; }
+
+        input[type="range"].cslider {
+            -webkit-appearance: none; appearance: none;
+            width: 100%; height: 5px; border-radius: 3px;
+            background: rgba(0,0,0,0.09); outline: none; cursor: pointer; display: block;
+        }
+        input[type="range"].cslider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 13px; height: 13px; border-radius: 50%;
+            background: var(--green); cursor: pointer;
+            border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.22);
+        }
+        input[type="range"].cslider::-moz-range-thumb {
+            width: 13px; height: 13px; border-radius: 50%;
+            background: var(--green); cursor: pointer;
+            border: 2px solid white;
+        }
+
+        /* env block */
+        .env-block {
+            background: rgba(186,148,94,0.1);
+            border: 2px solid var(--gold); border-radius: 7px;
+            padding: 8px 9px; margin-top: auto;
+            flex-shrink: 0;
+        }
+        .env-row { display: flex; justify-content: space-between; margin-bottom: 2px; }
+        .env-label { font-weight: 700; font-size: 0.77em; color: var(--forest); }
+        .env-val   { font-weight: 700; font-size: 0.77em; color: var(--gold); }
+        .env-sub   { font-size: 0.67em; color: var(--grey); margin-bottom: 5px; font-style: italic; }
+
+        input[type="range"].eslider {
+            -webkit-appearance: none; appearance: none;
+            width: 100%; height: 6px; border-radius: 3px;
+            background: linear-gradient(to right, var(--green), var(--gold), var(--terra));
+            outline: none; cursor: pointer; display: block;
+        }
+        input[type="range"].eslider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px; height: 15px; border-radius: 50%;
+            background: var(--gold); cursor: pointer;
+            border: 2px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.28);
+        }
+        input[type="range"].eslider::-moz-range-thumb {
+            width: 15px; height: 15px; border-radius: 50%;
+            background: var(--gold); cursor: pointer;
+            border: 2px solid white;
+        }
+
+        /* ── Center: canvas ──────────────────────────────────────── */
+        .canvas-panel {
+            flex: 1; background: var(--accent-bg); border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 10px; display: flex; flex-direction: column;
+            align-items: center; min-width: 0;
+        }
+        /* height is set by JS to match pixel dims — no fixed CSS height */
+        canvas { border-radius: 8px; display: block; width: 100%; }
+
+        /* ── Right: profile output ───────────────────────────────── */
+        .profile-panel {
+            background: var(--accent-bg); border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 13px 11px 12px; width: 210px; flex-shrink: 0;
+            display: flex; flex-direction: column; gap: 9px;
+        }
+        .profile-badge {
+            text-align: center; padding: 10px 9px;
+            border-radius: 8px; background: white;
+            border: 2px solid var(--stone); transition: all 0.4s;
+        }
+        .profile-name {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.88em; font-weight: 700;
+            color: var(--forest); margin-bottom: 4px;
+        }
+        .profile-sub { font-size: 0.72em; color: var(--grey); line-height: 1.45; }
+
+        .metric-block { flex-shrink: 0; }
+        .met-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+        .met-label { font-size: 0.69em; color: var(--grey); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+        .met-val   { font-family: 'Libre Baskerville', serif; font-size: 1.25em; font-weight: 700; }
+        .met-track { height: 7px; background: rgba(0,0,0,0.09); border-radius: 4px; overflow: hidden; margin-bottom: 7px; }
+        .met-fill  { height: 100%; border-radius: 4px; transition: width 0.4s ease, background 0.4s; }
+
+        .dominant-block {
+            padding: 8px 9px; background: white;
+            border-radius: 6px; border: 1px solid var(--stone);
+            flex-shrink: 0;
+        }
+        .dom-label { font-size: 0.68em; color: var(--grey); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; }
+        .dom-name  { font-size: 0.82em; font-weight: 700; color: var(--forest); }
+        .dom-desc  { font-size: 0.69em; color: var(--grey); margin-top: 2px; }
+
+        .reset-btn {
+            background: var(--stone); color: white; border: none;
+            padding: 9px; border-radius: 6px; cursor: pointer;
+            font-family: 'Nunito Sans', sans-serif; font-weight: 700;
+            font-size: 0.84em; margin-top: auto; transition: background 0.2s;
+            flex-shrink: 0;
+        }
+        .reset-btn:hover { background: var(--grey); }
+
+        /* ── Status bar ──────────────────────────────────────────── */
+        .status-panel {
+            background: var(--accent-bg); border-radius: 10px;
+            padding: 14px 25px; width: 100%; max-width: 1100px;
+            margin-top: 12px; text-align: center;
+        }
+        #status-main { font-weight: 700; font-size: 0.94em; margin: 0 0 5px; color: var(--forest); }
+        #status-sub  { color: var(--grey); font-style: italic; font-size: 0.84em; line-height: 1.55; margin: 0; }
+
+        .disclaimer {
+            max-width: 1100px; width: 100%; text-align: center;
+            font-size: 0.71em; color: #a6aea6;
+            font-family: 'Nunito Sans', sans-serif; line-height: 1.55;
+            margin: 14px auto 6px; padding: 0 12px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Brand -->
+<div style="width:100%;max-width:1100px;display:flex;justify-content:flex-start;align-items:center;padding:0 4px 10px;margin:0 auto;">
+    <a href="https://www.secondarrow.net" target="_blank" rel="noopener"
+       style="font-family:'Libre Baskerville',serif;font-size:20px;color:#35361c;text-decoration:none;letter-spacing:.01em;opacity:.9;">
+        Second Arrow Counseling
+    </a>
+</div>
+
+<div class="header">
+    <h2>Polygenic Architecture &amp; Neurodivergent Profiles</h2>
+    <p>No single gene determines a neurodivergent profile. Hundreds of small-effect variants across multiple biological systems accumulate - shaped and amplified by environment - to cross an expression threshold.</p>
+</div>
+
+<div class="main-area">
+
+    <!-- LEFT: Gene Cluster Sliders -->
+    <div class="cluster-panel">
+        <p class="panel-title">Gene Cluster Effects</p>
+        <div id="cluster-cards"></div>
+        <div class="env-block">
+            <div class="env-row">
+                <span class="env-label">&#127807; Environmental Load</span>
+                <span class="env-val" id="env-val">0</span>
+            </div>
+            <p class="env-sub">Trauma, adversity, chronic stress — epigenetic amplifiers</p>
+            <input type="range" class="eslider" min="0" max="100" value="0" id="env-slider"
+                   oninput="updateEnv(this.value)">
+        </div>
+    </div>
+
+    <!-- CENTER: Canvas -->
+    <div class="canvas-panel">
+        <p class="panel-title">Cumulative Load Architecture</p>
+        <canvas id="main-canvas"></canvas>
+    </div>
+
+    <!-- RIGHT: Profile Output -->
+    <div class="profile-panel">
+        <p class="panel-title">Emerging Profile</p>
+
+        <div class="profile-badge" id="profile-badge">
+            <div class="profile-name" id="profile-name">Typical Range</div>
+            <div class="profile-sub"  id="profile-sub">Genetic architecture within standard variation</div>
+        </div>
+
+        <div class="metric-block">
+            <div class="met-row">
+                <span class="met-label">Genetic Load</span>
+                <span class="met-val" id="gval" style="color:var(--green)">0</span>
+            </div>
+            <div class="met-track"><div class="met-fill" id="gfill" style="width:0%;background:var(--green)"></div></div>
+
+            <div class="met-row">
+                <span class="met-label">Env. Load</span>
+                <span class="met-val" id="eval2" style="color:var(--gold)">0</span>
+            </div>
+            <div class="met-track"><div class="met-fill" id="efill" style="width:0%;background:var(--gold)"></div></div>
+
+            <div class="met-row">
+                <span class="met-label">Total Score</span>
+                <span class="met-val" id="tval" style="color:var(--forest)">0</span>
+            </div>
+            <div class="met-track"><div class="met-fill" id="tfill" style="width:0%;background:var(--forest)"></div></div>
+        </div>
+
+        <div class="dominant-block">
+            <div class="dom-label">Dominant System</div>
+            <div class="dom-name" id="dom-name">&#8212;</div>
+            <div class="dom-desc" id="dom-desc">Adjust sliders to activate</div>
+        </div>
+
+        <button class="reset-btn" onclick="doReset()">Reset All</button>
+    </div>
+</div>
+
+<div class="status-panel">
+    <p id="status-main">No threshold crossed &#8212; genetic architecture within typical variation</p>
+    <p id="status-sub">Use the gene cluster sliders on the left to model different polygenic configurations. Watch how small individual effects accumulate into a meaningful cumulative load.</p>
+</div>
+
+<p class="disclaimer">This tool is intended for psychoeducational purposes only. It does not constitute medical advice, diagnosis, or treatment. The information presented is a simplified representation of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.</p>
+
+<script>
+/* ── Data ──────────────────────────────────────────────────────────────────── */
+const CLUSTERS = [
+    { id:'dopamine',     name:'Dopamine',      sub:'Regulation',     genes:'COMT \u00B7 DRD2 \u00B7 DAT1',  col:'#45735d', desc:'Attention, reward & motivation signaling' },
+    { id:'serotonin',    name:'Serotonin',     sub:'Pathways',       genes:'5-HTTLPR \u00B7 HTR2A',    col:'#ba945e', desc:'Mood regulation & sensory gating' },
+    { id:'glutamate',    name:'Glutamate',     sub:'/ GABA Balance', genes:'GRIN2A \u00B7 GABRB3',     col:'#b68d76', desc:'Excitation / inhibition ratio' },
+    { id:'norepi',       name:'Norepinephrine',sub:'System',         genes:'NET \u00B7 ADRA2A',        col:'#7a9e8e', desc:'Arousal, stress response & vigilance' },
+    { id:'connectivity', name:'Synaptic',      sub:'Connectivity',   genes:'NRXN1 \u00B7 CNTNAP2',    col:'#8fa86e', desc:'Neural network formation & pruning' },
+    { id:'immune',       name:'Immune',        sub:'/ Pruning',      genes:'C4A \u00B7 MHC-II',       col:'#8b7d5a', desc:'Synaptic pruning & neuroinflammation' }
+];
+
+const T_SUB  = 22;
+const T_EMRG = 36;
+const T_EXPR = 52;
+const T_HIGH = 70;
+
+const PROFILES = [
+    { min:0,      label:'Typical Range',
+      sub:'Genetic architecture within standard variation. Traits present but below expression threshold.',
+      main:'No threshold crossed \u2014 genetic architecture within typical variation',
+      detail:'Small-effect variants exist across all human genomes. Below this threshold, the cumulative load does not significantly alter neurocognitive profile.', col:'#45735d' },
+    { min:T_SUB,  label:'Subclinical Traits',
+      sub:'Mild processing differences. May notice sensory or attentional quirks without a full profile.',
+      main:'Subclinical load \u2014 traits present without full profile expression',
+      detail:'Some systems show elevated variant load. At this range, traits may be noticeable in high-demand environments but may not yet meet diagnostic criteria.', col:'#bdb7a2' },
+    { min:T_EMRG, label:'Emerging Profile',
+      sub:'Cumulative load approaching threshold. Multiple systems contributing to a distinct processing style.',
+      main:'Approaching expression threshold \u2014 multiple systems converging',
+      detail:'Polygenic architecture is converging across systems. This is the range where environmental factors become especially significant as amplifiers.', col:'#ba945e' },
+    { min:T_EXPR, label:'Neurodivergent Expression',
+      sub:'Threshold crossed. Cumulative variant load produces a meaningfully different cognitive and sensory profile.',
+      main:'Expression threshold crossed \u2014 neurodivergent architecture active',
+      detail:'No single gene caused this. Dozens of small-effect variants across multiple systems accumulated past threshold \u2014 the core argument against single-gene theories of neurodivergence.', col:'#b68d76' },
+    { min:T_HIGH, label:'High Load Profile',
+      sub:'Significant load across genetic and environmental systems. May present with complex or comorbid features.',
+      main:'High cumulative load \u2014 complex neurodivergent architecture',
+      detail:'When genetic and environmental amplifiers are both elevated, the resulting profile is often more complex, with potential comorbidities and heightened sensory or regulatory demands.', col:'#35361c' }
+];
+
+/* ── State ─────────────────────────────────────────────────────────────────── */
+let cvals        = Array(CLUSTERS.length).fill(0);
+let envLoad      = 0;
+let envParticles = [];
+let orbPulse     = Array(CLUSTERS.length).fill(0);
+let ctrPulse     = 0;
+let frame        = 0;
+
+const canvas = document.getElementById('main-canvas');
+const ctx    = canvas.getContext('2d');
+
+/* ── UI ────────────────────────────────────────────────────────────────────── */
+function buildCards() {
+    const wrap = document.getElementById('cluster-cards');
+    wrap.innerHTML = '';
+    CLUSTERS.forEach((c, i) => {
+        wrap.innerHTML += `
+        <div class="cluster-card" id="card-${c.id}">
+            <div class="cluster-header">
+                <span class="cluster-name">${c.name} <span class="cluster-subtitle">${c.sub}</span></span>
+                <span class="cluster-val" id="val-${c.id}">0</span>
+            </div>
+            <div class="cluster-genes">${c.genes}</div>
+            <input type="range" class="cslider" min="0" max="10" value="0" id="sl-${c.id}"
+                   oninput="updateCluster(${i}, this)">
+        </div>`;
+    });
+}
+
+function updateCluster(i, slider) {
+    const v = parseInt(slider.value);
+    cvals[i] = v;
+    const pct = v * 10;
+    slider.style.background =
+        `linear-gradient(to right, ${CLUSTERS[i].col} ${pct}%, rgba(0,0,0,0.09) ${pct}%)`;
+    document.getElementById(`val-${CLUSTERS[i].id}`).innerText = v;
+    document.getElementById(`card-${CLUSTERS[i].id}`).classList.toggle('active', v > 5);
+    orbPulse[i] = 1.0;
+    refreshMetrics();
+}
+
+function updateEnv(v) {
+    envLoad = parseInt(v);
+    document.getElementById('env-val').innerText = v;
+    refreshMetrics();
+}
+
+function refreshMetrics() {
+    const gScore = cvals.reduce((a,b) => a+b, 0);
+    const eScore = Math.round(envLoad * 0.35);
+    const tScore = gScore + eScore;
+
+    document.getElementById('gval').innerText  = gScore;
+    document.getElementById('eval2').innerText = eScore;
+    document.getElementById('tval').innerText  = tScore;
+
+    document.getElementById('gfill').style.width = (gScore / 60 * 100) + '%';
+    document.getElementById('efill').style.width = (eScore / 35 * 100) + '%';
+
+    const tf = document.getElementById('tfill');
+    tf.style.width      = Math.min(100, tScore / 95 * 100) + '%';
+    tf.style.background = tScore >= T_EXPR ? 'var(--terra)' : tScore >= T_EMRG ? 'var(--gold)' : 'var(--green)';
+
+    const p     = getProfile(tScore);
+    const badge = document.getElementById('profile-badge');
+    badge.style.borderColor = p.col;
+    badge.style.background  = hexAlpha(p.col, 0.06);
+    document.getElementById('profile-name').innerText = p.label;
+    document.getElementById('profile-sub').innerText  = p.sub;
+    document.getElementById('status-main').innerText  = p.main;
+    document.getElementById('status-sub').innerText   = p.detail;
+
+    const maxV = Math.max(...cvals);
+    if (maxV > 0) {
+        const idx = cvals.indexOf(maxV);
+        document.getElementById('dom-name').innerText = `${CLUSTERS[idx].name} ${CLUSTERS[idx].sub}`;
+        document.getElementById('dom-desc').innerText = CLUSTERS[idx].desc;
+    } else {
+        document.getElementById('dom-name').innerText = '\u2014';
+        document.getElementById('dom-desc').innerText = 'Adjust sliders to activate';
+    }
+    ctrPulse = 1.0;
+}
+
+function getProfile(t) {
+    for (let i = PROFILES.length - 1; i >= 0; i--)
+        if (t >= PROFILES[i].min) return PROFILES[i];
+    return PROFILES[0];
+}
+
+function hexAlpha(hex, a) {
+    const n = parseInt(hex.replace('#',''), 16);
+    return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;
+}
+
+function lighten(hex, amt) {
+    const n = parseInt(hex.replace('#',''), 16);
+    return `rgb(${Math.min(255,((n>>16)&255)+amt)},${Math.min(255,((n>>8)&255)+amt)},${Math.min(255,(n&255)+amt)})`;
+}
+
+/* ── Canvas helpers ────────────────────────────────────────────────────────── */
+function rrect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x+w, y,   x+w, y+h, r);
+    ctx.arcTo(x+w, y+h, x,   y+h, r);
+    ctx.arcTo(x,   y+h, x,   y,   r);
+    ctx.arcTo(x,   y,   x+w, y,   r);
+    ctx.closePath();
+}
+
+function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const w = rect.width > 0 ? rect.width : (canvas.parentElement.clientWidth - 24) || 420;
+    canvas.width  = Math.floor(w);
+    canvas.height = 560;  /* taller to prevent top orb clipping at max load */
+}
+
+function orbPositions() {
+    const cw = canvas.width, ch = canvas.height;
+    const cx = cw / 2;
+    /* push centre down to 48% — gives ~130px headroom above top orb at max size */
+    const cy = ch * 0.48;
+    const r  = Math.min(cw * 0.28, 132);
+    return CLUSTERS.map((_, i) => {
+        const ang = (i / CLUSTERS.length) * Math.PI * 2 - Math.PI / 2;
+        return { x: cx + Math.cos(ang) * r, y: cy + Math.sin(ang) * r };
+    });
+}
+
+/* ── Env particles ─────────────────────────────────────────────────────────── */
+function maybeSpawn() {
+    if (envLoad <= 0) return;
+    if (Math.random() > envLoad / 100 * 0.35) return;
+    const ti = Math.floor(Math.random() * CLUSTERS.length);
+    envParticles.push({
+        x: Math.random() * canvas.width, y: -6, ti,
+        speed: 1.6 + Math.random() * 1.8,
+        a: 0.65 + Math.random() * 0.3,
+        size: 2 + Math.random() * 2.5,
+        hit: false
+    });
+}
+
+/* ── Animation ─────────────────────────────────────────────────────────────── */
+function animate() {
+    frame++;
+    ctx.globalAlpha = 1;
+
+    const cw = canvas.width, ch = canvas.height;
+    const ops = orbPositions();
+    const cx = cw / 2, cy = ch * 0.48;
+
+    const gScore = cvals.reduce((a,b)=>a+b, 0);
+    const eScore = Math.round(envLoad * 0.35);
+    const tScore = gScore + eScore;
+    const frac   = Math.min(1, tScore / 95);
+
+    /* background */
+    ctx.fillStyle = '#19201d';
+    ctx.fillRect(0, 0, cw, ch);
+
+    /* connection lines + signal pulses */
+    ops.forEach((pos, i) => {
+        const v = cvals[i], intensity = v / 10;
+        ctx.globalAlpha = 0.08 + intensity * 0.52;
+        ctx.strokeStyle = CLUSTERS[i].col;
+        ctx.lineWidth   = 1 + intensity * 2.8;
+        ctx.beginPath(); ctx.moveTo(pos.x, pos.y); ctx.lineTo(cx, cy); ctx.stroke();
+
+        if (v > 0) {
+            const t  = (frame * 0.018 + i * 0.28) % 1;
+            const px = pos.x + (cx - pos.x) * t;
+            const py = pos.y + (cy - pos.y) * t;
+            ctx.globalAlpha = intensity * 0.9;
+            ctx.fillStyle   = CLUSTERS[i].col;
+            ctx.beginPath(); ctx.arc(px, py, 2.5 + intensity * 2, 0, Math.PI*2); ctx.fill();
+        }
+    });
+    ctx.globalAlpha = 1;
+
+    /* orbs */
+    ops.forEach((pos, i) => {
+        const v = cvals[i], baseR = 15 + v * 3.6;
+        if (orbPulse[i] > 0) orbPulse[i] = Math.max(0, orbPulse[i] - 0.035);
+        const pR = baseR + orbPulse[i] * 11;
+
+        if (v > 0) {
+            const grd = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, pR * 2.2);
+            grd.addColorStop(0, hexAlpha(CLUSTERS[i].col, 0.45));
+            grd.addColorStop(1, hexAlpha(CLUSTERS[i].col, 0));
+            ctx.globalAlpha = 0.35 + v * 0.05;
+            ctx.fillStyle   = grd;
+            ctx.beginPath(); ctx.arc(pos.x, pos.y, pR * 2.2, 0, Math.PI*2); ctx.fill();
+        }
+
+        ctx.globalAlpha = 0.55 + v * 0.045;
+        const og = ctx.createRadialGradient(pos.x - baseR*0.3, pos.y - baseR*0.3, 0, pos.x, pos.y, pR);
+        og.addColorStop(0, lighten(CLUSTERS[i].col, 65));
+        og.addColorStop(1, CLUSTERS[i].col);
+        ctx.fillStyle = og;
+        ctx.beginPath(); ctx.arc(pos.x, pos.y, pR, 0, Math.PI*2); ctx.fill();
+
+        ctx.globalAlpha = 0.88;
+        ctx.fillStyle   = 'white';
+        ctx.font        = 'bold 9px "Nunito Sans", sans-serif';
+        ctx.textAlign   = 'center';
+        ctx.fillText(CLUSTERS[i].name, pos.x, pos.y - 1);
+        ctx.globalAlpha = 0.58;
+        ctx.font        = '8px "Nunito Sans", sans-serif';
+        ctx.fillText(CLUSTERS[i].sub, pos.x, pos.y + 10);
+    });
+    ctx.globalAlpha = 1;
+
+    /* env particles */
+    maybeSpawn();
+    envParticles.forEach(p => {
+        const t = ops[p.ti];
+        const dx = t.x - p.x, dy = t.y - p.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 22 && !p.hit) {
+            p.hit = true;
+            orbPulse[p.ti] = Math.min(1, orbPulse[p.ti] + 0.38);
+        }
+        if (!p.hit) { p.x += (dx/dist)*p.speed*0.45; p.y += p.speed; }
+        else { p.a -= 0.07; }
+        ctx.globalAlpha = Math.max(0, p.a);
+        ctx.fillStyle   = '#ba945e';
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+    });
+    envParticles = envParticles.filter(p => p.y < ch + 10 && p.a > 0);
+    ctx.globalAlpha = 1;
+
+    /* centre phenotype node */
+    if (ctrPulse > 0) ctrPulse = Math.max(0, ctrPulse - 0.025);
+    const breathe = Math.sin(frame * 0.04) * 3 * frac;
+    const nodeCol = frac > 0.65 ? '#b68d76' : frac > 0.38 ? '#ba945e' : '#45735d';
+    const nodeR   = 24 + frac * 17 + ctrPulse * 9;
+
+    const ng = ctx.createRadialGradient(cx, cy, 0, cx, cy, nodeR * 2.6 + breathe);
+    ng.addColorStop(0,    hexAlpha(nodeCol, 0.7 + frac*0.2));
+    ng.addColorStop(0.45, hexAlpha(nodeCol, 0.3));
+    ng.addColorStop(1,    hexAlpha(nodeCol, 0));
+    ctx.globalAlpha = 0.45 + frac * 0.45;
+    ctx.fillStyle = ng;
+    ctx.beginPath(); ctx.arc(cx, cy, nodeR * 2.6 + breathe, 0, Math.PI*2); ctx.fill();
+
+    ctx.globalAlpha = 1;
+    const bg = ctx.createRadialGradient(cx - nodeR*0.3, cy - nodeR*0.3, 0, cx, cy, nodeR + breathe);
+    bg.addColorStop(0, lighten(nodeCol, 80));
+    bg.addColorStop(1, nodeCol);
+    ctx.fillStyle = bg;
+    ctx.beginPath(); ctx.arc(cx, cy, nodeR + breathe, 0, Math.PI*2); ctx.fill();
+
+    if (frac > 0.43) {
+        ctx.globalAlpha = Math.min(0.9, (frac - 0.43) * 4.5);
+        ctx.strokeStyle = '#b68d76';
+        ctx.lineWidth   = 2;
+        ctx.setLineDash([4,4]);
+        ctx.beginPath(); ctx.arc(cx, cy, nodeR + breathe + 10, 0, Math.PI*2); ctx.stroke();
+        ctx.setLineDash([]);
+    }
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle = 'white';
+    ctx.font      = 'bold 9px "Nunito Sans", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('PHENOTYPE', cx, cy - 4);
+    ctx.globalAlpha = 0.7;
+    ctx.font = '8px "Nunito Sans", sans-serif';
+    ctx.fillText('OUTPUT', cx, cy + 7);
+    ctx.globalAlpha = 1;
+    ctx.font = 'bold 12px serif';
+    ctx.fillText(tScore, cx, cy + 22);
+
+    /* load bar — pinned to bottom with comfortable margin */
+    const bY = ch - 46, bH = 16;
+    const bX = 18,       bW = cw - 36;
+    const tX = bX + (T_EXPR / 95) * bW;
+
+    ctx.globalAlpha = 0.18;
+    ctx.fillStyle   = 'white';
+    rrect(bX, bY, bW, bH, 4); ctx.fill();
+    ctx.globalAlpha = 1;
+
+    if (tScore > 0) {
+        const fw = Math.min(bW, (tScore / 95) * bW);
+        const lg = ctx.createLinearGradient(bX, 0, bX + bW, 0);
+        lg.addColorStop(0,             '#45735d');
+        lg.addColorStop(T_EMRG / 95,  '#ba945e');
+        lg.addColorStop(T_EXPR  / 95, '#b68d76');
+        lg.addColorStop(1,            '#35361c');
+        ctx.fillStyle = lg;
+        rrect(bX, bY, fw, bH, 4); ctx.fill();
+    }
+
+    ctx.globalAlpha  = 0.85;
+    ctx.strokeStyle  = '#b68d76';
+    ctx.lineWidth    = 1.5;
+    ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(tX, bY - 5); ctx.lineTo(tX, bY + bH + 5); ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle  = '#b68d76';
+    ctx.font       = '9px "Nunito Sans", sans-serif';
+    ctx.textAlign  = 'center';
+    ctx.fillText('\u25B2 expression threshold', tX, bY + bH + 14);
+
+    ctx.globalAlpha = 0.45;
+    ctx.fillStyle   = 'white';
+    ctx.font        = '9px "Nunito Sans", sans-serif';
+    ctx.textAlign   = 'left';
+    ctx.fillText('Typical', bX + 4, bY - 5);
+    ctx.textAlign   = 'right';
+    ctx.fillText('High Load', bX + bW - 4, bY - 5);
+    ctx.globalAlpha = 1;
+
+    requestAnimationFrame(animate);
+}
+
+/* ── Reset ─────────────────────────────────────────────────────────────────── */
+function doReset() {
+    cvals        = Array(CLUSTERS.length).fill(0);
+    envLoad      = 0;
+    envParticles = [];
+    orbPulse     = Array(CLUSTERS.length).fill(0);
+    ctrPulse     = 0;
+    CLUSTERS.forEach(c => {
+        const sl = document.getElementById(`sl-${c.id}`);
+        if (sl) { sl.value = 0; sl.style.background = 'rgba(0,0,0,0.09)'; }
+        document.getElementById(`val-${c.id}`).innerText = '0';
+        document.getElementById(`card-${c.id}`).classList.remove('active');
+    });
+    document.getElementById('env-slider').value = 0;
+    document.getElementById('env-val').innerText = '0';
+    refreshMetrics();
+}
+
+/* ── Init ──────────────────────────────────────────────────────────────────── */
+function init() {
+    resizeCanvas();
+    buildCards();
+    refreshMetrics();
+    requestAnimationFrame(animate);
+    window.addEventListener('resize', resizeCanvas);
+    if (window.ResizeObserver)
+        new ResizeObserver(resizeCanvas).observe(canvas.parentElement);
+}
+
+window.onload = () => setTimeout(init, 80);
+</script>
+</body>
+</html>
