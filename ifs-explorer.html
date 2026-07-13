@@ -280,7 +280,7 @@ const DATA = {
        role:'Pulls the system offline when the load becomes too much to process.',
        intent:'Going offline prevents something worse, a full break, a flood, an exposure that can\'t be undone.',
        behaviors:'Dissociation, numbness, withdrawal, an inability to access words or action.'},
-      {name:'Protector Rage',
+      {name:'Anger Outburst',
        role:'Creates distance and signals danger to keep people from getting too close.',
        intent:'When nothing else works, making the environment unsafe for others keeps the vulnerable parts protected.',
        behaviors:'Explosive anger, harsh words, pushing people away before they can leave first.'},
@@ -598,7 +598,7 @@ function renderType(key){
   const t=DATA[key];
   setDetail(`
     <div class="detail-card" style="border-color:${t.color}44">
-      <span class="d-label" style="color:${t.color}">${t.name}</span><span class="d-label" style="color:var(--grey);letter-spacing:.04em;text-transform:none;font-weight:600;font-size:.72em;margin-top:-2px">${t.tagline}</span><span class="d-label" style="color:var(--grey);letter-spacing:.04em;text-transform:none;font-weight:600;font-size:.72em;margin-top:-2px">${t.tagline}</span>
+      <span class="d-label" style="color:${t.color}">${t.name}</span><span class="d-label" style="color:var(--grey);letter-spacing:.04em;text-transform:none;font-weight:600;font-size:.72em;margin-top:-2px">${t.tagline}</span>
       <p class="d-body" style="margin-top:4px">${t.description}</p>
     </div>
     <p class="sect-lbl" style="margin-top:2px">Parts in this group</p>
