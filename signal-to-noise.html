@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dopamine Signal-to-Noise Mixer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green:       #45735d;
+            --gold:        #ba945e;
+            --terra:       #b68d76;
+            --dark-forest: #35361c;
+            --text:        #222a26;
+            --grey:        #6d7873;
+            --bg:          #faf8f5;
+            --accent-bg:   #F5F3EF;
+            --stone:       #bdb7a2;
+            --cool-grey:   #a6aea6;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px;
+            margin: 0;
+            color: var(--text);
+        }
+
+        /* HEADER */
+        .header {
+            background: var(--accent-bg);
+            padding: 16px 20px 14px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .header h2 {
+            font-family: 'Libre Baskerville', serif;
+            margin: 0 0 6px;
+        }
+
+        .header p {
+            color: var(--grey);
+            margin: 0 0 12px;
+            font-size: 0.9em;
+        }
+
+        .profile-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .profile-btn {
+            padding: 8px 22px;
+            border-radius: 6px;
+            border: 2px solid var(--stone);
+            background: white;
+            color: var(--text);
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .profile-btn:hover       { border-color: var(--grey); }
+        .profile-btn.active-nt   { background: var(--green); color: white; border-color: var(--green); }
+        .profile-btn.active-adhd { background: var(--terra); color: white; border-color: var(--terra); }
+
+        /* MAIN LAYOUT */
+        .main-area {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        /* MIXER PANEL */
+        .mixer {
+            background: var(--accent-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 16px 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 240px;
+            flex-shrink: 0;
+        }
+
+        .mixer-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.78em;
+            color: var(--grey);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+        }
+
+        .fader-group {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .fader {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .fader-value {
+            font-size: 1.1em;
+            font-weight: 700;
+            background: white;
+            border-radius: 4px;
+            padding: 2px 8px;
+            min-width: 36px;
+            text-align: center;
+        }
+
+        input[type="range"].vertical {
+            -webkit-appearance: slider-vertical;
+            appearance: slider-vertical;
+            writing-mode: vertical-lr;
+            direction: rtl;
+            width: 36px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        #tonic-slider  { accent-color: var(--green); }
+        #phasic-slider { accent-color: var(--gold); }
+
+        .fader-label {
+            font-weight: 700;
+            font-size: 0.78em;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .fader-sublabel {
+            font-weight: 400;
+            color: var(--grey);
+            font-size: 0.88em;
+        }
+
+        /* SNR METER */
+        .meter {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .meter-label {
+            font-size: 0.7em;
+            font-weight: 700;
+            color: var(--grey);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            text-align: center;
+        }
+
+        .meter-track {
+            width: 20px;
+            height: 200px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .meter-fill {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            border-radius: 10px;
+            background: linear-gradient(to top, var(--green), #a3d4bc);
+            transition: height 0.2s ease, background 0.3s;
+        }
+
+        .threshold-tick {
+            position: absolute;
+            left: -7px;
+            right: -7px;
+            height: 3px;
+            background: var(--terra);
+            border-radius: 2px;
+            bottom: 45%;
+            z-index: 1;
+        }
+
+        .threshold-tick::after {
+            content: 'ACT';
+            position: absolute;
+            right: -26px;
+            top: -6px;
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--terra);
+            font-family: 'Nunito Sans', sans-serif;
+            letter-spacing: 0.04em;
+        }
+
+        /* VIZ PANEL */
+        .viz-panel {
+            flex: 1;
+            height: 420px;
+            background: var(--dark-forest);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        .task-card {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 3px solid var(--green);
+            border-radius: 12px;
+            padding: 18px 28px;
+            text-align: center;
+            pointer-events: none;
+            z-index: 2;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            white-space: nowrap;
+        }
+
+        .task-icon { font-size: 2.2em; }
+
+        .task-title {
+            font-family: 'Libre Baskerville', serif;
+            font-weight: 700;
+            color: var(--text);
+            font-size: 1.05em;
+            margin: 6px 0 0;
+        }
+
+        /* STATUS PANEL */
+        .status-panel {
+            background: var(--accent-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 12px 20px;
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        #snr-label {
+            font-weight: 700;
+            font-size: 1em;
+            margin: 0;
+        }
+
+        #status-desc {
+            color: var(--grey);
+            font-style: italic;
+            font-size: 0.9em;
+            margin: 4px 0 0;
+        }
+
+        .sac-topbar{width:100%;max-width:1100px;padding:0 4px 10px;margin:0 auto;text-align:left;}
+        .sac-toplink{font-family:'Libre Baskerville',serif;font-size:1.05em;font-weight:700;
+            color:var(--dark-forest);text-decoration:none;opacity:0.85;transition:opacity 0.2s;letter-spacing:0.01em;}
+        .sac-toplink:hover{opacity:1;}
+        .disclaimer{width:100%;max-width:1100px;margin:10px auto 6px;padding:0 12px;
+            text-align:center;color:var(--grey);font-size:0.74em;line-height:1.6;
+            font-family:'Nunito Sans',sans-serif;}
+
+    </style>
+</head>
+<body>
+
+<div class="sac-topbar">
+    <a href="https://www.secondarrow.net" target="_blank" rel="noopener" class="sac-toplink">Second Arrow Counseling</a>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+    <h2>The Signal-to-Noise Mixer</h2>
+    <p>Tonic dopamine keeps background noise quiet. Phasic dopamine spikes the signal. See how ADHD changes the math.</p>
+    <div class="profile-buttons">
+        <button class="profile-btn active-nt" id="btn-nt"   onclick="setProfile('nt')">🧠 Neurotypical</button>
+        <button class="profile-btn"           id="btn-adhd" onclick="setProfile('adhd')">⚡ ADHD Profile</button>
+    </div>
+</div>
+
+<!-- MAIN AREA -->
+<div class="main-area">
+
+    <!-- MIXER -->
+    <div class="mixer">
+        <div class="mixer-title">Dopamine Mixer</div>
+
+        <div class="fader-group">
+            <!-- Tonic -->
+            <div class="fader">
+                <span class="fader-value" id="tonic-val" style="color:var(--green);">70</span>
+                <input type="range" class="vertical" id="tonic-slider" min="0" max="100" value="70">
+                <div class="fader-label" style="color:var(--green);">TONIC<br><span class="fader-sublabel">Baseline</span></div>
+            </div>
+
+            <!-- Phasic -->
+            <div class="fader">
+                <span class="fader-value" id="phasic-val" style="color:var(--gold);">30</span>
+                <input type="range" class="vertical" id="phasic-slider" min="0" max="100" value="30">
+                <div class="fader-label" style="color:var(--gold);">PHASIC<br><span class="fader-sublabel">Urgency / Novelty</span></div>
+            </div>
+
+            <!-- Meter -->
+            <div class="meter">
+                <div class="meter-label">SNR</div>
+                <div class="meter-track">
+                    <div class="meter-fill" id="meter-fill" style="height:55%;"></div>
+                    <div class="threshold-tick"></div>
+                </div>
+                <div class="meter-label">▲</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIZ PANEL -->
+    <div class="viz-panel" id="viz-panel">
+        <canvas id="noise-canvas"></canvas>
+        <div class="task-card" id="task-card">
+            <div class="task-icon">🧺</div>
+            <p class="task-title">Do Laundry</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- STATUS -->
+<div class="status-panel">
+    <p id="snr-label">✅ Signal clear. Task is accessible and actionable.</p>
+    <p id="status-desc">High tonic dopamine keeps noise suppressed. Routine tasks register as meaningful signals without requiring urgency or crisis to initiate.</p>
+</div>
+
+<p class="disclaimer"><strong>Psychoeducational Tool Only.</strong> This tool is designed for educational purposes to illustrate neurobiological concepts. It does not constitute medical advice, diagnosis, or treatment. Content developed by <a href="https://www.secondarrow.net" target="_blank" rel="noopener" style="color:var(--grey);">Second Arrow Counseling</a>. For clinical concerns, consult a qualified healthcare provider.</p>
+
+<script>
+    const tonicSlider  = document.getElementById('tonic-slider');
+    const phasicSlider = document.getElementById('phasic-slider');
+    const tonicVal     = document.getElementById('tonic-val');
+    const phasicVal    = document.getElementById('phasic-val');
+    const meterFill    = document.getElementById('meter-fill');
+    const taskCard     = document.getElementById('task-card');
+    const snrLabel     = document.getElementById('snr-label');
+    const statusDesc   = document.getElementById('status-desc');
+    const canvas       = document.getElementById('noise-canvas');
+    const ctx          = canvas.getContext('2d');
+    const vizPanel     = document.getElementById('viz-panel');
+
+    const ACTION_THRESHOLD = 0.45;
+
+    function resizeCanvas() {
+        canvas.width  = vizPanel.offsetWidth;
+        canvas.height = vizPanel.offsetHeight;
+    }
+    requestAnimationFrame(resizeCanvas);
+    window.addEventListener('resize', resizeCanvas);
+
+    function computeSNR(tonic, phasic) {
+        const noise  = (100 - tonic) / 100;
+        const signal = (tonic * 0.45 + phasic * 0.55) / 100;
+        return Math.min(1, signal / (noise + 0.25));
+    }
+
+    const distractions = [
+        '📱 notification', '💭 random thought', '🎵 earworm',
+        '🛋️ so comfortable...', '✨ new idea!', '🐈 the cat moved',
+        '🌐 one quick tab', '⏰ what time is it?', '☕ need coffee first',
+        '🔔 did I reply to that?', '🌿 is that a new leaf?'
+    ];
+
+    function drawNoise(noiseLevel) {
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+        if (noiseLevel < 0.02) return;
+
+        const dotCount = Math.floor(noiseLevel * noiseLevel * 5000);
+        for (let i = 0; i < dotCount; i++) {
+            const x  = Math.random() * w;
+            const y  = Math.random() * h;
+            const r  = Math.random() * 2.5 + 0.5;
+            const br = Math.floor(Math.random() * 200 + 55);
+            const a  = Math.random() * noiseLevel * 0.7;
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${br},${Math.floor(br*0.88)},${Math.floor(br*0.80)},${a})`;
+            ctx.fill();
+        }
+
+        if (noiseLevel > 0.3) {
+            const alpha    = Math.min(0.9, (noiseLevel - 0.3) * 1.8);
+            const fontSize = Math.floor(noiseLevel * 14 + 10);
+            ctx.font       = `${fontSize}px 'Nunito Sans', sans-serif`;
+            const count    = Math.ceil(noiseLevel * 6);
+
+            for (let i = 0; i < count; i++) {
+                const d = distractions[Math.floor(Math.random() * distractions.length)];
+                const x = 8 + Math.random() * (w - 160);
+                const y = fontSize + Math.random() * (h - fontSize - 8);
+                ctx.fillStyle = `rgba(220, 205, 185, ${alpha * (0.5 + Math.random() * 0.5)})`;
+                ctx.fillText(d, x, y);
+            }
+        }
+    }
+
+    let frameCount = 0;
+    function animate() {
+        frameCount++;
+        if (frameCount % 3 === 0) {
+            const noiseLevel = Math.max(0, (100 - parseInt(tonicSlider.value)) / 100);
+            drawNoise(noiseLevel);
+        }
+        requestAnimationFrame(animate);
+    }
+    animate();
+
+    function updateUI() {
+        const tonic  = parseInt(tonicSlider.value);
+        const phasic = parseInt(phasicSlider.value);
+
+        tonicVal.innerText  = tonic;
+        phasicVal.innerText = phasic;
+
+        const snr    = computeSNR(tonic, phasic);
+        const snrPct = Math.min(100, Math.round(snr * 100));
+
+        meterFill.style.height = `${snrPct}%`;
+        meterFill.style.background = snr >= ACTION_THRESHOLD
+            ? 'linear-gradient(to top, var(--green), #a3d4bc)'
+            : 'linear-gradient(to top, var(--terra), #d4a897)';
+
+        taskCard.style.opacity = Math.min(1, Math.max(0.04, snr * 2.4));
+
+        if (phasic > 60 && tonic < 35) {
+            const intensity = Math.min(1, (phasic - 60) / 40);
+            taskCard.style.borderColor = 'var(--gold)';
+            taskCard.style.boxShadow   = `0 0 ${Math.round(intensity*28)}px ${Math.round(intensity*10)}px rgba(186,148,94,${(intensity*0.65).toFixed(2)})`;
+        } else {
+            taskCard.style.borderColor = 'var(--green)';
+            taskCard.style.boxShadow   = '0 4px 12px rgba(0,0,0,0.2)';
+        }
+
+        updateStatus(tonic, phasic, snr);
+    }
+
+    function updateStatus(tonic, phasic, snr) {
+        const canAct = snr >= ACTION_THRESHOLD;
+
+        if (canAct) {
+            if (phasic > 60 && tonic < 35) {
+                snrLabel.style.color = 'var(--gold)';
+                snrLabel.innerText   = '⚡ Crossing threshold - but only via urgency. Not sustainable.';
+                statusDesc.innerText = 'Phasic dopamine (panic, deadline, crisis) is doing all the heavy lifting. The moment urgency fades, the task vanishes from view again.';
+            } else {
+                snrLabel.style.color = 'var(--green)';
+                snrLabel.innerText   = '✅ Signal clear. Task is accessible and actionable.';
+                statusDesc.innerText = 'Tonic baseline is stable enough to suppress noise. Routine tasks can trigger action without urgency or crisis.';
+            }
+        } else {
+            if (tonic < 35) {
+                snrLabel.style.color = 'var(--terra)';
+                snrLabel.innerText   = '🔇 Signal buried. Brain cannot initiate.';
+                statusDesc.innerText = 'Low tonic dopamine floods the field with competing signals. "Do Laundry" exists but cannot be heard above the noise. Try cranking PHASIC (Urgency / Novelty) all the way up.';
+            } else {
+                snrLabel.style.color = 'var(--grey)';
+                snrLabel.innerText   = '⚠️ Weak signal - below action threshold.';
+                statusDesc.innerText = 'Task is partially visible but below the initiation threshold. A small phasic boost - a bit of interest, novelty, or mild urgency - may be enough.';
+            }
+        }
+    }
+
+    tonicSlider.addEventListener('input', updateUI);
+    phasicSlider.addEventListener('input', updateUI);
+
+    function setProfile(profile) {
+        document.getElementById('btn-nt').className   = 'profile-btn' + (profile === 'nt'   ? ' active-nt'   : '');
+        document.getElementById('btn-adhd').className = 'profile-btn' + (profile === 'adhd' ? ' active-adhd' : '');
+        profile === 'nt' ? animateFaders(70, 30) : animateFaders(20, 15);
+    }
+
+    function animateFaders(targetTonic, targetPhasic) {
+        const startTonic  = parseInt(tonicSlider.value);
+        const startPhasic = parseInt(phasicSlider.value);
+        const duration    = 650;
+        const startTime   = performance.now();
+
+        function step(now) {
+            const t     = Math.min(1, (now - startTime) / duration);
+            const eased = t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t;
+            tonicSlider.value  = Math.round(startTonic  + (targetTonic  - startTonic)  * eased);
+            phasicSlider.value = Math.round(startPhasic + (targetPhasic - startPhasic) * eased);
+            updateUI();
+            if (t < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+    }
+
+    updateUI();
+</script>
+</body>
+</html>
