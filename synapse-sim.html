@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Synapse Simulator — Second Arrow Counseling</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:  #4a7c5f;
+  --forest: #35361c;
+  --sage:   #8aab95;
+  --cream:  #faf8f3;
+  --parch:  #f2ede3;
+  --card:   #ede8dd;
+  --ink:    #2c2c1e;
+  --muted:  #7a8a7e;
+  --border: rgba(74,124,95,0.18);
+  --da:     #c8a86b;
+  --bound:  #4a9e6e;
+  --reup:   #b05c4e;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  background:var(--cream);
+  font-family:'Libre Baskerville',Georgia,serif;
+  min-height:100vh;
+  color:var(--ink);
+  overflow-x:hidden;
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:0.027;
+}
+
+.app{max-width:980px;margin:0 auto;padding:26px 20px 48px}
+
+header{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border);
+  opacity:0;animation:fadeUp .7s ease forwards .05s;
+}
+.hdr-left .eyebrow{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--sage);display:block;margin-bottom:5px;
+}
+.hdr-left h1{font-size:clamp(1.4rem,3vw,2rem);font-weight:400;font-style:italic;color:var(--forest);line-height:1}
+.hdr-right{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.13em;color:var(--muted);text-align:right;line-height:1.6}
+
+.main-grid{
+  display:grid;grid-template-columns:1fr 290px;gap:22px;align-items:start;
+  opacity:0;animation:fadeUp .7s ease forwards .2s;
+}
+
+/* ── SCENE ── */
+.scene-wrap{
+  position:relative;width:100%;height:640px;
+  background:var(--parch);border-radius:8px;border:1px solid var(--border);
+  overflow:hidden;
+}
+.scene-wrap::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,transparent 50%,rgba(235,229,218,.6) 100%);
+  z-index:2;pointer-events:none;
+}
+
+/* Images constrained by HEIGHT — not width — so they never overflow */
+.n-img{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  height:42%;           /* ← key fix: constrain by height */
+  width:auto;
+  max-width:78%;
+  mix-blend-mode:multiply;
+  filter:sepia(8%) saturate(.85) brightness(1.04);
+  pointer-events:none;
+  z-index:1;
+  display:block;
+}
+.n-pre { top:0; }
+.n-post{
+  bottom:0;
+  /* NO scaleY(-1): post-synaptic PNG has receptor face at top,
+     which naturally faces the cleft when placed at bottom:0       */
+}
+
+#sc{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
+
+.scene-legend{
+  position:absolute;bottom:8px;left:10px;z-index:4;
+  display:flex;flex-direction:column;gap:5px;pointer-events:none;
+}
+.leg-item{
+  display:flex;align-items:center;gap:6px;
+  font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+.scene-lbl-row{display:flex;justify-content:space-between;padding:7px 2px 0}
+.scene-lbl-row span{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* ── CONTROLS ── */
+.ctrl-col{display:flex;flex-direction:column;gap:16px}
+.sect-lbl{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+.nt-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.nt-btn{
+  padding:9px 7px;border:1px solid var(--border);background:var(--parch);
+  border-radius:5px;cursor:pointer;text-align:center;transition:border-color .18s,background .18s;
+  font-family:'DM Mono',monospace;
+}
+.nt-btn .nt-name{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--forest);display:block;font-weight:500}
+.nt-btn .nt-sub{font-family:'Libre Baskerville',serif;font-size:9.5px;color:var(--muted);display:block;margin-top:2px;font-style:italic}
+.nt-btn:hover{border-color:var(--green)}
+.nt-btn.active{border-color:var(--green);background:rgba(74,124,95,.07)}
+.nt-btn.active .nt-name{color:var(--green)}
+
+.divider{height:1px;background:var(--border)}
+
+.sliders{display:flex;flex-direction:column;gap:13px}
+.sl-row{display:flex;flex-direction:column;gap:5px}
+.sl-hdr{display:flex;justify-content:space-between;align-items:baseline}
+.sl-lbl{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--forest)}
+.sl-val{font-family:'DM Mono',monospace;font-size:11px;color:var(--green);min-width:36px;text-align:right}
+.sl-desc{font-size:10px;color:var(--muted);font-style:italic;line-height:1.4}
+
+input[type=range]{
+  -webkit-appearance:none;width:100%;height:3px;
+  background:linear-gradient(to right,var(--green) var(--pct,40%),rgba(74,124,95,.18) var(--pct,40%));
+  border-radius:2px;outline:none;cursor:pointer;margin:2px 0;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+  background:var(--cream);border:2px solid var(--green);
+  box-shadow:0 1px 4px rgba(0,0,0,.12);cursor:pointer;transition:transform .15s;
+}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
+
+.fire-btn{
+  width:100%;padding:14px 10px;background:var(--forest);color:var(--cream);
+  border:none;border-radius:5px;font-family:'Libre Baskerville',serif;
+  font-style:italic;font-size:1.05rem;letter-spacing:.04em;cursor:pointer;
+  transition:background .2s,transform .1s,box-shadow .2s;
+  box-shadow:0 2px 12px rgba(53,54,28,.18);
+}
+.fire-btn:hover:not(:disabled){background:var(--green);box-shadow:0 4px 18px rgba(74,124,95,.3)}
+.fire-btn:active:not(:disabled){transform:scale(0.98)}
+.fire-btn:disabled{opacity:.45;cursor:not-allowed}
+
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.stat-box{background:var(--parch);border:1px solid var(--border);border-radius:5px;padding:10px 10px 8px;text-align:center}
+.stat-v{font-family:'DM Mono',monospace;font-size:1.35rem;color:var(--forest);display:block;line-height:1;margin-bottom:3px}
+.stat-l{font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.stat-box.hi .stat-v{color:var(--green)}
+.ebar-wrap{height:3px;background:rgba(74,124,95,.15);border-radius:2px;overflow:hidden;margin-top:5px}
+.ebar{height:100%;background:var(--green);border-radius:2px;transition:width .5s ease;width:0}
+
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:5px;padding:13px 14px}
+.info-card h3{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--green);margin-bottom:7px}
+.info-card p{font-size:11px;line-height:1.7;color:var(--ink);font-style:italic}
+
+.reset-link{display:block;text-align:center;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);cursor:pointer;border:none;background:none;width:100%;padding:2px 0}
+.reset-link:hover{color:var(--green)}
+
+footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--border);text-align:center;font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--sage);opacity:0;animation:fadeUp .7s ease forwards .4s}
+footer a{color:inherit;text-decoration:none}
+footer a:hover{color:var(--green)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:700px){
+  .main-grid{grid-template-columns:1fr}
+  .scene-wrap{height:480px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header>
+  <div class="hdr-left">
+    <span class="eyebrow">Second Arrow Counseling</span>
+    <h1>Synapse Simulator</h1>
+  </div>
+  <div class="hdr-right">Clinical education tool<br>Not for diagnostic use</div>
+</header>
+
+<div class="main-grid">
+  <div>
+    <div class="scene-wrap" id="scene-wrap">
+      <img class="n-img n-pre" id="img-pre"
+        src="https://raw.githubusercontent.com/secondarrowcounseling/clinical-tools/main/PresynapticNeuron.png"
+        alt="Pre-synaptic terminal">
+      <img class="n-img n-post" id="img-post"
+        src="https://raw.githubusercontent.com/secondarrowcounseling/clinical-tools/main/PostsynapticNeuron.png"
+        alt="Post-synaptic dendrite">
+      <canvas id="sc"></canvas>
+      <div class="scene-legend">
+        <div class="leg-item"><div class="leg-dot" style="background:#c8a86b;box-shadow:0 0 4px rgba(200,168,107,.6)"></div>Dopamine</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#4a9e6e"></div>Bound</div>
+        <div class="leg-item"><div class="leg-dot" style="background:#b05c4e"></div>Reuptaken (DAT)</div>
+      </div>
+    </div>
+    <div class="scene-lbl-row">
+      <span>Pre-Synaptic Terminal</span>
+      <span>Synaptic Cleft</span>
+      <span>Post-Synaptic Dendrite</span>
+    </div>
+  </div>
+
+  <div class="ctrl-col">
+    <div class="sect-lbl">Neurotype Profile</div>
+    <div class="nt-grid">
+      <button class="nt-btn active" data-nt="NT"><span class="nt-name">NT</span><span class="nt-sub">Neurotypical</span></button>
+      <button class="nt-btn" data-nt="ADHD"><span class="nt-name">ADHD</span><span class="nt-sub">High reuptake</span></button>
+      <button class="nt-btn" data-nt="Autism"><span class="nt-name">Autism</span><span class="nt-sub">Altered gating</span></button>
+      <button class="nt-btn" data-nt="AuDHD"><span class="nt-name">AuDHD</span><span class="nt-sub">Combined</span></button>
+    </div>
+
+    <div class="divider"></div>
+    <div class="sect-lbl">Parameters</div>
+    <div class="sliders">
+      <div class="sl-row">
+        <div class="sl-hdr"><span class="sl-lbl">DAT Activity</span><span class="sl-val" id="v-dat">40%</span></div>
+        <input type="range" id="s-dat" min="10" max="95" value="40">
+        <span class="sl-desc">Reuptake transporter — higher vacuums faster</span>
+      </div>
+      <div class="sl-row">
+        <div class="sl-hdr"><span class="sl-lbl">Receptor Density</span><span class="sl-val" id="v-rec">65%</span></div>
+        <input type="range" id="s-rec" min="10" max="95" value="65">
+        <span class="sl-desc">D1/D2 binding sites — lower = fewer targets</span>
+      </div>
+      <div class="sl-row">
+        <div class="sl-hdr"><span class="sl-lbl">Signal Intensity</span><span class="sl-val" id="v-sig">40</span></div>
+        <input type="range" id="s-sig" min="8" max="80" value="40">
+        <span class="sl-desc">Molecules released per firing event</span>
+      </div>
+    </div>
+
+    <button class="fire-btn" id="fire-btn">Fire Signal</button>
+    <button class="reset-link" id="reset-btn">↺ Reset Stats</button>
+
+    <div class="divider"></div>
+    <div class="sect-lbl">Signal Outcome</div>
+    <div class="stats-grid">
+      <div class="stat-box"><span class="stat-v" id="st-rel">—</span><span class="stat-l">Released</span></div>
+      <div class="stat-box hi">
+        <span class="stat-v" id="st-bnd">—</span><span class="stat-l">Bound</span>
+        <div class="ebar-wrap"><div class="ebar" id="ebar"></div></div>
+      </div>
+      <div class="stat-box"><span class="stat-v" id="st-reu">—</span><span class="stat-l">Reuptaken</span></div>
+      <div class="stat-box"><span class="stat-v" id="st-eff">—</span><span class="stat-l">Efficiency</span></div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="info-card">
+      <h3 id="info-title">NT — Neurotypical</h3>
+      <p id="info-body">Balanced dopamine dynamics. DAT clears the cleft at a moderate rate, leaving enough time for D1/D2 receptors to bind. Motivation and reward circuits function with standard efficiency.</p>
+    </div>
+  </div>
+</div>
+
+<footer>Second Arrow Counseling &nbsp;·&nbsp; Clinical Education Tool &nbsp;·&nbsp; <a href="https://www.secondarrowcounseling.com">secondarrowcounseling.com</a></footer>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+//  PRESETS
+// ─────────────────────────────────────────────
+const PRESETS = {
+  NT:    { dat:40, rec:65, sig:40,
+    title:'NT — Neurotypical',
+    body:'Balanced dopamine dynamics. DAT clears the cleft at a moderate rate, leaving enough time for D1/D2 receptors to bind. Motivation and reward circuits function with standard efficiency.' },
+  ADHD:  { dat:78, rec:44, sig:40,
+    title:'ADHD — High DAT Activity',
+    body:'Elevated DAT vacuums dopamine before it can bind. Fewer receptors mean the signal that arrives is weaker. The result: low baseline motivation and a high hunger for intense stimulation — seeking the flood that finally breaks through.' },
+  Autism:{ dat:36, rec:50, sig:40,
+    title:'Autism — Altered Receptor Gating',
+    body:'DAT is closer to baseline, but receptor configuration produces less modulated, more all-or-nothing signal processing. The system can be hypersensitive to certain inputs while less responsive to conventional social reward pathways.' },
+  AuDHD: { dat:72, rec:36, sig:40,
+    title:'AuDHD — Combined Profile',
+    body:'Elevated reuptake meets altered receptor density. The dopamine system is working against itself — molecules are cleared quickly, and the available binding sites may not respond predictably. High variability, high effort, inconsistent reward.' }
+};
+
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+const S = {
+  dat:40, rec:65, sig:40,
+  molecules:[], receptors:[], dats:[], vesicles:[],
+  stats:{ rel:0, bnd:0, reu:0 },
+  firing:false, frame:0,
+  W:0, H:0,
+  AZY:0,   // active zone Y  = where molecules spawn (bottom of pre-synaptic)
+  RZY:0    // receptor zone Y = where receptors are   (top of post-synaptic)
+};
+
+// ─────────────────────────────────────────────
+//  CANVAS + RESIZE
+// ─────────────────────────────────────────────
+const canvas = document.getElementById('sc');
+const ctx    = canvas.getContext('2d');
+const wrap   = document.getElementById('scene-wrap');
+const imgPre = document.getElementById('img-pre');
+const imgPost= document.getElementById('img-post');
+
+function resize() {
+  S.W = canvas.width  = wrap.clientWidth;
+  S.H = canvas.height = wrap.clientHeight;
+
+  // Dynamically read where images actually render — no hardcoded fractions
+  // Pre-synaptic is at top:0; its rendered height = bottom of image
+  const preH  = imgPre.offsetHeight  || S.H * 0.42;
+  // Post-synaptic is at bottom:0; top of image = S.H - postH
+  const postH = imgPost.offsetHeight || S.H * 0.42;
+
+  // Active zone: 88% down the pre-synaptic image (inset for whitespace at bottom)
+  S.AZY = preH  * 0.88;
+
+  // Receptor zone: top of post image + 12% inset (whitespace above receptor face)
+  S.RZY = (S.H - postH) + postH * 0.12;
+
+  buildReceptors();
+  buildDATs();
+  initVesicles();
+}
+
+// Boot after both images load (handle cache hits)
+let imgLoadCount = 0;
+function onImgLoad() {
+  if (++imgLoadCount >= 2) { resize(); requestAnimationFrame(loop); }
+}
+imgPre.addEventListener('load',  onImgLoad);
+imgPre.addEventListener('error', onImgLoad);
+imgPost.addEventListener('load', onImgLoad);
+imgPost.addEventListener('error',onImgLoad);
+if (imgPre.complete)  onImgLoad();
+if (imgPost.complete) onImgLoad();
+
+window.addEventListener('resize', resize);
+
+// ─────────────────────────────────────────────
+//  BUILD RECEPTORS & DATs
+// ─────────────────────────────────────────────
+function buildReceptors() {
+  const count = Math.max(2, Math.round(2 + S.rec * 0.07));
+  S.receptors = [];
+  const cx = S.W/2, spread = S.W * 0.42;
+  for (let i = 0; i < count; i++) {
+    const t = count === 1 ? 0.5 : i/(count-1);
+    S.receptors.push({ x: cx - spread/2 + t*spread, y: S.RZY, occupied:false, timer:0, flash:0 });
+  }
+}
+
+function buildDATs() {
+  const count = Math.max(1, Math.round(1 + S.dat * 0.075));
+  S.dats = [];
+  const cx = S.W/2, spread = S.W * 0.48;
+  for (let i = 0; i < count; i++) {
+    const t = count === 1 ? 0.5 : i/(count-1);
+    S.dats.push({
+      x: cx - spread/2 + t*spread, y: S.AZY,
+      pull: 22 + S.dat * 0.22,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+}
+
+// ─────────────────────────────────────────────
+//  VESICLES  (inside pre-synaptic terminal)
+// ─────────────────────────────────────────────
+function initVesicles() {
+  S.vesicles = [];
+  for (let i = 0; i < 5; i++) {
+    S.vesicles.push({
+      x: S.W  * (0.3 + Math.random() * 0.4),
+      y: S.AZY * (0.15 + Math.random() * 0.62),  // within the terminal bulb
+      r: 7 + Math.random() * 5,
+      vx:(Math.random()-.5)*.12, vy:(Math.random()-.5)*.12,
+      phase: Math.random() * Math.PI * 2,
+      fusing:false, fuseX:0, fuseY:0, fuseP:0
+    });
+  }
+}
+
+// ─────────────────────────────────────────────
+//  FIRE SIGNAL
+// ─────────────────────────────────────────────
+function fireSignal() {
+  if (S.firing) return;
+  S.firing = true;
+  document.getElementById('fire-btn').disabled = true;
+
+  const v = S.vesicles[Math.floor(Math.random() * S.vesicles.length)];
+  v.fusing = true;
+  v.fuseX  = S.W * (0.42 + Math.random() * 0.16);
+  v.fuseY  = S.AZY;
+  v.fuseP  = 0;
+
+  setTimeout(() => {
+    spawnMolecules(S.sig);
+    v.fusing = false; v.fuseP = 0;
+    v.x = S.W * (0.3 + Math.random() * 0.4);
+    v.y = S.AZY * (0.15 + Math.random() * 0.62);
+  }, 400);
+
+  setTimeout(() => {
+    S.firing = false;
+    document.getElementById('fire-btn').disabled = false;
+  }, 4000);
+}
+
+function spawnMolecules(n) {
+  const cx = S.W/2, spread = S.W * 0.22;
+  for (let i = 0; i < n; i++) {
+    S.molecules.push({
+      x:  cx + (Math.random()-.5) * spread,
+      y:  S.AZY + (Math.random()-.5) * 5,
+      vx: (Math.random()-.5) * 0.55,
+      vy: 0.5 + Math.random() * 0.38,   // downward toward RZY
+      r:  2.8 + Math.random() * 1.4,
+      st: 'move', al:1,
+      jit: 0.07 + Math.random() * 0.11,
+      bt: null
+    });
+    S.stats.rel++;
+  }
+}
+
+// ─────────────────────────────────────────────
+//  UPDATE
+// ─────────────────────────────────────────────
+function update() {
+  S.frame++;
+  const { W, AZY, RZY } = S;
+  const cleftMid = (AZY + RZY) / 2;
+
+  // Vesicles drift inside the terminal
+  S.vesicles.forEach(v => {
+    if (v.fusing) {
+      v.x += (v.fuseX - v.x) * 0.12;
+      v.y += (v.fuseY - v.y) * 0.12;
+      v.fuseP = Math.min(1, v.fuseP + 0.05);
+      return;
+    }
+    v.x += v.vx + Math.sin(S.frame*.009 + v.phase)*.08;
+    v.y += v.vy + Math.cos(S.frame*.007 + v.phase)*.08;
+    v.vx *= .98; v.vy *= .98;
+    const xL=W*.2, xR=W*.8, yT=AZY*.1, yB=AZY-10;
+    if (v.x < xL+16) v.vx += .05;
+    if (v.x > xR-16) v.vx -= .05;
+    if (v.y < yT+16) v.vy += .04;
+    if (v.y > yB-8)  v.vy -= .04;
+  });
+
+  // Receptor timers + flash fade
+  S.receptors.forEach(r => {
+    if (r.timer > 0) r.timer--;
+    if (r.timer <= 0) r.occupied = false;
+    r.flash = Math.max(0, r.flash - 0.028);
+  });
+
+  // Molecules
+  S.molecules.forEach(m => {
+    if (m.st === 'dead') return;
+
+    if (m.st === 'move') {
+      m.vx += (Math.random()-.5) * m.jit;
+      m.vx *= .95;
+      m.x  += m.vx;
+      m.y  += m.vy;
+      if (m.x < 8)     m.vx += .3;
+      if (m.x > W-8)   m.vx -= .3;
+
+      // DAT pull — only while above cleft midpoint
+      if (m.y < cleftMid) {
+        for (const dat of S.dats) {
+          const dx = m.x-dat.x, dy = m.y-dat.y;
+          const d  = Math.sqrt(dx*dx+dy*dy);
+          if (d < dat.pull) {
+            const f = (1 - d/dat.pull) * .45;
+            m.vx -= dx*f*.06;
+            m.vy -= f*.72;
+            if (d < 7) { m.st='reup'; S.stats.reu++; break; }
+          }
+        }
+      }
+
+      // Receptor binding — at RZY
+      if (m.st==='move' && m.y >= RZY - 10) {
+        let best=null, bestD=40;
+        S.receptors.forEach(r => {
+          if (!r.occupied) {
+            const dx=Math.abs(m.x-r.x);
+            if (dx<bestD){best=r;bestD=dx}
+          }
+        });
+        if (best) {
+          best.occupied=true; best.timer=80+Math.floor(Math.random()*70); best.flash=1;
+          m.x=best.x; m.y=best.y; m.st='bind'; m.bt=best; S.stats.bnd++;
+        } else {
+          m.st='lost';
+        }
+      }
+
+      if (m.y > RZY+30 || m.y < AZY-50) m.st='dead';
+    }
+
+    else if (m.st==='bind') { m.al-=.022; m.r*=.975; if(m.al<=0) m.st='dead'; }
+    else if (m.st==='reup') {
+      m.vy-=.38; m.al-=.045; m.x+=m.vx; m.y+=m.vy;
+      if (m.al<=0||m.y<AZY-40) m.st='dead';
+    }
+    else if (m.st==='lost') {
+      m.al-=.013; m.vy+=.08; m.x+=m.vx; m.y+=m.vy;
+      if (m.al<=0) m.st='dead';
+    }
+  });
+
+  S.molecules = S.molecules.filter(m => m.st !== 'dead');
+  updateStats();
+}
+
+// ─────────────────────────────────────────────
+//  DRAW
+// ─────────────────────────────────────────────
+function draw() {
+  const { W, H, AZY, RZY, frame } = S;
+  ctx.clearRect(0, 0, W, H);
+  const cleftMid = (AZY+RZY)/2;
+
+  // Cleft background glow
+  const cg = ctx.createLinearGradient(0, AZY, 0, RZY);
+  cg.addColorStop(0,   'rgba(250,248,243,0)');
+  cg.addColorStop(.3,  'rgba(138,171,149,.08)');
+  cg.addColorStop(.7,  'rgba(138,171,149,.08)');
+  cg.addColorStop(1,   'rgba(250,248,243,0)');
+  ctx.fillStyle = cg;
+  ctx.fillRect(0, AZY, W, RZY-AZY);
+
+  // Organic membrane lines
+  function memLine(y) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(W*.1, y);
+    for (let x=W*.1; x<=W*.9; x+=3)
+      ctx.lineTo(x, y + Math.sin(x*.045 + frame*.018)*1.3);
+    ctx.strokeStyle = 'rgba(53,54,28,.26)';
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+    ctx.restore();
+  }
+  memLine(AZY);
+  memLine(RZY);
+
+  // DAT transporters (on active zone membrane, opening downward into cleft)
+  S.dats.forEach(dat => {
+    const p = .5+.5*Math.sin(frame*.045+dat.phase);
+    if (S.dat > 35) {
+      const fg = ctx.createRadialGradient(dat.x,dat.y,0,dat.x,dat.y,dat.pull);
+      fg.addColorStop(0,`rgba(176,92,78,${.07*p})`);
+      fg.addColorStop(1,'rgba(176,92,78,0)');
+      ctx.beginPath(); ctx.arc(dat.x,dat.y,dat.pull,0,Math.PI*2);
+      ctx.fillStyle=fg; ctx.fill();
+    }
+    ctx.save();
+    ctx.strokeStyle=`rgba(176,92,78,${.45+p*.3})`;
+    ctx.lineWidth=1.7;
+    ctx.beginPath();
+    ctx.arc(dat.x,dat.y,6.5,Math.PI,0);  // arch on membrane, open down
+    ctx.stroke();
+    ctx.lineWidth=1;
+    ctx.strokeStyle=`rgba(176,92,78,${.3+p*.2})`;
+    [-3.5,0,3.5].forEach(ox=>{
+      ctx.beginPath();
+      ctx.moveTo(dat.x+ox, dat.y+3);
+      ctx.lineTo(dat.x+ox, dat.y+8);
+      ctx.stroke();
+    });
+    ctx.restore();
+  });
+
+  // Receptor sites (on receptor zone membrane, opening upward into cleft)
+  S.receptors.forEach(r => {
+    if (r.flash > 0) {
+      const rg=ctx.createRadialGradient(r.x,r.y,0,r.x,r.y,16);
+      rg.addColorStop(0,`rgba(74,158,110,${r.flash*.55})`);
+      rg.addColorStop(1,'rgba(74,158,110,0)');
+      ctx.beginPath(); ctx.arc(r.x,r.y,16,0,Math.PI*2);
+      ctx.fillStyle=rg; ctx.fill();
+    }
+    const col = r.occupied ? `rgba(74,158,110,${.75+r.flash*.25})` : 'rgba(53,54,28,.38)';
+    ctx.save();
+    ctx.strokeStyle=col; ctx.lineWidth=1.6;
+    ctx.beginPath();
+    ctx.arc(r.x, r.y, 5.5, Math.PI, 0);   // keyhole arch opens upward
+    ctx.lineTo(r.x+3, r.y+7.5);
+    ctx.lineTo(r.x-3, r.y+7.5);
+    ctx.closePath();
+    ctx.stroke();
+    if (r.occupied){ ctx.fillStyle=`rgba(74,158,110,${.15+r.flash*.25})`; ctx.fill(); }
+    ctx.restore();
+  });
+
+  // Vesicles
+  S.vesicles.forEach(v => {
+    const al = v.fusing ? 1-v.fuseP*.85 : 0.72;
+    ctx.save();
+    ctx.setLineDash([2,2]);
+    ctx.beginPath(); ctx.arc(v.x,v.y,v.r,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(53,54,28,${al*.42})`; ctx.lineWidth=1.2; ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=`rgba(111,168,130,${al*.18})`; ctx.fill();
+    ctx.beginPath(); ctx.arc(v.x,v.y,v.r*.3,0,Math.PI*2);
+    ctx.fillStyle=`rgba(200,168,107,${al*.5})`; ctx.fill();
+    ctx.restore();
+  });
+
+  // Dopamine molecules
+  S.molecules.forEach(m => {
+    if (m.st==='dead') return;
+    const a=m.al, r=m.r;
+    const mg=ctx.createRadialGradient(m.x,m.y,0,m.x,m.y,r*3.8);
+    mg.addColorStop(0,`rgba(200,168,107,${a*.5})`);
+    mg.addColorStop(1,'rgba(200,168,107,0)');
+    ctx.beginPath(); ctx.arc(m.x,m.y,r*3.8,0,Math.PI*2);
+    ctx.fillStyle=mg; ctx.fill();
+
+    ctx.beginPath(); ctx.arc(m.x,m.y,r,0,Math.PI*2);
+    ctx.fillStyle = m.st==='bind' ? `rgba(74,158,110,${a})`
+                  : m.st==='reup' ? `rgba(176,92,78,${a})`
+                  : `rgba(200,168,107,${a})`;
+    ctx.fill();
+    ctx.beginPath(); ctx.arc(m.x-r*.28,m.y-r*.28,r*.38,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,245,215,${a*.5})`; ctx.fill();
+  });
+
+  // Cleft label
+  ctx.save();
+  ctx.font="8px 'DM Mono',monospace";
+  ctx.fillStyle='rgba(138,171,149,.6)';
+  ctx.textAlign='right';
+  ctx.fillText('SYNAPTIC CLEFT', W-12, cleftMid+3);
+  ctx.restore();
+}
+
+// ─────────────────────────────────────────────
+//  STATS
+// ─────────────────────────────────────────────
+function updateStats() {
+  const {rel,bnd,reu}=S.stats;
+  const eff=rel>0?Math.round(bnd/rel*100):0;
+  document.getElementById('st-rel').textContent=rel>0?rel:'—';
+  document.getElementById('st-bnd').textContent=bnd>0?bnd:'—';
+  document.getElementById('st-reu').textContent=reu>0?reu:'—';
+  document.getElementById('st-eff').textContent=rel>0?eff+'%':'—';
+  document.getElementById('ebar').style.width=eff+'%';
+}
+
+// ─────────────────────────────────────────────
+//  CONTROLS
+// ─────────────────────────────────────────────
+function setSlider(id,valId,val,suffix){
+  const el=document.getElementById(id);
+  el.value=val;
+  document.getElementById(valId).textContent=val+suffix;
+  const pct=(val-el.min)/(el.max-el.min)*100;
+  el.style.setProperty('--pct',pct+'%');
+}
+function applyPreset(key){
+  const p=PRESETS[key];
+  S.dat=p.dat; S.rec=p.rec; S.sig=p.sig;
+  setSlider('s-dat','v-dat',p.dat,'%');
+  setSlider('s-rec','v-rec',p.rec,'%');
+  setSlider('s-sig','v-sig',p.sig,'');
+  document.getElementById('info-title').textContent=p.title;
+  document.getElementById('info-body').textContent=p.body;
+  buildReceptors(); buildDATs();
+  document.querySelectorAll('.nt-btn').forEach(b=>b.classList.toggle('active',b.dataset.nt===key));
+}
+document.querySelectorAll('.nt-btn').forEach(btn=>
+  btn.addEventListener('click',()=>applyPreset(btn.dataset.nt)));
+
+function sliderInput(id,valId,suffix,key){
+  const el=document.getElementById(id);
+  el.addEventListener('input',()=>{
+    const v=+el.value;
+    document.getElementById(valId).textContent=v+suffix;
+    const pct=(v-el.min)/(el.max-el.min)*100;
+    el.style.setProperty('--pct',pct+'%');
+    S[key]=v; buildReceptors(); buildDATs();
+    document.querySelectorAll('.nt-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById('info-title').textContent='Custom Configuration';
+    document.getElementById('info-body').textContent='Manually adjusted. Watch how DAT activity and receptor density determine how much dopamine actually binds — and how much gets lost.';
+  });
+}
+sliderInput('s-dat','v-dat','%','dat');
+sliderInput('s-rec','v-rec','%','rec');
+sliderInput('s-sig','v-sig','','sig');
+
+document.getElementById('fire-btn').addEventListener('click',fireSignal);
+document.getElementById('reset-btn').addEventListener('click',()=>{
+  S.stats={rel:0,bnd:0,reu:0}; updateStats();
+});
+
+// ─────────────────────────────────────────────
+//  LOOP
+// ─────────────────────────────────────────────
+function loop(){ update(); draw(); requestAnimationFrame(loop); }
+
+applyPreset('NT');
+</script>
+</body>
+</html>
