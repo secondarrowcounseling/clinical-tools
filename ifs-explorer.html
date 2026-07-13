@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Inner System — Second Arrow Counseling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;1,6..12,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#45735d;--gold:#ba945e;--terra:#b68d76;
+  --forest:#35361c;--text:#222a26;--grey:#6d7873;
+  --bg:#faf8f5;--accent-bg:#F5F3EF;--stone:#bdb7a2;--cool-grey:#a6aea6;
+  --blue:#7a9eb5;
+  --self-c:#ba945e;--mgr-c:#45735d;--fire-c:#b68d76;--exile-c:#7a9eb5;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+
+.brand-bar{width:100%;max-width:1180px;display:flex;justify-content:flex-start;
+  align-items:center;padding:0 4px 10px}
+.brand-bar a{font-family:'Libre Baskerville',serif;font-size:20px;color:var(--forest);
+  text-decoration:none;letter-spacing:.01em;opacity:.9}
+.brand-bar a:hover{opacity:1}
+
+.header{background:var(--accent-bg);padding:13px 20px;border-radius:10px;
+  box-shadow:0 3px 6px rgba(0,0,0,.07);width:100%;max-width:1180px;
+  margin-bottom:12px;text-align:center}
+.header h2{font-family:'Libre Baskerville',serif;font-size:1.28em;color:var(--forest);margin-bottom:4px}
+.header p{color:var(--grey);font-size:.86em;line-height:1.55;max-width:680px;margin:0 auto}
+
+.three-col{display:grid;grid-template-columns:230px 1fr 255px;gap:12px;
+  width:100%;max-width:1180px;align-items:stretch}
+
+.panel{background:var(--accent-bg);border-radius:10px;
+  box-shadow:0 3px 6px rgba(0,0,0,.07);padding:14px 13px;
+  display:flex;flex-direction:column;gap:9px}
+
+.mid-panel{background:var(--accent-bg);border-radius:10px;
+  box-shadow:0 3px 6px rgba(0,0,0,.07);padding:10px;
+  display:flex;flex-direction:column;align-items:center;
+  height:100%;box-sizing:border-box}
+
+#ifs-canvas{display:block;width:100%;border-radius:8px;flex-grow:1;min-height:0;cursor:default}
+
+.sect-lbl{font-family:'Libre Baskerville',serif;font-size:.73em;color:var(--grey);
+  text-transform:uppercase;letter-spacing:.07em;text-align:center;flex-shrink:0}
+.divider{height:1px;background:rgba(69,115,93,.15);flex-shrink:0}
+.spacer{flex:1}
+
+/* Type buttons */
+.type-btn{width:100%;padding:9px 11px;border-radius:8px;border:2px solid var(--stone);
+  background:#fff;color:var(--text);font-family:'Nunito Sans',sans-serif;
+  font-weight:700;font-size:.80em;cursor:pointer;transition:all .18s;
+  text-align:left;display:flex;align-items:center;gap:9px;flex-shrink:0}
+.type-btn:hover{transform:translateX(2px);border-color:var(--grey)}
+.type-btn .btn-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.type-btn .btn-sub{font-size:.76em;color:var(--grey);font-weight:400;display:block;margin-top:1px}
+.type-btn.sel-self{border-color:var(--self-c);background:rgba(186,148,94,.07)}
+.type-btn.sel-managers{border-color:var(--mgr-c);background:rgba(69,115,93,.07)}
+.type-btn.sel-firefighters{border-color:var(--fire-c);background:rgba(182,141,118,.07)}
+.type-btn.sel-exiles{border-color:var(--exile-c);background:rgba(122,158,181,.07)}
+
+.intro-text{font-size:.76em;color:var(--grey);line-height:1.65;font-style:italic}
+.footnote{font-size:.70em;color:var(--cool-grey);line-height:1.5}
+
+/* Detail panel */
+.detail-card{background:#fff;border:1.5px solid var(--stone);border-radius:8px;
+  padding:10px 12px;flex-shrink:0}
+.d-label{font-size:.66em;color:var(--grey);font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:4px;display:block}
+.d-title{font-family:'Libre Baskerville',serif;font-size:.98em;color:var(--forest);
+  margin-bottom:6px;font-weight:700;line-height:1.3}
+.d-body{font-size:.75em;color:var(--text);line-height:1.68}
+
+.cs-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.cs-item{background:#fff;border:1.5px solid var(--stone);border-radius:6px;
+  padding:6px 8px;font-size:.71em;color:var(--forest);font-weight:700;text-align:center}
+
+.nd-note{background:rgba(122,158,181,.09);border-left:3px solid var(--blue);
+  border-radius:0 6px 6px 0;padding:8px 10px;flex-shrink:0}
+.nd-lbl{font-size:.63em;font-weight:700;color:var(--blue);text-transform:uppercase;
+  letter-spacing:.07em;margin-bottom:3px;display:block}
+.nd-text{font-size:.73em;color:var(--text);line-height:1.65;font-style:italic}
+
+.part-mini{background:#fff;border:1.5px solid var(--stone);border-radius:7px;
+  padding:8px 10px;cursor:pointer;transition:all .15s;flex-shrink:0}
+.part-mini:hover{border-color:var(--grey);transform:translateX(2px)}
+.part-mini .pm-name{font-weight:700;font-size:.77em;color:var(--forest)}
+.part-mini .pm-role{font-size:.68em;color:var(--grey);margin-top:2px;line-height:1.4}
+
+.back-link{font-size:.70em;color:var(--grey);cursor:pointer;text-align:center;
+  text-decoration:underline;text-underline-offset:3px;flex-shrink:0}
+.back-link:hover{color:var(--forest)}
+
+/* Info bar */
+.info-bar{width:100%;max-width:1180px;margin-top:12px;background:var(--accent-bg);
+  border-radius:10px;box-shadow:0 3px 6px rgba(0,0,0,.07);
+  padding:16px 24px;display:flex;align-items:flex-start;gap:20px}
+.info-lbl{flex-shrink:0;font-family:'Libre Baskerville',serif;font-size:.73em;
+  color:var(--grey);text-transform:uppercase;letter-spacing:.07em;
+  padding-top:2px;min-width:80px}
+.info-content h3{font-family:'Libre Baskerville',serif;font-size:1em;
+  color:var(--forest);margin-bottom:5px;font-weight:700}
+.info-content p{font-size:.86em;line-height:1.65;color:var(--text);font-style:italic}
+
+.disclaimer{max-width:1180px;width:100%;text-align:center;font-size:.70em;
+  color:var(--cool-grey);line-height:1.55;margin:12px auto 6px;padding:0 12px}
+
+@media(max-width:820px){
+  .three-col{grid-template-columns:1fr}
+  .info-bar{flex-direction:column;gap:8px}
+}
+</style>
+</head>
+<body>
+
+<div class="brand-bar">
+  <a href="https://www.secondarrowcounseling.com" target="_blank" rel="noopener">Second Arrow Counseling</a>
+</div>
+
+<div class="header">
+  <h2>Your Inner System</h2>
+  <p>Inside each of us is a whole inner community — voices, roles, and reactions all trying to help, in their own way. This is a gentle map of what lives inside.</p>
+</div>
+
+<div class="three-col">
+
+  <!-- LEFT: Guide -->
+  <div class="panel">
+    <p class="sect-lbl">Explore Your System</p>
+    <p class="intro-text">Every part of you developed for a reason. Nothing inside you is broken — your system learned to protect you. Tap any orb on the map, or start here.</p>
+    <div class="divider"></div>
+
+    <button class="type-btn" id="btn-self" onclick="selectType('self')">
+      <span class="btn-dot" style="background:var(--self-c)"></span>
+      <span>The Self<span class="btn-sub">Your natural center</span></span>
+    </button>
+    <button class="type-btn" id="btn-managers" onclick="selectType('managers')">
+      <span class="btn-dot" style="background:var(--mgr-c)"></span>
+      <span>Managers<span class="btn-sub">Proactive protectors</span></span>
+    </button>
+    <button class="type-btn" id="btn-firefighters" onclick="selectType('firefighters')">
+      <span class="btn-dot" style="background:var(--fire-c)"></span>
+      <span>Firefighters<span class="btn-sub">Emergency responders</span></span>
+    </button>
+    <button class="type-btn" id="btn-exiles" onclick="selectType('exiles')">
+      <span class="btn-dot" style="background:var(--exile-c)"></span>
+      <span>Exiles<span class="btn-sub">The hidden ones</span></span>
+    </button>
+
+    <div class="spacer"></div>
+    <div class="divider"></div>
+    <p class="footnote">Based on Internal Family Systems (IFS) — a model developed by Dr. Richard Schwartz. All parts are welcome here.</p>
+  </div>
+
+  <!-- CENTER: Canvas -->
+  <div class="mid-panel">
+    <p class="sect-lbl" style="margin-bottom:8px;width:100%">Inner System Map</p>
+    <canvas id="ifs-canvas"></canvas>
+  </div>
+
+  <!-- RIGHT: Detail -->
+  <div class="panel" id="detail-panel" style="overflow-y:auto">
+    <p class="sect-lbl">About This Part</p>
+    <div class="divider"></div>
+    <div id="detail-content" style="display:flex;flex-direction:column;gap:8px">
+      <div class="detail-card">
+        <span class="d-label">The Core Self</span>
+        <p class="d-title">You have an unbreakable center.</p>
+        <p class="d-body">Beneath all your roles, reactions, and protective parts lives a core Self that has never been damaged. It isn't something you need to earn or fix. It's simply you — uncovered.</p>
+      </div>
+      <p class="sect-lbl" style="margin-top:2px">The 8 C's of Self</p>
+      <div class="cs-grid">
+        <div class="cs-item">Calm</div><div class="cs-item">Curious</div>
+        <div class="cs-item">Compassionate</div><div class="cs-item">Clear</div>
+        <div class="cs-item">Confident</div><div class="cs-item">Courageous</div>
+        <div class="cs-item">Creative</div><div class="cs-item">Connected</div>
+      </div>
+      <p class="d-body" style="font-style:italic;color:var(--grey);font-size:.72em">Tap any orb in the map to learn its role in your system.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="info-bar">
+  <span class="info-lbl">A Note</span>
+  <div class="info-content">
+    <h3 id="info-title">Every part of you makes sense.</h3>
+    <p id="info-body">In IFS, there are no bad parts — only parts doing their best with what they learned. Some strategies may not be working anymore, but they all started as protection. The goal is never to eliminate any part, but to understand them and lead from your core Self.</p>
+  </div>
+</div>
+
+<p class="disclaimer">This tool is for psychoeducational use only and does not constitute clinical advice, diagnosis, or treatment. Internal Family Systems (IFS) is a therapeutic model developed by Dr. Richard Schwartz / IFS Institute. Adapted for client introduction by Second Arrow Counseling.</p>
+
+<script>
+// ══════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════
+const DATA = {
+  self: {
+    key:'self', name:'The Self', color:'#ba945e',
+    description:'The Self is not a part — it\'s who you fundamentally are beneath all the roles and reactions. It has never been damaged, even when it was hard to access. In IFS, the goal isn\'t to fix the Self. It\'s simply to help it lead.',
+    ndNote:'For many neurodivergent people, years of masking and adapting can make the Self feel distant or buried. It isn\'t. Your parts learned to work very hard to keep you safe in a world that often asked you to be different than you naturally are. The Self was always there underneath.',
+    eightCs:['Calm','Curious','Compassionate','Clear','Confident','Courageous','Creative','Connected'],
+    infoTitle:'The Self is always there.',
+    infoBody:'Like the sun behind clouds, the Self is never destroyed — only temporarily obscured by parts doing their jobs. When parts feel safe enough to step back, the Self naturally emerges. You don\'t build it. You uncover it.'
+  },
+  managers:{
+    name:'Managers', color:'#45735d', tagline:'Proactive Protectors',
+    description:'Managers run your daily life. They\'re the planners, the critics, the over-achievers, the peacekeepers. Their job is to keep things stable and prevent anything painful from surfacing. They don\'t see themselves as controlling — they see themselves as responsible. And in many ways, they are.',
+    ndNote:'For neurodivergent minds, Managers often go into overdrive. After years of navigating a world not built for a different nervous system, these parts learned that being "acceptable" meant survival. They\'re not the problem — they\'re exhausted from trying so hard for so long.',
+    infoTitle:'Managers mean well.',
+    infoBody:'Every Manager developed for a reason. The Inner Critic learned to criticize first before the world could. The Perfectionist learned that achievement bought acceptance. The Caretaker learned that meeting others\' needs prevented abandonment. Understanding a Manager\'s intent is the beginning of something new.',
+    parts:[
+      {name:'Inner Critic', role:'Monitors behavior and anticipates failure before it happens.',
+       intent:'Criticizes internally first — to prevent the sting of external rejection.',
+       behaviors:'Harsh self-talk, relentless comparison, impossible internal standards.',
+       ndNote:'For neurodivergent people, this part often developed early — in response to years of feedback that something was wrong. It learned to get there first. Before the teacher, before the parent, before the classmates. Criticizing you was its strange form of love.'},
+      {name:'Perfectionist', role:'Maintains high standards and monitors every output with vigilance.',
+       intent:'Proves worth through achievement; prevents failure by anticipating every flaw.',
+       behaviors:'Overworking, difficulty finishing, all-or-nothing thinking, chronic restarts.',
+       ndNote:'Perfectionism in ND folks often lives alongside executive function challenges — a painful gap between the standard this part sets and what the brain can reliably deliver. That gap isn\'t personal failure. It\'s a nervous system doing its best with what it has.'},
+      {name:'Caretaker', role:'Manages relationships by consistently putting others\' needs first.',
+       intent:'Prevents conflict and maintains connection through endless accommodation.',
+       behaviors:'Difficulty saying no, chronic masking, over-giving, losing track of own needs.',
+       ndNote:'For many autistic and ADHD folks, people-pleasing became a survival skill very early. Fitting in, reading the room, staying "acceptable" — this part worked overtime to bridge the gap between who you were and what the world seemed to want from you.'}
+    ]
+  },
+  firefighters:{
+    name:'Firefighters', color:'#b68d76', tagline:'Emergency Responders',
+    description:'Firefighters don\'t plan — they react. When an exile\'s pain gets close to the surface, Firefighters rush in with whatever works fastest. They don\'t weigh consequences. They just need the pain to stop right now. Like all parts, there is a noble intent underneath the chaos.',
+    ndNote:'Dysregulation, meltdowns, and sudden shutdowns in neurodivergent nervous systems are often Firefighters responding to accumulated overwhelm, sensory flooding, or the pain of being chronically misunderstood. They\'re not impulsive or broken. They\'re loyal, desperate protectors.',
+    infoTitle:'Firefighters are protecting someone.',
+    infoBody:'Behind every Firefighter behavior is a wound they\'re trying to cover. The rage, the shutdown, the escape — these aren\'t random. Something got too close to a vulnerable part, and the Firefighter did what it always does: whatever it takes to make it stop. Understanding this changes everything.',
+    parts:[
+      {name:'Shutdown', role:'Pulls the emergency brake when overwhelm becomes unbearable.',
+       intent:'Prevents the system from breaking under impossible pressure by going offline.',
+       behaviors:'Dissociation, emotional numbness, withdrawal, sleeping, going blank.',
+       ndNote:'Shutdown is particularly common in neurodivergent nervous systems. What looks like "laziness" or "giving up" from the outside is often this part doing exactly its job — protecting you from sensory or emotional flooding by taking the whole system offline.'},
+      {name:'Protector Rage', role:'Creates distance and defends vulnerable parts from further exposure.',
+       intent:'Keeps people far enough away that they can\'t cause more harm.',
+       behaviors:'Explosive anger, verbal aggression, pushing people away, destruction.',
+       ndNote:'Rage in ND folks often follows a long accumulation of overwhelm — a nervous system that finally hit its ceiling. It\'s not a character flaw. It\'s a part that learned: when everything else fails, making people afraid of you works. It deserves compassion, not shame.'},
+      {name:'Escape', role:'Drowns out pain with intense sensation, pleasure, or distraction.',
+       intent:'Gives the system relief when the pain is simply too much to hold any longer.',
+       behaviors:'Bingeing, substance use, scrolling, intense hyperfocus on pleasure.',
+       ndNote:'For neurodivergent minds, hyperfocus can sometimes be this part — a nervous system seeking regulation through dopamine when everything else feels like too much. Not a moral failing. A brilliant nervous system doing its absolute best to survive.'}
+    ]
+  },
+  exiles:{
+    name:'Exiles', color:'#7a9eb5', tagline:'The Hidden Ones',
+    description:'Exiles are the youngest, most vulnerable parts. They carry the wounds — the shame, the grief, the fear — from experiences that felt unbearable. The protectors work constantly to keep them hidden, not out of cruelty, but because they believe the exiles\' pain would destabilize the whole system if it surfaced.',
+    ndNote:'Many neurodivergent people carry exiles shaped by years of being told they were too much, not enough, or fundamentally broken. These parts absorbed the world\'s misunderstanding and turned it inward. They aren\'t shameful — they\'re waiting to be truly seen, perhaps for the first time.',
+    infoTitle:'Exiles carry what we couldn\'t hold alone.',
+    infoBody:'The goal of IFS is never to eliminate exiles or silence them. It\'s to go back — with the Self leading — and offer what they never received: presence, understanding, and the truth that they were never to blame. Unburdening an exile changes the whole system.',
+    parts:[
+      {name:'Not Enough', role:'Carries the deep belief of fundamental inadequacy.',
+       intent:'Holds the pain so the rest of the system can keep functioning.',
+       behaviors:'Felt sense of failure, invisibility, unworthiness, shrinking.',
+       ndNote:'This exile often holds the accumulated weight of a system built for a different kind of mind. Years of struggling where others seemed to manage easily. Needing more time, more support, more understanding — and learning to read that as proof of something broken. It was never the truth.'},
+      {name:'Too Much', role:'Carries the belief of being excessive, overwhelming, or a burden.',
+       intent:'Absorbs the feedback that intensity itself is the problem.',
+       behaviors:'Deep shame around emotions, needs, or authentic expression.',
+       ndNote:'"Too loud. Too sensitive. Too intense. Too much." This exile is heartbreakingly common in neurodivergent people. What the world called excess was often a nervous system fully, beautifully alive. Your intensity was never the problem. The mismatch was.'},
+      {name:'Shame', role:'Carries a felt sense of being fundamentally wrong or broken.',
+       intent:'Holds the most unbearable question: "What if I am the problem?"',
+       behaviors:'Deep hiding, fear of being truly known, disconnection from others.',
+       ndNote:'Shame often sits at the center of many neurodivergent experiences — not because something is actually wrong with being ND, but because the world so consistently responded as if there were. This part absorbed that message. It was never, ever the truth.'}
+    ]
+  }
+};
+
+// ══════════════════════════════════════════════
+// CANVAS STATE
+// ══════════════════════════════════════════════
+const canvas = document.getElementById('ifs-canvas');
+const ctx = canvas.getContext('2d');
+
+const S = {
+  selType:null, selPart:null, hovered:null,
+  frame:0, W:0, H:0, cx:0, cy:0,
+  R:{mgr:0,fire:0,exile:0}, selfR:0,
+  orbs:[], particles:[], pulse:0
+};
+
+function resize(){
+  const dpr = window.devicePixelRatio||1;
+  const cssW = canvas.parentElement.clientWidth - 20;
+  const cssH = Math.max(cssW * 0.88, canvas.parentElement.clientHeight - 56);
+  canvas.width = cssW*dpr; canvas.height = cssH*dpr;
+  canvas.style.width = cssW+'px'; canvas.style.height = cssH+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  S.W=cssW; S.H=cssH; S.cx=cssW/2; S.cy=cssH/2;
+  const base = Math.min(cssW,cssH)*0.44;
+  S.R.mgr   = base*0.36;
+  S.R.fire  = base*0.64;
+  S.R.exile = base*0.93;
+  S.selfR   = base*0.11;
+  buildOrbs();
+}
+
+function buildOrbs(){
+  S.orbs=[];
+  const configs=[
+    {key:'managers',  radius:S.R.mgr,  speed:0.0016, r:13},
+    {key:'firefighters',radius:S.R.fire,speed:-0.0011,r:13},
+    {key:'exiles',   radius:S.R.exile, speed:0.0008, r:13}
+  ];
+  configs.forEach(cfg=>{
+    const parts = DATA[cfg.key].parts;
+    parts.forEach((part,i)=>{
+      const base = (i/parts.length)*Math.PI*2 - Math.PI/2;
+      S.orbs.push({
+        part, type:cfg.key, color:DATA[cfg.key].color,
+        radius:cfg.radius, r:cfg.r, speed:cfg.speed,
+        baseAngle:base, angle:base, x:0, y:0
+      });
+    });
+  });
+}
+
+// ══════════════════════════════════════════════
+// UPDATE
+// ══════════════════════════════════════════════
+function update(){
+  S.frame++;
+  S.orbs.forEach(o=>{
+    o.angle = o.baseAngle + S.frame*o.speed;
+    o.x = S.cx + Math.cos(o.angle)*o.radius;
+    o.y = S.cy + Math.sin(o.angle)*o.radius;
+  });
+  S.pulse = 0.5 + 0.5*Math.sin(S.frame*0.038);
+
+  // Self-energy particles drift outward gently
+  if(S.frame%10===0){
+    const a=Math.random()*Math.PI*2;
+    S.particles.push({
+      x:S.cx, y:S.cy,
+      vx:Math.cos(a)*(0.35+Math.random()*0.65),
+      vy:Math.sin(a)*(0.35+Math.random()*0.65),
+      r:1.2+Math.random()*1.8, al:0.65, col:'#ba945e'
+    });
+  }
+  S.particles=S.particles.filter(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.al-=0.010; p.r*=0.987; return p.al>0;
+  });
+}
+
+// ══════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════
+function hexRgba(hex,a){
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+function lighten(hex,amt){
+  const r=Math.min(255,parseInt(hex.slice(1,3),16)+Math.round(255*amt));
+  const g=Math.min(255,parseInt(hex.slice(3,5),16)+Math.round(255*amt));
+  const b=Math.min(255,parseInt(hex.slice(5,7),16)+Math.round(255*amt));
+  return `rgb(${r},${g},${b})`;
+}
+
+// ══════════════════════════════════════════════
+// DRAW
+// ══════════════════════════════════════════════
+function draw(){
+  const{W,H,cx,cy,R}=S;
+  ctx.clearRect(0,0,W,H);
+
+  // Warm radial background
+  const bg=ctx.createRadialGradient(cx,cy*0.8,0,cx,cy,Math.max(W,H)*0.72);
+  bg.addColorStop(0,'#f6f3ea'); bg.addColorStop(1,'#ece9df');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+  // Orbit rings (dashed)
+  [
+    {r:R.mgr,   col:DATA.managers.color,      op:0.20},
+    {r:R.fire,  col:DATA.firefighters.color,  op:0.17},
+    {r:R.exile, col:DATA.exiles.color,        op:0.14}
+  ].forEach(ring=>{
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx,cy,ring.r,0,Math.PI*2);
+    ctx.setLineDash([4,9]); ctx.lineWidth=1.1;
+    ctx.strokeStyle=ring.col; ctx.globalAlpha=ring.op;
+    ctx.stroke(); ctx.restore();
+  });
+
+  // Exile veil — soft mist on outer ring when exiles not selected
+  if(S.selType!=='exiles'){
+    const mist=ctx.createRadialGradient(cx,cy,R.exile*0.82,cx,cy,R.exile*1.18);
+    mist.addColorStop(0,'rgba(236,233,224,0)');
+    mist.addColorStop(0.5,'rgba(236,233,224,0.28)');
+    mist.addColorStop(1,'rgba(236,233,224,0)');
+    ctx.beginPath(); ctx.arc(cx,cy,R.exile*1.18,0,Math.PI*2);
+    ctx.fillStyle=mist; ctx.fill();
+  }
+
+  // Self glow pulse
+  const sg=ctx.createRadialGradient(cx,cy,0,cx,cy,S.selfR*4.2);
+  sg.addColorStop(0,`rgba(186,148,94,${0.28+S.pulse*0.14})`);
+  sg.addColorStop(0.45,`rgba(186,148,94,${0.08+S.pulse*0.06})`);
+  sg.addColorStop(1,'rgba(186,148,94,0)');
+  ctx.beginPath(); ctx.arc(cx,cy,S.selfR*4.2,0,Math.PI*2);
+  ctx.fillStyle=sg; ctx.fill();
+
+  // Particles
+  S.particles.forEach(p=>{
+    ctx.save(); ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.col; ctx.globalAlpha=p.al; ctx.fill(); ctx.restore();
+  });
+
+  // Draw orbs back to front: exiles, firefighters, managers
+  ['exiles','firefighters','managers'].forEach(typeKey=>{
+    const typeData=DATA[typeKey];
+    S.orbs.filter(o=>o.type===typeKey).forEach(orb=>{
+      const isSel = S.selPart===orb.part;
+      const typeActive = S.selType===typeKey;
+      const hov = S.hovered===orb;
+      const dimmed = S.selType && S.selType!==typeKey && S.selType!=='self';
+      const exileFade = typeKey==='exiles' && !typeActive && !isSel ? 0.58 : 1;
+      const alpha = dimmed ? 0.22 : 1;
+      const drawR = isSel||hov ? orb.r*1.4 : orb.r;
+
+      // Glow
+      if(isSel||typeActive||hov){
+        const glow=ctx.createRadialGradient(orb.x,orb.y,0,orb.x,orb.y,drawR*3.8);
+        glow.addColorStop(0,hexRgba(orb.color,0.38));
+        glow.addColorStop(1,hexRgba(orb.color,0));
+        ctx.save(); ctx.globalAlpha=alpha*exileFade;
+        ctx.beginPath(); ctx.arc(orb.x,orb.y,drawR*3.8,0,Math.PI*2);
+        ctx.fillStyle=glow; ctx.fill(); ctx.restore();
+      }
+
+      // Connector line to Self when individually selected
+      if(isSel){
+        ctx.save();
+        ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(orb.x,orb.y);
+        ctx.setLineDash([3,6]); ctx.lineWidth=1;
+        ctx.strokeStyle=hexRgba(orb.color,0.30);
+        ctx.stroke(); ctx.restore();
+      }
+
+      // Orb body
+      ctx.save(); ctx.globalAlpha=alpha*exileFade;
+      const og=ctx.createRadialGradient(orb.x-drawR*0.3,orb.y-drawR*0.3,0,orb.x,orb.y,drawR);
+      og.addColorStop(0,lighten(orb.color,0.38)); og.addColorStop(1,orb.color);
+      ctx.beginPath(); ctx.arc(orb.x,orb.y,drawR,0,Math.PI*2);
+      ctx.fillStyle=og; ctx.fill();
+      ctx.strokeStyle=orb.color; ctx.lineWidth=isSel?2.5:1.5; ctx.stroke();
+      // Shimmer
+      ctx.beginPath(); ctx.arc(orb.x-drawR*0.28,orb.y-drawR*0.28,drawR*0.33,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,252,245,${0.52*alpha*exileFade})`; ctx.fill();
+      ctx.restore();
+
+      // Label
+      if(hov||isSel||typeActive){
+        ctx.save();
+        ctx.font=`700 9px 'Nunito Sans',sans-serif`;
+        ctx.textAlign='center';
+        ctx.globalAlpha=alpha*exileFade;
+        ctx.fillStyle=isSel? orb.color :'#4a4a3a';
+        ctx.fillText(orb.part.name, orb.x, orb.y+drawR+13);
+        ctx.restore();
+      }
+    });
+  });
+
+  // Self orb (front)
+  const selfSel=S.selType==='self';
+  const sR=S.selfR*(selfSel?1.12:1);
+  const sfg=ctx.createRadialGradient(cx-sR*0.25,cy-sR*0.25,0,cx,cy,sR);
+  sfg.addColorStop(0,'#edd09a'); sfg.addColorStop(0.55,'#ba945e'); sfg.addColorStop(1,'#9e7d4a');
+  ctx.beginPath(); ctx.arc(cx,cy,sR,0,Math.PI*2);
+  ctx.fillStyle=sfg; ctx.fill();
+  ctx.strokeStyle='#9e7d4a'; ctx.lineWidth=selfSel?3:2; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx-sR*0.27,cy-sR*0.27,sR*0.36,0,Math.PI*2);
+  ctx.fillStyle='rgba(255,252,240,0.65)'; ctx.fill();
+
+  // Self label
+  ctx.save();
+  ctx.font=`700 10px 'Nunito Sans',sans-serif`;
+  ctx.textAlign='center'; ctx.fillStyle='#35361c';
+  ctx.fillText('Self',cx,cy+sR+15); ctx.restore();
+
+  // Ring labels (faint, always visible)
+  ctx.save(); ctx.font=`600 7.5px 'Nunito Sans',sans-serif`; ctx.textAlign='center';
+  [
+    {label:'MANAGERS',   r:R.mgr,   col:DATA.managers.color,     op:0.38},
+    {label:'FIREFIGHTERS',r:R.fire, col:DATA.firefighters.color, op:0.32},
+    {label:'EXILES',     r:R.exile, col:DATA.exiles.color,       op:0.26}
+  ].forEach(rl=>{
+    ctx.fillStyle=rl.col; ctx.globalAlpha=rl.op;
+    ctx.fillText(rl.label, cx, cy-rl.r+10);
+  });
+  ctx.restore();
+}
+
+// ══════════════════════════════════════════════
+// HIT TEST
+// ══════════════════════════════════════════════
+function getHit(mx,my){
+  if(Math.hypot(mx-S.cx,my-S.cy)<S.selfR*1.6) return 'self';
+  let best=null, bd=Infinity;
+  for(const o of S.orbs){
+    const d=Math.hypot(mx-o.x,my-o.y);
+    if(d<o.r*2.2&&d<bd){best=o;bd=d;}
+  }
+  return best;
+}
+function getMouse(e){
+  const rect=canvas.getBoundingClientRect();
+  return{x:(e.clientX-rect.left)*(S.W/rect.width),y:(e.clientY-rect.top)*(S.H/rect.height)};
+}
+
+canvas.addEventListener('mousemove',e=>{
+  const{x,y}=getMouse(e);
+  const h=getHit(x,y);
+  S.hovered=(h&&h!=='self')?h:null;
+  canvas.style.cursor=h?'pointer':'default';
+});
+canvas.addEventListener('click',e=>{
+  const{x,y}=getMouse(e);
+  const h=getHit(x,y);
+  if(!h)return;
+  if(h==='self') selectType('self');
+  else selectPartOrb(h);
+});
+
+// ══════════════════════════════════════════════
+// SELECTION
+// ══════════════════════════════════════════════
+function selectType(key){
+  S.selType=key; S.selPart=null;
+  updateBtns(key);
+  if(key==='self') renderSelf();
+  else renderType(key);
+  updateBar(DATA[key].infoTitle||'', DATA[key].infoBody||'');
+}
+function selectPartOrb(orb){
+  S.selType=orb.type; S.selPart=orb.part;
+  updateBtns(orb.type);
+  renderPart(orb.part, orb.type);
+  updateBar(DATA[orb.type].infoTitle, DATA[orb.type].infoBody);
+}
+window.selectPartByName=function(typeKey,name){
+  const orb=S.orbs.find(o=>o.type===typeKey&&o.part.name===name);
+  if(orb) selectPartOrb(orb);
+};
+window.selectType=selectType;
+
+function updateBtns(active){
+  const map={self:'sel-self',managers:'sel-managers',firefighters:'sel-firefighters',exiles:'sel-exiles'};
+  ['self','managers','firefighters','exiles'].forEach(k=>{
+    const b=document.getElementById('btn-'+k);
+    b.className='type-btn'+(k===active?' '+map[k]:'');
+  });
+}
+function updateBar(title,body){
+  document.getElementById('info-title').textContent=title;
+  document.getElementById('info-body').textContent=body;
+}
+
+// ══════════════════════════════════════════════
+// PANEL RENDERERS
+// ══════════════════════════════════════════════
+function setDetail(html){
+  const d=document.getElementById('detail-content');
+  d.innerHTML=html;
+  d.style.display='flex'; d.style.flexDirection='column'; d.style.gap='8px';
+}
+
+function renderSelf(){
+  setDetail(`
+    <div class="detail-card">
+      <span class="d-label">The Core Self</span>
+      <p class="d-title">You have an unbreakable center.</p>
+      <p class="d-body">${DATA.self.description}</p>
+    </div>
+    <p class="sect-lbl" style="margin-top:2px">The 8 C's of Self</p>
+    <div class="cs-grid">
+      ${DATA.self.eightCs.map(c=>`<div class="cs-item">${c}</div>`).join('')}
+    </div>
+    <div class="nd-note">
+      <span class="nd-lbl">Neurodivergent Note</span>
+      <p class="nd-text">${DATA.self.ndNote}</p>
+    </div>
+  `);
+}
+
+function renderType(key){
+  const t=DATA[key];
+  const colVar={managers:'var(--mgr-c)',firefighters:'var(--fire-c)',exiles:'var(--exile-c)'}[key];
+  setDetail(`
+    <div class="detail-card" style="border-color:${t.color}33">
+      <span class="d-label" style="color:${t.color}">${t.name} — ${t.tagline}</span>
+      <p class="d-body" style="margin-top:4px">${t.description}</p>
+    </div>
+    <p class="sect-lbl" style="margin-top:2px">Parts in this group</p>
+    ${t.parts.map(p=>`
+      <div class="part-mini" onclick="selectPartByName('${key}','${p.name}')">
+        <p class="pm-name">${p.name}</p>
+        <p class="pm-role">${p.role}</p>
+      </div>
+    `).join('')}
+    <div class="nd-note">
+      <span class="nd-lbl">Neurodivergent Note</span>
+      <p class="nd-text">${t.ndNote}</p>
+    </div>
+  `);
+}
+
+function renderPart(part, typeKey){
+  const t=DATA[typeKey];
+  setDetail(`
+    <div class="detail-card" style="border-color:${t.color}44">
+      <span class="d-label" style="color:${t.color}">${t.name}</span>
+      <p class="d-title">${part.name}</p>
+      <p class="d-body">${part.role}</p>
+    </div>
+    <div class="detail-card">
+      <span class="d-label">Positive Intent</span>
+      <p class="d-body">${part.intent}</p>
+    </div>
+    <div class="detail-card">
+      <span class="d-label">Common Behaviors</span>
+      <p class="d-body">${part.behaviors}</p>
+    </div>
+    <div class="nd-note">
+      <span class="nd-lbl">Neurodivergent Note</span>
+      <p class="nd-text">${part.ndNote}</p>
+    </div>
+    <p class="back-link" onclick="selectType('${typeKey}')">← Back to all ${t.name}</p>
+  `);
+}
+
+// ══════════════════════════════════════════════
+// LOOP
+// ══════════════════════════════════════════════
+function loop(){ update(); draw(); requestAnimationFrame(loop); }
+resize();
+window.addEventListener('resize',()=>{ ctx.setTransform(1,0,0,1,0,0); resize(); });
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
