@@ -20,14 +20,12 @@
 body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);
   min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
 
-/* ── BRAND BAR ── */
 .brand-bar{width:100%;max-width:1180px;display:flex;justify-content:flex-start;
   align-items:center;padding:0 4px 10px}
 .brand-bar a{font-family:'Libre Baskerville',serif;font-size:20px;color:var(--forest);
   text-decoration:none;letter-spacing:.01em;opacity:.9;transition:opacity .2s}
 .brand-bar a:hover{opacity:1}
 
-/* ── HEADER ── */
 .header{background:var(--accent-bg);padding:13px 20px;border-radius:10px;
   box-shadow:0 3px 6px rgba(0,0,0,.07);width:100%;max-width:1180px;
   margin-bottom:12px;text-align:center}
@@ -36,11 +34,9 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text)
 .header p{color:var(--grey);margin:0 auto;font-size:.86em;
   max-width:700px;line-height:1.5}
 
-/* ── THREE-COLUMN GRID ── */
 .three-col{display:grid;grid-template-columns:240px 1fr 272px;
   gap:12px;width:100%;max-width:1180px}
 
-/* shared panel style */
 .panel{background:var(--accent-bg);border-radius:10px;
   box-shadow:0 4px 6px rgba(0,0,0,.07);padding:14px;
   display:flex;flex-direction:column;gap:11px}
@@ -49,7 +45,6 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text)
   color:var(--forest);text-transform:uppercase;letter-spacing:.06em;
   border-bottom:1px solid var(--stone);padding-bottom:6px}
 
-/* ── LEFT: CONTROLS ── */
 .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .pbtn{padding:8px 5px;border-radius:7px;border:1.5px solid var(--stone);
   background:#fff;color:var(--text);font-family:'Nunito Sans',sans-serif;
@@ -83,7 +78,6 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
   color:var(--forest);margin-bottom:5px}
 .pc-desc{font-size:.75em;color:var(--grey);line-height:1.65}
 
-/* ── CENTER: VISUALIZATION ── */
 .center-panel{background:var(--accent-bg);border-radius:10px;
   box-shadow:0 4px 6px rgba(0,0,0,.07);padding:14px;
   display:flex;flex-direction:column;align-items:center;gap:14px}
@@ -114,11 +108,14 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
 .coact-title{font-size:.72em;font-weight:700;color:var(--grey);
   text-transform:uppercase;letter-spacing:.5px}
 .coact-badge{font-size:.85em;font-weight:700;transition:color .4s}
-.coact-track{height:8px;background:var(--stone);border-radius:4px;overflow:hidden}
+.coact-track{height:8px;background:var(--stone);border-radius:4px;overflow:hidden;position:relative}
 .coact-fill{height:100%;border-radius:4px;
   transition:width .5s cubic-bezier(.4,0,.2,1),background .5s}
+.coact-dividers{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.coact-dividers span{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,.6)}
+.coact-ticks{display:flex;justify-content:space-between;margin-top:3px}
+.coact-ticks span{font-size:.6em;color:var(--stone)}
 
-/* ── RIGHT: FEEDBACK ── */
 .right-panel{background:var(--accent-bg);border-radius:10px;
   box-shadow:0 4px 6px rgba(0,0,0,.07);padding:14px;
   display:flex;flex-direction:column;gap:8px}
@@ -135,7 +132,6 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
   text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
 .fb-text{font-size:.78em;color:var(--grey);line-height:1.65}
 
-/* ── DISCLAIMER ── */
 .disclaimer{max-width:1180px;width:100%;text-align:center;font-size:.70em;
   color:var(--cool-grey);line-height:1.55;margin:12px auto 6px;padding:0 12px}
 
@@ -152,12 +148,11 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
 
 <div class="header">
   <h2>Network Co-activation Simulator</h2>
-  <p>Visualize the relationship between the Default Mode Network (internal) and the Task Positive Network (external) across neurological profiles. Observe how co-activation — not just activation — drives metabolic cost.</p>
+  <p>See what happens when both networks fire at the same time - and why that matters for energy and exhaustion. Explore how different neurological profiles experience this across levels of task demand.</p>
 </div>
 
 <div class="three-col">
 
-  <!-- ── LEFT: CONTROLS ── -->
   <div class="panel">
     <p class="sect-lbl">Neurological Profile</p>
     <div class="profile-grid">
@@ -178,24 +173,23 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
 
     <div class="profile-card">
       <div class="pc-name" id="profile-name-display">Neurotypical</div>
-      <div class="pc-desc" id="profile-desc">Robust anti-correlation between DMN and TPN. As external demand increases, the DMN suppresses cleanly and efficiently, allowing the TPN to take over. The textbook "seesaw" — one goes up, the other comes down.</div>
+      <div class="pc-desc" id="profile-desc">A clean back-and-forth between DMN and TPN. As external demand increases, the DMN steps back cleanly, allowing the TPN to take over - one goes up, the other comes down.</div>
     </div>
   </div>
 
-  <!-- ── CENTER: VISUALIZATION ── -->
   <div class="center-panel">
     <p class="sect-lbl" style="align-self:flex-start;width:100%">Network Activity</p>
     <div class="gauges-row">
       <div class="gauge-container">
         <div class="bar-bg"><div id="dmn-fill" class="bar-fill"></div></div>
         <div class="gauge-label dmn">DMN</div>
-        <div class="gauge-subtext">Default Mode Network<br>Internal / Self-Referential</div>
+        <div class="gauge-subtext">Default Mode Network<br>inner thoughts / daydreaming</div>
         <div id="dmn-value" class="gauge-value" style="color:var(--dmn-color)">90%</div>
       </div>
       <div class="gauge-container">
         <div class="bar-bg"><div id="tpn-fill" class="bar-fill"></div></div>
         <div class="gauge-label tpn">TPN</div>
-        <div class="gauge-subtext">Task Positive Network<br>External Focus / Execution</div>
+        <div class="gauge-subtext">Task Positive Network<br>Getting things done</div>
         <div id="tpn-value" class="gauge-value" style="color:var(--tpn-color)">10%</div>
       </div>
     </div>
@@ -207,23 +201,30 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
       </div>
       <div class="coact-track">
         <div class="coact-fill" id="coact-fill" style="width:10%;background:var(--green)"></div>
+        <div class="coact-dividers">
+          <span style="left:25%"></span>
+          <span style="left:50%"></span>
+          <span style="left:75%"></span>
+        </div>
+      </div>
+      <div class="coact-ticks">
+        <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
       </div>
     </div>
   </div>
 
-  <!-- ── RIGHT: FEEDBACK ── -->
   <div class="right-panel">
     <p class="sect-lbl">Current State</p>
     <div class="state-bar good" id="state-bar"></div>
 
     <div class="fb-block">
       <div class="fb-title">Internal Experience</div>
-      <div class="fb-text" id="experience-text">Resting state. The DMN is active for daydreaming, rumination, and self-referential processing. The system is at baseline.</div>
+      <div class="fb-text" id="experience-text">Resting state. The DMN is active for daydreaming, inner thought, and reflection. The system is at baseline.</div>
     </div>
 
     <div class="fb-block">
-      <div class="fb-title">Metabolic Cost</div>
-      <div class="fb-text" id="cost-text">Low — Baseline maintenance only.</div>
+      <div class="fb-title">Energy Drain</div>
+      <div class="fb-text" id="cost-text">Low - Baseline maintenance only.</div>
     </div>
 
     <div class="fb-block" id="clinical-note-item" style="display:none">
@@ -232,7 +233,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
     </div>
   </div>
 
-</div><!-- end .three-col -->
+</div>
 
 <div class="disclaimer">
   <strong>Second Arrow Counseling</strong> — Erin Taylor, LCSW &nbsp;|&nbsp;
@@ -263,46 +264,46 @@ let currentProfile = 'neurotypical';
 const PROFILES = {
   neurotypical: {
     name:'Neurotypical',
-    desc:'Robust anti-correlation between DMN and TPN. As external demand increases, the DMN suppresses cleanly and efficiently, allowing the TPN to take over. The textbook "seesaw" — one goes up, the other comes down.',
+    desc:'A clean back-and-forth between DMN and TPN. As external demand increases, the DMN steps back cleanly, allowing the TPN to take over - one goes up, the other comes down.',
     dmn:d=>90-d*0.80, tpn:d=>10+d*0.80,
   },
   adhd: {
-    name:'ADHD — Interest-Based Nervous System',
-    desc:'The DMN\'s "off-switch" is impaired. It remains sticky and resistant to suppression as task demand rises, so the TPN must work harder while fighting against a persistently active internal narrator. This is the neurological basis of distractibility — not a willpower failure.',
+    name:'ADHD - Interest-Based Nervous System',
+    desc:'The DMN has a higher suppression threshold and stays active well into task-focused states - a difference in wiring, not willpower. The TPN must work harder while the internal narrator stays online.',
     dmn:d=>90-d*0.25, tpn:d=>10+d*0.72,
   },
   autism: {
-    name:'Autism — Sensory & Interoceptive Processing Load',
-    desc:'The DMN runs at a higher baseline due to intensive sensory processing, pattern recognition, and interoception demands. Context-switching carries a steeper metabolic cost. DMN suppression can occur, but the transition is less smooth and requires deliberate effort.',
+    name:'Autism - Sensory & Interoceptive Processing Load',
+    desc:"The DMN runs at a higher baseline due to intensive sensory processing, pattern recognition, and reading your body's internal signals. Switching from one thing to another costs more energy. DMN suppression can occur, but the transition is less smooth and requires deliberate effort.",
     dmn:d=>92-d*0.46, tpn:d=>8+d*0.73,
   },
   audhd: {
-    name:'AuDHD — Compounded Co-activation',
-    desc:'The ADHD sticky off-switch meets the autism elevated processing load. Both internal noise and sensory/interoceptive burden are present simultaneously, and neither suppresses well under demand. The system runs hot before any task begins — the origin of "wired but tired."',
+    name:'AuDHD - Compounded Co-activation',
+    desc:"The ADHD pattern of persistent DMN activity meets the autism elevated processing load. Both internal noise and sensory and interoceptive load are present simultaneously, and neither quiets down well under demand. The system runs hot before any task begins - the origin of 'wired but tired.'",
     dmn:d=>94-d*0.18, tpn:d=>10+d*0.66,
   },
 };
 
 const FEEDBACK = {
   neurotypical:[
-    {maxD:28, state:'good',     exp:'Resting state. The DMN is active for daydreaming, rumination, and self-referential processing. The system is at baseline.', cost:'Low — Baseline maintenance only.', note:null},
-    {maxD:68, state:'moderate', exp:'Transitioning. The internal narrator begins quieting as external attention engages. Mild, efficient effort.', cost:'Moderate — Clean transition underway.', note:null},
-    {maxD:100,state:'good',     exp:'Clear focus achieved. The DMN is successfully suppressed and attention is cleanly allocated to the external task.', cost:'Moderate — Efficient energy use relative to task demand.', note:null},
+    {maxD:28, state:'good',     exp:'Resting state. The DMN is active for daydreaming, inner thought, and reflection. The system is at baseline.', cost:'Low - Baseline maintenance only.', note:null},
+    {maxD:68, state:'moderate', exp:'Transitioning. The internal narrator begins quieting as external attention engages. Mild, efficient effort.', cost:'Moderate - Clean transition underway.', note:null},
+    {maxD:100,state:'good',     exp:'Clear focus achieved. The DMN has stepped back and attention is cleanly on the external task.', cost:'Moderate - Efficient energy use relative to task demand.', note:null},
   ],
   adhd:[
-    {maxD:28, state:'good',     exp:'Resting state — often restless. The DMN may produce unwanted rumination, hyperfocus on low-priority stimuli, or time-blindness.', cost:'Low-Moderate — Baseline is slightly elevated.', note:null},
-    {maxD:68, state:'moderate', exp:'Friction state. Attempting to engage the task while the DMN persists. Distractibility is high. The internal narrator is not quieting.', cost:'Moderate-High — Working against internal resistance.', note:'This is the neurological basis of ADHD distractibility — the DMN\'s off-switch is genuinely impaired, not under voluntary control. This is not a character trait.'},
-    {maxD:100,state:'high',     exp:'Network competition. The TPN is executing, but the DMN continues to broadcast simultaneously — working while the brain plays loud background noise. High-interest tasks may temporarily resolve this.', cost:'High — Sustained co-activation is metabolically draining.', note:'Interest and emotional salience can trigger hyperfocus in ADHD, temporarily resolving the competition. This is why engagement and meaning so dramatically affect functioning — they change the neurological equation.'},
+    {maxD:28, state:'good',     exp:'Resting state - often restless. The DMN may produce ongoing rumination, attention drawn to things your brain finds more interesting in the moment, or time-blindness.', cost:'Low-Moderate - Baseline is slightly elevated.', note:null},
+    {maxD:68, state:'moderate', exp:'Friction state. Attempting to engage the task while the DMN persists. Distractibility is high. The internal narrator is not quieting.', cost:'Moderate-High - Working against internal resistance.', note:"The DMN has a higher suppression threshold and stays online through rising task demand - this is not under voluntary control. This is not a character trait - it is a difference in how the brain's networks transition."},
+    {maxD:100,state:'high',     exp:'Network competition. The TPN is executing, but the DMN continues to broadcast simultaneously - working while the brain plays loud background noise. High-interest tasks may temporarily resolve this.', cost:'High - Sustained co-activation drains energy.', note:"Things that feel meaningful or exciting can trigger hyperfocus in ADHD, temporarily resolving the competition. This is why engagement and meaning so greatly shape how the brain accesses tasks - they change the equation."},
   ],
   autism:[
-    {maxD:28, state:'moderate', exp:'Resting state involves active internal work: sensory integration, pattern recognition, interoceptive monitoring. This is not "doing nothing" — it is high-bandwidth processing.', cost:'Moderate — Elevated baseline due to continuous sensory and interoceptive demands.', note:'For autistic individuals, "rest" often involves significant internal processing. This is why social interaction after a quiet period can still feel depleting — the baseline was never truly low.'},
-    {maxD:68, state:'moderate', exp:'Context-switching is underway but carries a higher transition cost. DMN suppression occurs, but less smoothly. Processing inertia creates friction.', cost:'Moderate-High — Steeper transition cost than neurotypical.', note:'Autistic inertia is visible here: the cost of switching from internal processing mode to external demand is significantly higher. This is not rigidity — it is a real neurological switching cost.'},
-    {maxD:100,state:'high',     exp:'Task focus is achievable, but residual sensory and interoceptive processing continues to run in the background. Performance may appear typical while internal cost is substantially higher.', cost:'High — The gap between visible performance and actual metabolic cost is large.', note:'This is the neurological substrate of autistic masking: external performance can look intact while internal energy expenditure is far higher. The sustained gap between performance and cost is a direct pathway to post-exertional crashes.'},
+    {maxD:28, state:'moderate', exp:"Resting state involves active internal work: sensory integration, pattern recognition, and monitoring your body's internal signals. This is not 'doing nothing' - it is a lot of active processing.", cost:'Moderate - Elevated baseline due to continuous sensory processing and internal monitoring.', note:"For many autistic people, 'resting' is still an active process - the brain is busy scanning, organizing, and making sense of sensory information. That's why a quiet afternoon can still leave you tired."},
+    {maxD:68, state:'moderate', exp:'Switching from one thing to another is underway but carries a higher transition cost. DMN suppression occurs, but less smoothly. Mental momentum creates friction.', cost:'Moderate-High - Higher transition cost than average.', note:'Autistic inertia is visible here: the cost of switching from one thing to another is significantly higher. This is not rigidity - it is a real neurological switching cost.'},
+    {maxD:100,state:'high',     exp:"Task focus is achievable, but residual sensory and body-signal processing continues in the background. Performance may appear externally seamless while the actual energy cost is substantially higher.", cost:'High - The gap between visible performance and actual energy drain is large.', note:"This is what's happening under the surface during masking: external performance can look intact while internal energy use is far higher. The sustained gap between performance and energy cost is a direct pathway to crashes after pushing through."},
   ],
   audhd:[
-    {maxD:28, state:'moderate', exp:'Resting state is not genuinely restorative. The DMN is both sticky (ADHD) and heavily loaded (sensory/interoceptive). The system is "on" before any demand is applied. The floor is already elevated.', cost:'Moderate — The system never reaches true baseline.', note:'AuDHD clients who report never feeling truly rested are accurately describing their neurology. The neurological floor of activation is genuinely elevated at rest — this is not catastrophizing.'},
-    {maxD:68, state:'high',     exp:'Both dynamics compound: the sticky DMN won\'t suppress AND the internal processing load is heavy. The TPN is attempting to engage against high-resistance, high-load internal activity. Significant friction and fatigue.', cost:'High — Compounded co-activation. Both problems are active simultaneously.', note:'This is the "wired but tired" AuDHD state: trying to focus while unable to quiet internal noise AND carrying a heavy sensory load. These are not additive — they compound each other, producing exhaustion that precedes the task.'},
-    {maxD:100,state:'high',     exp:'Maximum co-activation. The TPN is pushing hard for task execution while the DMN refuses to release. The system is burning from both ends. Sustained time in this state is a direct pathway to AuDHD burnout.', cost:'Very High — Unsustainable. Both networks simultaneously competing for limited metabolic resources.', note:'This is the neurological basis of AuDHD burnout: not laziness, not avoidance — the physical depletion of a system running at maximum co-activation. Recovery requires genuine rest and reduced demand.'},
+    {maxD:28, state:'moderate', exp:"Resting state is not genuinely restorative. The DMN is both persistent (ADHD wiring) and heavily loaded (sensory processing). The system is 'on' before any demand is applied. The brain's starting point is already higher than usual.", cost:'Moderate - The system never reaches true baseline.', note:"AuDHD clients who report never feeling truly rested are accurately describing their neurology. Your brain's starting point, even before any task begins, is already higher than average. There is no true idle mode. This is not catastrophizing."},
+    {maxD:68, state:'high',     exp:"Both patterns compound: the persistent DMN won't quiet AND the mental load is heavy. The TPN is attempting to engage against high-resistance internal activity. Significant friction and fatigue.", cost:'High - Both patterns are active simultaneously, both networks firing at the same time.', note:"This is the 'wired but tired' AuDHD state: trying to focus while the internal processing channel remains active AND carrying a heavy sensory load. These are not additive - they compound each other, producing exhaustion that precedes the task."},
+    {maxD:100,state:'high',     exp:'Both networks running at full force simultaneously. The TPN is pushing hard for task execution while the DMN refuses to step down. Running both systems at full force with nowhere to rest.', cost:'Very High - Unsustainable. Both networks firing at the same time, competing for limited energy.', note:"This is the neurological basis of AuDHD burnout: not laziness, not avoidance - the physical depletion of a system running both networks at full force. Recovery requires genuine rest and reduced demand."},
   ],
 };
 
@@ -333,8 +334,8 @@ function update(){
   coactFill.style.width = coact+'%';
   let cc, ct;
   if(coact<25){cc='var(--green)'; ct='Minimal';}
-  else if(coact<45){cc='var(--gold)'; ct='Moderate';}
-  else if(coact<65){cc='var(--terra)'; ct='High';}
+  else if(coact<50){cc='var(--gold)'; ct='Moderate';}
+  else if(coact<75){cc='var(--terra)'; ct='High';}
   else{cc='#8b4a3a'; ct='Severe';}
   coactFill.style.background = cc;
   coactLabel.textContent = ct;
@@ -352,7 +353,6 @@ function update(){
   }
 }
 
-// Profile button handling
 pbtns.forEach(btn=>{
   btn.addEventListener('click',()=>{
     pbtns.forEach(b=>b.className='pbtn');
