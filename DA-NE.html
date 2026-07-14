@@ -118,10 +118,7 @@
             padding: 10px; display: flex; flex-direction: column;
             align-items: center; min-width: 0;
         }
-        /* spotlight canvas fills its panel */
         #spotlight-canvas { border-radius: 8px; display: block; width: 100%; }
-        /* map canvas must NOT be stretched — it is sized explicitly by JS */
-        #map-canvas { border-radius: 8px; display: block; }
         .status-panel {
             background: var(--accent-bg); border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.08);
@@ -157,16 +154,6 @@
             font-size: 0.84em; margin-top: auto; transition: background 0.2s; flex-shrink: 0;
         }
         .reset-btn:hover { background: var(--grey); }
-        .map-area {
-            width: 100%; max-width: 1100px; margin-top: 12px;
-            background: var(--accent-bg); border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
-            padding: 14px 14px 14px;
-        }
-        .map-area .panel-title { margin-bottom: 3px; }
-        .map-subtitle { text-align: center; font-size: 0.75em; color: var(--grey); margin: 0 0 8px; }
-        /* map-wrap centers a fixed-width canvas */
-        .map-wrap { display: flex; justify-content: center; }
         .bottom-status {
             width: 100%; max-width: 1100px; margin-top: 12px;
             background: var(--accent-bg); border-radius: 10px;
@@ -268,12 +255,6 @@
     </div>
 </div>
 
-<div class="map-area">
-    <p class="panel-title">The DA/NE Landscape</p>
-    <p class="map-subtitle">Your position in the signal-to-arousal space. Profiles are regions, not fixed points.</p>
-    <div class="map-wrap"><canvas id="map-canvas"></canvas></div>
-</div>
-
 <div class="bottom-status">
     <p id="bottom-main">Neurotypical focus: the brain can lock onto a mundane task because dopamine highlights it just enough, and norepinephrine provides steady energy without amplifying background noise.</p>
     <p id="bottom-sub">Try moving the sliders to experience how different DA/NE combinations create the phenomenological signatures of ADHD fog, autistic sensory flood, and AuDHD paradox.</p>
@@ -298,13 +279,6 @@ const PROFILES = {
               sub:  'Metabolically exhausted and profoundly bored (ADHD), while simultaneously intensely overstimulated and overwhelmed by the environment (Autism).' }
 };
 
-const MAP_BLOBS = {
-    nt:     { cx: 0.65, cy: 0.55, rx: 0.18, ry: 0.14, col: '#45735d', label: 'NT' },
-    adhd:   { cx: 0.25, cy: 0.80, rx: 0.16, ry: 0.12, col: '#b68d76', label: 'ADHD' },
-    autism: { cx: 0.70, cy: 0.18, rx: 0.18, ry: 0.12, col: '#ba945e', label: 'Autism' },
-    audhd:  { cx: 0.28, cy: 0.22, rx: 0.16, ry: 0.14, col: '#35361c', label: 'AuDHD' }
-};
-
 /* STATE */
 let curDA = 50, curNE = 45;
 let targetDA = 50, targetNE = 45;
@@ -314,19 +288,12 @@ let frame = 0;
 
 const sCanvas = document.getElementById('spotlight-canvas');
 const sCtx    = sCanvas.getContext('2d');
-const mCanvas = document.getElementById('map-canvas');
-const mCtx    = mCanvas.getContext('2d');
 
-/* CANVAS SIZING — key fix: map canvas pixel dims match its CSS display size */
+/* CANVAS SIZING */
 function resizeCanvases() {
     const sRect = sCanvas.parentElement.getBoundingClientRect();
     sCanvas.width  = Math.max(300, sRect.width - 20);
     sCanvas.height = 430;
-
-    // Map canvas: cap width so aspect ratio stays reasonable (no more squashing)
-    const mRect = mCanvas.parentElement.getBoundingClientRect();
-    mCanvas.width  = Math.min(760, Math.max(480, mRect.width - 28));
-    mCanvas.height = 340;  // taller for better label breathing room
 }
 
 /* PARTICLES */
@@ -368,10 +335,10 @@ function getZoneInfo(da,ne) {
         desc:'The locus coeruleus is firing at maximum. All sensory gates are open. Background noise is so intense that figure-ground distinction collapses. Everything is equally loud, bright, and urgent.' };
     if (da<35&&snr<1.8) return { name:'Weak Signal', col:'#bdb7a2', badgeBg:'#bdb7a210',
         sub:'Adequate arousal but poor task precision.',
-        desc:'The brain has enough norepinephrine to function, but dopamine is not effectively weighting any particular task. Scattered, directionless energy — "I have energy but nothing feels important."' };
+        desc:'The brain has enough norepinephrine to function, but dopamine is not effectively weighting any particular task. Scattered, directionless energy - "I have energy but nothing feels important."' };
     if (snr>=2.5&&neOpt>0.6) return { name:'Goldilocks Focus', col:'#45735d', badgeBg:'#45735d10',
         sub:'Optimal signal-to-noise ratio.',
-        desc:'Dopamine successfully highlights the target task, and norepinephrine provides balanced arousal without amplifying background noise. The neurotypical ideal — though individual variation means this is a zone, not a single point.' };
+        desc:'Dopamine successfully highlights the target task, and norepinephrine provides balanced arousal without amplifying background noise. The neurotypical ideal - though individual variation means this is a zone, not a single point.' };
     return { name:'Functional Focus', col:'#ba945e', badgeBg:'#ba945e10',
         sub:'Task-directed but not optimal.',
         desc:'Either dopamine or norepinephrine is slightly off-ideal. The brain can direct attention but with noticeable effort, compensatory strategies, or background interference.' };
@@ -472,80 +439,9 @@ function drawSpotlight() {
         sCtx.font='bold 11px sans-serif'; sCtx.textAlign='center';
         sCtx.fillText('COGNITIVE FOG',cx,cy+tBaseR+28); sCtx.globalAlpha=1;
     }
-    const neLabel=curNE<28?'Low Gain → Fog':curNE<=58?'Optimal Gain':'High Gain → Flood';
+    const neLabel=curNE<28?'Low Gain - Fog':curNE<=58?'Optimal Gain':'High Gain - Flood';
     sCtx.globalAlpha=0.45; sCtx.fillStyle='white'; sCtx.font='9px sans-serif';
     sCtx.textAlign='left'; sCtx.fillText(neLabel,12,h-14); sCtx.globalAlpha=1;
-}
-
-/* 2D MAP RENDER — improved font sizes, labels, padding */
-function drawMap() {
-    mCtx.globalAlpha=1;
-    const w=mCanvas.width, h=mCanvas.height;
-    const padL=52, padR=24, padT=28, padB=48;
-    const plotW=w-padL-padR, plotH=h-padT-padB;
-
-    mCtx.fillStyle='#19201d'; mCtx.fillRect(0,0,w,h);
-
-    /* grid */
-    mCtx.strokeStyle='rgba(255,255,255,0.06)'; mCtx.lineWidth=1;
-    for (let i=1;i<4;i++) {
-        const x=padL+(plotW/4)*i, y=padT+(plotH/4)*i;
-        mCtx.beginPath(); mCtx.moveTo(x,padT); mCtx.lineTo(x,padT+plotH); mCtx.stroke();
-        mCtx.beginPath(); mCtx.moveTo(padL,y); mCtx.lineTo(padL+plotW,y); mCtx.stroke();
-    }
-
-    /* axis labels — bigger and properly positioned */
-    mCtx.fillStyle='rgba(255,255,255,0.55)'; mCtx.font='bold 12px "Nunito Sans", sans-serif';
-    mCtx.textAlign='center';
-    mCtx.fillText('Dopamine (Signal Precision) →', padL+plotW/2, h-12);
-    mCtx.save(); mCtx.translate(14, padT+plotH/2); mCtx.rotate(-Math.PI/2);
-    mCtx.fillText('← Norepinephrine (Systemic Gain)', 0, 0); mCtx.restore();
-
-    /* tick values */
-    mCtx.fillStyle='rgba(255,255,255,0.38)'; mCtx.font='11px "Nunito Sans", sans-serif';
-    mCtx.textAlign='center';
-    mCtx.fillText('0',  padL,          padT+plotH+18);
-    mCtx.fillText('50', padL+plotW/2,  padT+plotH+18);
-    mCtx.fillText('100',padL+plotW,    padT+plotH+18);
-    mCtx.textAlign='right';
-    mCtx.fillText('High', padL-8, padT+6);
-    mCtx.fillText('Low',  padL-8, padT+plotH+4);
-
-    /* Goldilocks sweet-spot glow */
-    const sCx=padL+0.55*plotW, sCy=padT+0.55*plotH;
-    const sg=mCtx.createRadialGradient(sCx,sCy,0,sCx,sCy,plotW*0.3);
-    sg.addColorStop(0,'rgba(69,115,93,0.22)'); sg.addColorStop(0.5,'rgba(69,115,93,0.10)'); sg.addColorStop(1,'rgba(69,115,93,0)');
-    mCtx.fillStyle=sg; mCtx.beginPath(); mCtx.ellipse(sCx,sCy,plotW*0.28,plotH*0.22,0,0,Math.PI*2); mCtx.fill();
-    /* Goldilocks label */
-    mCtx.globalAlpha=0.5; mCtx.fillStyle='#45735d';
-    mCtx.font='italic 11px "Nunito Sans", sans-serif'; mCtx.textAlign='center';
-    mCtx.fillText('Goldilocks Zone', sCx, sCy-plotH*0.23-6); mCtx.globalAlpha=1;
-
-    /* profile blobs */
-    Object.values(MAP_BLOBS).forEach(b => {
-        const bx=padL+b.cx*plotW, by=padT+b.cy*plotH;
-        const brx=b.rx*plotW, bry=b.ry*plotH;
-        mCtx.globalAlpha=0.14; mCtx.fillStyle=b.col;
-        mCtx.beginPath(); mCtx.ellipse(bx,by,brx,bry,0,0,Math.PI*2); mCtx.fill();
-        mCtx.globalAlpha=0.38; mCtx.strokeStyle=b.col; mCtx.lineWidth=1.5;
-        mCtx.beginPath(); mCtx.ellipse(bx,by,brx,bry,0,0,Math.PI*2); mCtx.stroke();
-        mCtx.globalAlpha=0.95; mCtx.fillStyle=b.col;
-        mCtx.font='bold 13px "Nunito Sans", sans-serif'; mCtx.textAlign='center';
-        mCtx.fillText(b.label, bx, by+5);
-        mCtx.globalAlpha=1;
-    });
-
-    /* current position dot */
-    const dotX=padL+(curDA/100)*plotW, dotY=padT+(1-curNE/100)*plotH;
-    const dg=mCtx.createRadialGradient(dotX,dotY,0,dotX,dotY,18);
-    dg.addColorStop(0,'rgba(186,148,94,0.7)'); dg.addColorStop(1,'rgba(186,148,94,0)');
-    mCtx.fillStyle=dg; mCtx.beginPath(); mCtx.arc(dotX,dotY,18,0,Math.PI*2); mCtx.fill();
-    mCtx.fillStyle='#ba945e'; mCtx.beginPath(); mCtx.arc(dotX,dotY,6,0,Math.PI*2); mCtx.fill();
-    mCtx.strokeStyle='white'; mCtx.lineWidth=2; mCtx.stroke();
-    mCtx.setLineDash([3,3]); mCtx.strokeStyle='rgba(186,148,94,0.35)'; mCtx.lineWidth=1;
-    mCtx.beginPath(); mCtx.moveTo(dotX,dotY); mCtx.lineTo(dotX,padT+plotH); mCtx.stroke();
-    mCtx.beginPath(); mCtx.moveTo(dotX,dotY); mCtx.lineTo(padL,dotY); mCtx.stroke();
-    mCtx.setLineDash([]);
 }
 
 /* LOOP */
@@ -553,7 +449,7 @@ function animate() {
     frame++;
     curDA+=(targetDA-curDA)*0.12;
     curNE+=(targetNE-curNE)*0.12;
-    drawSpotlight(); drawMap(); refreshMetrics();
+    drawSpotlight(); refreshMetrics();
     requestAnimationFrame(animate);
 }
 
