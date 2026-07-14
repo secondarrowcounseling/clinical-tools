@@ -4,113 +4,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network Co-activation Simulator</title>
+    <title>Network Co-activation Simulator | Second Arrow Counseling</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,wght@0,400;0,600;0,700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --sa-amber: #f59e0b;
-            --bg: #0d1b2a;
-            --bg-card: #0f2033;
-            --bg-panel: #162236;
-            --bg-control: #0b1825;
-            --border: rgba(255,255,255,0.09);
-            --border-hover: rgba(255,255,255,0.18);
-            --text: #e2e8f0;
-            --muted: #94a3b8;
-            --dim: #64748b;
-            --dmn-color: #9580d8;
-            --dmn-glow: rgba(149,128,216,0.35);
+            --green: #45735d;
+            --gold: #ba945e;
+            --terra: #b68d76;
+            --forest: #35361c;
+            --bg: #faf8f5;
+            --accent-bg: #F5F3EF;
+            --stone: #bdb7a2;
+            --cool-grey: #a6aea6;
+            --text: #222a26;
+            --grey: #6d7873;
+            --dmn-color: #8884d8;
+            --dmn-soft: rgba(136,132,216,0.12);
             --tpn-color: #ff7300;
-            --tpn-glow: rgba(255,115,0,0.35);
-            --green: #34d399;
-            --red: #f87171;
-            --amber: #f59e0b;
+            --tpn-soft: rgba(255,115,0,0.12);
+            --good: #45735d;
+            --warn: #ba945e;
+            --bad: #c06c5b;
         }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+            font-family: "Nunito Sans", -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            padding: 16px;
         }
+
+        /* BRAND BAR */
+        .brand-bar {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 4px 8px;
+        }
+        .brand-bar a {
+            font-family: "Libre Baskerville", serif;
+            font-size: 1.05em;
+            font-weight: 700;
+            color: var(--forest);
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+            letter-spacing: 0.01em;
+        }
+        .brand-bar a:hover { opacity: 1; }
+
+        /* DISCLAIMER */
+        .disclaimer {
+            width: 100%;
+            max-width: 1000px;
+            text-align: right;
+            font-size: 11px;
+            color: var(--grey);
+            padding: 0 4px 12px;
+            line-height: 1.5;
+        }
+        .disclaimer strong { color: var(--gold); font-weight: 600; }
+
+        /* WRAPPER */
+        .wrap { max-width: 1000px; width: 100%; }
 
         /* HEADER */
-        header {
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border);
-            padding: 14px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .hdr {
+            background: var(--accent-bg);
+            border: 1px solid var(--stone);
+            border-radius: 16px 16px 0 0;
+            padding: 28px 32px 20px;
         }
-        .brand { font-size: 13px; color: var(--sa-amber); font-weight: 700; letter-spacing: 0.4px; }
-        .brand-sub { font-size: 11px; color: var(--dim); margin-top: 2px; }
-        .header-note { font-size: 11px; color: var(--dim); text-align: right; line-height: 1.5; }
-
-        /* MAIN */
-        main {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            padding: 40px 20px 60px;
-        }
-
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            max-width: 640px;
-            width: 100%;
-            padding: 36px 32px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-        }
-
-        .card-title {
+        .hdr h1 {
+            font-family: "Libre Baskerville", serif;
+            color: var(--forest);
             font-size: 1.45rem;
             font-weight: 700;
-            text-align: center;
             margin-bottom: 6px;
-            color: var(--text);
         }
-        .card-subtitle {
-            text-align: center;
-            color: var(--muted);
-            font-size: 0.875rem;
-            margin-bottom: 28px;
+        .hdr .subtitle {
+            color: var(--grey);
+            font-size: 0.92rem;
             line-height: 1.65;
+            max-width: 760px;
+        }
+
+        /* CARD BODY */
+        .card-body {
+            background: #fff;
+            border: 1px solid var(--stone);
+            border-top: none;
+            border-radius: 0 0 16px 16px;
+            padding: 28px 32px 36px;
         }
 
         /* CONTROLS */
         .controls {
-            background: var(--bg-control);
-            border: 1px solid var(--border);
+            background: var(--accent-bg);
+            border: 1px solid var(--stone);
             padding: 22px;
             border-radius: 14px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             display: flex;
             flex-direction: column;
             gap: 18px;
         }
         .control-group { display: flex; flex-direction: column; gap: 8px; }
         label {
-            font-weight: 600;
-            font-size: 0.8rem;
-            color: var(--muted);
-            letter-spacing: 0.5px;
+            font-weight: 700;
+            font-size: 0.72rem;
+            color: var(--grey);
+            letter-spacing: 0.6px;
             text-transform: uppercase;
         }
-
         select {
             width: 100%;
             padding: 11px 36px 11px 14px;
             font-size: 0.95rem;
+            font-family: "Nunito Sans", sans-serif;
             border-radius: 10px;
-            border: 1px solid var(--border);
-            background: var(--bg-panel);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            border: 1px solid var(--stone);
+            background: #fff;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236d7873' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 14px center;
             color: var(--text);
@@ -120,25 +145,25 @@
             -webkit-appearance: none;
             transition: border-color 0.2s;
         }
-        select:hover, select:focus { border-color: var(--border-hover); }
+        select:hover, select:focus { border-color: var(--grey); }
 
         /* SLIDER */
-        .slider-row { display: flex; align-items: center; gap: 14px; }
-        .slider-value { min-width: 72px; text-align: right; }
-        .demand-pct { font-size: 1.05rem; font-weight: 700; color: var(--sa-amber); line-height: 1; }
-        .demand-label-text { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+        .slider-row { display: flex; align-items: center; gap: 16px; }
+        .slider-value { min-width: 80px; text-align: right; }
+        .demand-pct {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--green);
+            line-height: 1;
+        }
+        .demand-label-text { font-size: 0.72rem; color: var(--grey); margin-top: 2px; }
 
         input[type="range"] {
             flex: 1;
             -webkit-appearance: none;
             height: 6px;
             border-radius: 3px;
-            background: linear-gradient(
-                to right,
-                var(--sa-amber) 0%,
-                var(--sa-amber) var(--pct, 0%),
-                rgba(255,255,255,0.1) var(--pct, 0%)
-            );
+            background: linear-gradient(to right, var(--green) var(--pct,0%), var(--stone) var(--pct,0%));
             cursor: pointer;
             outline: none;
         }
@@ -146,48 +171,58 @@
             -webkit-appearance: none;
             width: 20px; height: 20px;
             border-radius: 50%;
-            background: var(--sa-amber);
-            border: 3px solid var(--bg-card);
-            box-shadow: 0 0 0 1px var(--sa-amber);
+            background: var(--green);
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 1px var(--green);
             cursor: pointer;
             transition: transform 0.15s;
         }
-        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
 
         /* PROFILE INFO */
         #profile-info {
-            background: var(--bg-panel);
-            border: 1px solid var(--border);
+            background: #fff;
+            border: 1px solid var(--stone);
             border-radius: 12px;
-            padding: 16px 20px;
-            margin-bottom: 24px;
+            padding: 18px 22px;
+            margin-bottom: 28px;
             transition: border-color 0.3s;
         }
-        .profile-name { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-        #profile-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
+        .profile-name {
+            font-family: "Libre Baskerville", serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--forest);
+            margin-bottom: 6px;
+        }
+        #profile-desc {
+            font-size: 0.82rem;
+            color: var(--grey);
+            line-height: 1.7;
+        }
 
         /* GAUGES */
         .gauges {
             display: flex;
-            justify-content: space-around;
-            gap: 20px;
-            margin-bottom: 22px;
+            justify-content: center;
+            gap: 48px;
+            margin-bottom: 28px;
         }
         .gauge-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            flex: 1;
+            flex: 0 0 140px;
         }
         .bar-bg {
-            height: 180px;
-            width: 56px;
-            background: rgba(255,255,255,0.05);
+            height: 200px;
+            width: 60px;
+            background: var(--accent-bg);
             border-radius: 10px;
             position: relative;
             overflow: hidden;
-            margin-bottom: 12px;
-            border: 1px solid var(--border);
+            margin-bottom: 14px;
+            border: 1px solid var(--stone);
         }
         .bar-fill {
             position: absolute;
@@ -197,41 +232,62 @@
             transition: height 0.5s cubic-bezier(0.4,0,0.2,1);
         }
         #dmn-fill {
-            background: linear-gradient(to top, #5f50b0, var(--dmn-color));
-            box-shadow: 0 -8px 24px var(--dmn-glow);
+            background: linear-gradient(to top, #6b64c4, var(--dmn-color));
             height: 90%;
         }
         #tpn-fill {
-            background: linear-gradient(to top, #b05200, var(--tpn-color));
-            box-shadow: 0 -8px 24px var(--tpn-glow);
+            background: linear-gradient(to top, #cc5c00, var(--tpn-color));
             height: 10%;
         }
-        .gauge-label { font-weight: 800; font-size: 1rem; margin-bottom: 3px; }
+        .gauge-label {
+            font-family: "Libre Baskerville", serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
         .gauge-label.dmn { color: var(--dmn-color); }
         .gauge-label.tpn { color: var(--tpn-color); }
-        .gauge-subtext { font-size: 0.72rem; color: var(--muted); text-align: center; margin-bottom: 6px; line-height: 1.5; }
-        .gauge-value { font-size: 1.1rem; font-weight: 700; }
-
-        /* CO-ACTIVATION BAR */
-        .coact-section {
-            background: var(--bg-panel);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px 18px;
-            margin-bottom: 20px;
+        .gauge-subtext {
+            font-size: 0.72rem;
+            color: var(--grey);
+            text-align: center;
+            margin-bottom: 8px;
+            line-height: 1.5;
         }
-        .coact-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .coact-title {
-            font-size: 0.78rem;
+        .gauge-value {
+            font-size: 1.15rem;
             font-weight: 700;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
-        .coact-value-label { font-size: 0.88rem; font-weight: 700; transition: color 0.4s; }
+
+        /* CO-ACTIVATION */
+        .coact-section {
+            background: var(--accent-bg);
+            border: 1px solid var(--stone);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+        }
+        .coact-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .coact-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--grey);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+        .coact-value-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            transition: color 0.4s;
+        }
         .coact-track {
             height: 8px;
-            background: rgba(255,255,255,0.07);
+            background: var(--stone);
             border-radius: 4px;
             overflow: hidden;
         }
@@ -244,126 +300,131 @@
         /* FEEDBACK */
         #feedback-panel {
             border-radius: 12px;
-            padding: 18px 22px;
-            border-left: 4px solid var(--dim);
-            background: var(--bg-panel);
+            padding: 20px 24px;
+            border-left: 4px solid var(--cool-grey);
+            background: var(--accent-bg);
             transition: border-color 0.4s, background 0.4s;
         }
-        #feedback-panel.state-good   { border-color: var(--green); background: rgba(52,211,153,0.06); }
-        #feedback-panel.state-moderate { border-color: var(--amber); background: rgba(245,158,11,0.06); }
-        #feedback-panel.state-high   { border-color: var(--red); background: rgba(248,113,113,0.06); }
+        #feedback-panel.state-good   { border-color: var(--good); background: rgba(69,115,93,0.06); }
+        #feedback-panel.state-moderate { border-color: var(--warn); background: rgba(186,148,94,0.06); }
+        #feedback-panel.state-high   { border-color: var(--bad); background: rgba(192,108,91,0.06); }
 
-        .feedback-item { margin-bottom: 10px; font-size: 0.875rem; line-height: 1.65; }
+        .feedback-item { margin-bottom: 12px; font-size: 0.88rem; line-height: 1.65; }
         .feedback-item:last-child { margin-bottom: 0; }
-        .feedback-title { font-weight: 700; color: var(--text); margin-right: 4px; }
-        #experience-text, #cost-text, #clinical-note-text { color: var(--muted); }
+        .feedback-title {
+            font-weight: 700;
+            color: var(--forest);
+            margin-right: 4px;
+        }
+        #experience-text, #cost-text, #clinical-note-text { color: var(--grey); }
 
         /* FOOTER */
-        footer {
-            background: var(--bg-card);
-            border-top: 1px solid var(--border);
-            padding: 18px 24px;
+        .footer-note {
+            width: 100%;
+            max-width: 1000px;
             text-align: center;
             font-size: 11px;
-            color: var(--dim);
+            color: var(--grey);
+            padding: 24px 4px 8px;
             line-height: 1.7;
         }
-        footer strong { color: var(--sa-amber); }
+        .footer-note strong { color: var(--forest); font-weight: 700; }
     </style>
 </head>
 <body>
 
-<header>
-    <div>
-        <div class="brand">Second Arrow Counseling</div>
-        <div class="brand-sub">Educational Clinical Tools</div>
+    <div class="brand-bar">
+        <a href="https://www.secondarrow.net" target="_blank">Second Arrow Counseling</a>
     </div>
-    <div class="header-note">For educational purposes only.<br>Not a clinical assessment tool.</div>
-</header>
+    <div class="disclaimer">
+        Clinical education tool.<br>Not for diagnostic use.
+    </div>
 
-<main>
-    <div class="card">
-        <h2 class="card-title">Network Co-activation Simulator</h2>
-        <p class="card-subtitle">
-            Visualize the relationship between the Default Mode Network (internal focus)
-            and the Task Positive Network (external focus) across neurological profiles.
-            Observe how co-activation — not just activation — drives metabolic cost.
-        </p>
+    <div class="wrap">
+        <div class="hdr">
+            <h1>Network Co-activation Simulator</h1>
+            <p class="subtitle">
+                Visualize the relationship between the Default Mode Network (internal focus)
+                and the Task Positive Network (external focus) across neurological profiles.
+                Observe how co-activation — not just activation — drives metabolic cost.
+            </p>
+        </div>
 
-        <div class="controls">
-            <div class="control-group">
-                <label for="profile-select">Neurological Profile</label>
-                <select id="profile-select">
-                    <option value="neurotypical">Neurotypical — The Seesaw</option>
-                    <option value="adhd">ADHD — The Tug-of-War</option>
-                    <option value="autism">Autism — The Weighted Scale</option>
-                    <option value="audhd">AuDHD — The Overloaded Circuit</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <label for="demand-slider">External Task Demand</label>
-                <div class="slider-row">
-                    <input type="range" id="demand-slider" min="0" max="100" value="0">
-                    <div class="slider-value">
-                        <div class="demand-pct" id="demand-pct">0%</div>
-                        <div class="demand-label-text" id="demand-label">Resting</div>
+        <div class="card-body">
+            <div class="controls">
+                <div class="control-group">
+                    <label for="profile-select">Neurological Profile</label>
+                    <select id="profile-select">
+                        <option value="neurotypical">Neurotypical — The Seesaw</option>
+                        <option value="adhd">ADHD — The Tug-of-War</option>
+                        <option value="autism">Autism — The Weighted Scale</option>
+                        <option value="audhd">AuDHD — The Overloaded Circuit</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="demand-slider">External Task Demand</label>
+                    <div class="slider-row">
+                        <input type="range" id="demand-slider" min="0" max="100" value="0">
+                        <div class="slider-value">
+                            <div class="demand-pct" id="demand-pct">0%</div>
+                            <div class="demand-label-text" id="demand-label">Resting</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div id="profile-info">
-            <div class="profile-name" id="profile-name-display">Neurotypical</div>
-            <div id="profile-desc">Robust anti-correlation between DMN and TPN. At rest, the DMN is active for internal processing and self-referential thought. As external demand increases, the DMN suppresses cleanly and efficiently, allowing the TPN to take over. This is the textbook "seesaw" model.</div>
-        </div>
+            <div id="profile-info">
+                <div class="profile-name" id="profile-name-display">Neurotypical</div>
+                <div id="profile-desc">Robust anti-correlation between DMN and TPN. At rest, the DMN is active for internal processing and self-referential thought. As external demand increases, the DMN suppresses cleanly and efficiently, allowing the TPN to take over. This is the textbook "seesaw" model.</div>
+            </div>
 
-        <div class="gauges">
-            <div class="gauge-container">
-                <div class="bar-bg"><div id="dmn-fill" class="bar-fill"></div></div>
-                <div class="gauge-label dmn">DMN</div>
-                <div class="gauge-subtext">Default Mode Network<br>Internal / Self-Referential</div>
-                <div id="dmn-value" class="gauge-value" style="color: var(--dmn-color);">90%</div>
+            <div class="gauges">
+                <div class="gauge-container">
+                    <div class="bar-bg"><div id="dmn-fill" class="bar-fill"></div></div>
+                    <div class="gauge-label dmn">DMN</div>
+                    <div class="gauge-subtext">Default Mode Network<br>Internal / Self-Referential</div>
+                    <div id="dmn-value" class="gauge-value" style="color: var(--dmn-color);">90%</div>
+                </div>
+                <div class="gauge-container">
+                    <div class="bar-bg"><div id="tpn-fill" class="bar-fill"></div></div>
+                    <div class="gauge-label tpn">TPN</div>
+                    <div class="gauge-subtext">Task Positive Network<br>External Focus / Execution</div>
+                    <div id="tpn-value" class="gauge-value" style="color: var(--tpn-color);">10%</div>
+                </div>
             </div>
-            <div class="gauge-container">
-                <div class="bar-bg"><div id="tpn-fill" class="bar-fill"></div></div>
-                <div class="gauge-label tpn">TPN</div>
-                <div class="gauge-subtext">Task Positive Network<br>External Focus / Execution</div>
-                <div id="tpn-value" class="gauge-value" style="color: var(--tpn-color);">10%</div>
-            </div>
-        </div>
 
-        <div class="coact-section">
-            <div class="coact-header">
-                <span class="coact-title">Co-activation Tension</span>
-                <span class="coact-value-label" id="coact-label">Minimal</span>
+            <div class="coact-section">
+                <div class="coact-header">
+                    <span class="coact-title">Co-activation Tension</span>
+                    <span class="coact-value-label" id="coact-label">Minimal</span>
+                </div>
+                <div class="coact-track">
+                    <div class="coact-fill" id="coact-fill" style="width: 10%; background: var(--good);"></div>
+                </div>
             </div>
-            <div class="coact-track">
-                <div class="coact-fill" id="coact-fill" style="width: 10%; background: var(--green);"></div>
-            </div>
-        </div>
 
-        <div id="feedback-panel" class="state-good">
-            <div class="feedback-item">
-                <span class="feedback-title">Internal Experience:</span>
-                <span id="experience-text">Resting state. The DMN is active for daydreaming, rumination, and self-referential processing. The system is at baseline.</span>
-            </div>
-            <div class="feedback-item">
-                <span class="feedback-title">Metabolic Cost:</span>
-                <span id="cost-text">Low — Baseline maintenance only.</span>
-            </div>
-            <div class="feedback-item" id="clinical-note-item" style="display: none;">
-                <span class="feedback-title">Clinical Note:</span>
-                <span id="clinical-note-text"></span>
+            <div id="feedback-panel" class="state-good">
+                <div class="feedback-item">
+                    <span class="feedback-title">Internal Experience:</span>
+                    <span id="experience-text">Resting state. The DMN is active for daydreaming, rumination, and self-referential processing. The system is at baseline.</span>
+                </div>
+                <div class="feedback-item">
+                    <span class="feedback-title">Metabolic Cost:</span>
+                    <span id="cost-text">Low — Baseline maintenance only.</span>
+                </div>
+                <div class="feedback-item" id="clinical-note-item" style="display: none;">
+                    <span class="feedback-title">Clinical Note:</span>
+                    <span id="clinical-note-text"></span>
+                </div>
             </div>
         </div>
     </div>
-</main>
 
-<footer>
-    <strong>Second Arrow Counseling</strong> &mdash; Erin Taylor, LCSW<br>
-    This tool is intended for educational and psychoeducational use only. It represents simplified models of complex neurological processes
-    and does not constitute clinical assessment, diagnosis, or treatment.
-</footer>
+    <div class="footer-note">
+        <strong>Second Arrow Counseling</strong> — Erin Taylor, LCSW<br>
+        This tool is intended for educational and psychoeducational use only. It represents simplified models of complex neurological processes
+        and does not constitute clinical assessment, diagnosis, or treatment.
+    </div>
 
 <script>
     const profileSelect   = document.getElementById('profile-select');
@@ -384,8 +445,6 @@
     const profileNameDisp = document.getElementById('profile-name-display');
     const profileDesc     = document.getElementById('profile-desc');
 
-    // ── Profile definitions ──────────────────────────────────────────────────
-    // dmn/tpn functions take demand (0-100) and return activation level (0-100)
     const PROFILES = {
         neurotypical: {
             name: 'Neurotypical',
@@ -413,7 +472,6 @@
         },
     };
 
-    // ── Per-profile feedback tiers ───────────────────────────────────────────
     const FEEDBACK = {
         neurotypical: [
             { maxD: 28,  state: 'good',     exp: 'Resting state. The DMN is active for daydreaming, rumination, and self-referential processing. The system is at baseline.', cost: 'Low — Baseline maintenance only.', note: null },
@@ -423,7 +481,7 @@
         adhd: [
             { maxD: 28,  state: 'good',     exp: 'Resting state — often restless. The DMN is active but may be dysregulated, producing unwanted rumination, hyperfocus on low-priority internal stimuli, or time-blindness.', cost: 'Low-Moderate — Baseline is slightly elevated.', note: null },
             { maxD: 68,  state: 'moderate', exp: 'Friction state. Attempting to engage the task while the DMN persists. Distractibility is high. The internal narrator is not quieting.', cost: 'Moderate-High — Working against internal resistance.', note: 'This is the neurological basis of ADHD distractibility — the DMN\'s off-switch is genuinely impaired, not under voluntary control. This is not a character trait.' },
-            { maxD: 100, state: 'high',     exp: 'Network competition. The TPN is executing, but the DMN continues to broadcast simultaneously. Working while the brain plays loud background noise. Interest-based hyperfocus may temporarily resolve this in high-salience tasks.', cost: 'High — Sustained co-activation is metabolically draining.', note: 'Note: Interest and emotional salience can trigger hyperfocus in ADHD, temporarily resolving the competition. This is why engagement and meaning so dramatically affect functioning — they change the neurological equation.' },
+            { maxD: 100, state: 'high',     exp: 'Network competition. The TPN is executing, but the DMN continues to broadcast simultaneously. Working while the brain plays loud background noise. Interest-based hyperfocus may temporarily resolve this in high-salience tasks.', cost: 'High — Sustained co-activation is metabolically draining.', note: 'Interest and emotional salience can trigger hyperfocus in ADHD, temporarily resolving the competition. This is why engagement and meaning so dramatically affect functioning — they change the neurological equation.' },
         ],
         autism: [
             { maxD: 28,  state: 'moderate', exp: 'Resting state involves active internal work: sensory integration, pattern recognition, interoceptive monitoring. This is not "doing nothing" — it is high-bandwidth processing.', cost: 'Moderate — Elevated baseline due to continuous sensory and interoceptive demands.', note: 'For autistic individuals, "rest" often involves significant internal cognitive and sensory processing. This is why social interaction after a quiet period can still feel depleting — the baseline was never truly low.' },
@@ -444,48 +502,40 @@
         return FEEDBACK[profile].at(-1);
     }
 
-    // ── Main update ──────────────────────────────────────────────────────────
     function update() {
         const profile = profileSelect.value;
         const demand  = parseInt(demandSlider.value, 10);
 
-        // Slider gradient fill
         demandSlider.style.setProperty('--pct', demand + '%');
 
-        // Demand label
         demandPct.textContent = demand + '%';
         demandLbl.textContent = demand < 20 ? 'Resting' : demand < 50 ? 'Light Task' : demand < 80 ? 'Moderate Task' : 'High Demand';
 
-        // Compute activation
         const p = PROFILES[profile];
         const dmnLevel = Math.max(5, Math.min(100, p.dmn(demand)));
         const tpnLevel = Math.max(5, Math.min(100, p.tpn(demand)));
 
-        // Update bars
         dmnFill.style.height = dmnLevel + '%';
         tpnFill.style.height = tpnLevel + '%';
         dmnValue.textContent = Math.round(dmnLevel) + '%';
         tpnValue.textContent = Math.round(tpnLevel) + '%';
 
-        // Profile info card
         profileNameDisp.textContent = p.name;
         profileDesc.textContent     = p.desc;
 
-        // Co-activation = how much BOTH networks are simultaneously active
         const coact = Math.round(Math.min(dmnLevel, tpnLevel));
         coactFill.style.width = coact + '%';
 
         let coactColor, coactText;
-        if      (coact < 25) { coactColor = 'var(--green)';  coactText = 'Minimal';  }
-        else if (coact < 45) { coactColor = 'var(--amber)';  coactText = 'Moderate'; }
-        else if (coact < 65) { coactColor = '#f97316';        coactText = 'High';     }
-        else                 { coactColor = 'var(--red)';    coactText = 'Severe';   }
+        if      (coact < 25) { coactColor = 'var(--good)';   coactText = 'Minimal';  }
+        else if (coact < 45) { coactColor = 'var(--warn)';   coactText = 'Moderate'; }
+        else if (coact < 65) { coactColor = 'var(--terra)';  coactText = 'High';     }
+        else                 { coactColor = 'var(--bad)';    coactText = 'Severe';   }
 
         coactFill.style.background    = coactColor;
         coactLabel.textContent        = coactText;
         coactLabel.style.color        = coactColor;
 
-        // Feedback
         const fb = getFeedback(profile, demand);
         feedbackPanel.className      = 'state-' + fb.state;
         experienceText.textContent   = fb.exp;
