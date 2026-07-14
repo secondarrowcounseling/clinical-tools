@@ -147,8 +147,8 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
 </div>
 
 <div class="header">
-  <h2>Network Co-activation Simulator</h2>
-  <p>See what happens when both networks fire at the same time - and why that matters for energy and exhaustion. Explore how different neurological profiles experience this across levels of task demand.</p>
+  <h2>Brain Energy Simulator</h2>
+  <p>See what happens when your brain tries to rest and work at the same time, and why everyday tasks can leave you exhausted. Explore how different brains handle focus and energy.</p>
 </div>
 
 <div class="three-col">
@@ -158,7 +158,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
     <div class="profile-grid">
       <button class="pbtn act-nt" data-p="neurotypical">Neurotypical<span class="sub">The Seesaw</span></button>
       <button class="pbtn" data-p="adhd">ADHD<span class="sub">Tug-of-War</span></button>
-      <button class="pbtn" data-p="autism">Autism<span class="sub">Weighted Scale</span></button>
+      <button class="pbtn" data-p="autism">Autism<span class="sub">Deep Processor</span></button>
       <button class="pbtn" data-p="audhd">AuDHD<span class="sub">Overloaded Circuit</span></button>
     </div>
 
@@ -183,20 +183,20 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
       <div class="gauge-container">
         <div class="bar-bg"><div id="dmn-fill" class="bar-fill"></div></div>
         <div class="gauge-label dmn">DMN</div>
-        <div class="gauge-subtext">Default Mode Network<br>inner thoughts / daydreaming</div>
+        <div class="gauge-subtext">Default Mode Network<br>Resting, processing, wandering</div>
         <div id="dmn-value" class="gauge-value" style="color:var(--dmn-color)">90%</div>
       </div>
       <div class="gauge-container">
         <div class="bar-bg"><div id="tpn-fill" class="bar-fill"></div></div>
         <div class="gauge-label tpn">TPN</div>
-        <div class="gauge-subtext">Task Positive Network<br>Getting things done</div>
+        <div class="gauge-subtext">Task Positive Network<br>Focusing and getting things done</div>
         <div id="tpn-value" class="gauge-value" style="color:var(--tpn-color)">10%</div>
       </div>
     </div>
 
     <div class="coact-section">
       <div class="coact-header">
-        <span class="coact-title">Co-activation Tension</span>
+        <span class="coact-title">Brain Tension (Friction)</span>
         <span class="coact-badge" id="coact-label">Minimal</span>
       </div>
       <div class="coact-track">
@@ -264,46 +264,82 @@ let currentProfile = 'neurotypical';
 const PROFILES = {
   neurotypical: {
     name:'Neurotypical',
-    desc:'A clean back-and-forth between DMN and TPN. As external demand increases, the DMN steps back cleanly, allowing the TPN to take over - one goes up, the other comes down.',
+    desc:'Like a perfectly balanced seesaw. When it’s time to focus, the resting part of the brain quietly turns off. When it’s time to rest, the focusing part shuts down. They easily take turns.',
     dmn:d=>90-d*0.80, tpn:d=>10+d*0.80,
   },
   adhd: {
-    name:'ADHD - Interest-Based Nervous System',
-    desc:'The DMN has a higher suppression threshold and stays active well into task-focused states - a difference in wiring, not willpower. The TPN must work harder while the internal narrator stays online.',
+    name:'ADHD - The Tug-of-War',
+    desc:'Your resting brain doesn’t easily turn off when it’s time to work. You are trying to focus, but your internal thoughts are still running loudly. It takes a lot of extra energy to push through this. It’s a difference in how your brain is wired, not a lack of willpower.',
     dmn:d=>90-d*0.25, tpn:d=>10+d*0.72,
   },
   autism: {
-    name:'Autism - Sensory & Interoceptive Processing Load',
-    desc:"The DMN runs at a higher baseline due to intensive sensory processing, pattern recognition, and reading your body's internal signals. Switching from one thing to another costs more energy. DMN suppression can occur, but the transition is less smooth and requires deliberate effort.",
+    name:'Autism - The Deep Processor',
+    desc:'Your resting brain is constantly working hard to process sounds, lights, patterns, and body signals. Because your brain is so busy in the background, shifting gears to a new task takes more effort and drains your battery faster.',
     dmn:d=>92-d*0.46, tpn:d=>8+d*0.73,
   },
   audhd: {
-    name:'AuDHD - Compounded Co-activation',
-    desc:"The ADHD pattern of persistent DMN activity meets the autism elevated processing load. Both internal noise and sensory and interoceptive load are present simultaneously, and neither quiets down well under demand. The system runs hot before any task begins - the origin of 'wired but tired.'",
+    name:'AuDHD - The Overloaded Circuit',
+    desc:'Combines both patterns: your brain is actively processing the world around you, AND its internal thoughts won’t easily quiet down to focus. Your brain is running hot even before you start a task. This is the physical root of feeling "wired but tired."',
     dmn:d=>94-d*0.18, tpn:d=>10+d*0.66,
   },
 };
 
 const FEEDBACK = {
   neurotypical:[
-    {maxD:28, state:'good',     exp:'Resting state. The DMN is active for daydreaming, inner thought, and reflection. The system is at baseline.', cost:'Low - Baseline maintenance only.', note:null},
-    {maxD:68, state:'moderate', exp:'Transitioning. The internal narrator begins quieting as external attention engages. Mild, efficient effort.', cost:'Moderate - Clean transition underway.', note:null},
-    {maxD:100,state:'good',     exp:'Clear focus achieved. The DMN has stepped back and attention is cleanly on the external task.', cost:'Moderate - Efficient energy use relative to task demand.', note:null},
+    {maxD:28, state:'good',
+    exp:'Resting normally. Your mind is free to wander, daydream, and relax. Energy use is low.', 
+    cost:'Low - Just keeping the lights on.', 
+    note:null},
+    {maxD:68, state:'moderate', 
+    exp:'Shifting gears. Your wandering mind naturally quiets down as you start to focus on the task. It takes a normal amount of effort.', 
+    cost:'Moderate - A clean and easy transition.', 
+    note:null},
+    {maxD:100,state:'good',
+    exp:'In the zone. The resting part of your brain has completely stepped back so you can fully focus. Your energy is being used efficiently.', 
+    cost:'Moderate - Energy is matching the task perfectly.', 
+    note:null},
   ],
   adhd:[
-    {maxD:28, state:'good',     exp:'Resting state - often restless. The DMN may produce ongoing rumination, attention drawn to things your brain finds more interesting in the moment, or time-blindness.', cost:'Low-Moderate - Baseline is slightly elevated.', note:null},
-    {maxD:68, state:'moderate', exp:'Friction state. Attempting to engage the task while the DMN persists. Distractibility is high. The internal narrator is not quieting.', cost:'Moderate-High - Working against internal resistance.', note:"The DMN has a higher suppression threshold and stays online through rising task demand - this is not under voluntary control. This is not a character trait - it is a difference in how the brain's networks transition."},
-    {maxD:100,state:'high',     exp:'Network competition. The TPN is executing, but the DMN continues to broadcast simultaneously - working while the brain plays loud background noise. High-interest tasks may temporarily resolve this.', cost:'High - Sustained co-activation drains energy.', note:"Things that feel meaningful or exciting can trigger hyperfocus in ADHD, temporarily resolving the competition. This is why engagement and meaning so greatly shape how the brain accesses tasks - they change the equation."},
+    {maxD:28, state:'good',
+    exp:'Resting, but often feeling restless. Your mind might be jumping between thoughts, overthinking, or looking for something more interesting to do.', 
+    cost:'Low to Moderate - Your resting state burns a little extra fuel.', 
+    note:null},
+    {maxD:68, state:'moderate', 
+    exp:'Feeling friction. You are trying to work, but your inner thoughts won\'t turn off. It feels like fighting against yourself, making it easy to get distracted.', 
+    cost:'Moderate to High - You are burning energy fighting internal resistance.', 
+    note:"Your resting brain simply doesn't turn off automatically when tasks get harder. This isn't something you can fix by 'trying harder'—it's a real, physical difference in how your brain shifts gears."},
+    {maxD:100,state:'high',
+    exp:'The tug-of-war. You are getting things done, but your brain is playing loud background noise at the same time. You are doing the work, but it takes double the effort.', 
+    cost:'High - Doing two things at once drains your battery quickly.', 
+    note:"When a task is highly interesting or urgent, it can trigger 'hyperfocus,' which temporarily turns off the background noise. This is why having a deep interest in a task makes it so much easier for you to do—it changes your brain's chemistry in the moment."},
   ],
   autism:[
-    {maxD:28, state:'moderate', exp:"Resting state involves active internal work: sensory integration, pattern recognition, and monitoring your body's internal signals. This is not 'doing nothing' - it is a lot of active processing.", cost:'Moderate - Elevated baseline due to continuous sensory processing and internal monitoring.', note:"For many autistic people, 'resting' is still an active process - the brain is busy scanning, organizing, and making sense of sensory information. That's why a quiet afternoon can still leave you tired."},
-    {maxD:68, state:'moderate', exp:'Switching from one thing to another is underway but carries a higher transition cost. DMN suppression occurs, but less smoothly. Mental momentum creates friction.', cost:'Moderate-High - Higher transition cost than average.', note:'Autistic inertia is visible here: the cost of switching from one thing to another is significantly higher. This is not rigidity - it is a real neurological switching cost.'},
-    {maxD:100,state:'high',     exp:"Task focus is achievable, but residual sensory and body-signal processing continues in the background. Performance may appear externally seamless while the actual energy cost is substantially higher.", cost:'High - The gap between visible performance and actual energy drain is large.', note:"This is what's happening under the surface during masking: external performance can look intact while internal energy use is far higher. The sustained gap between performance and energy cost is a direct pathway to crashes after pushing through."},
+    {maxD:28, state:'moderate', 
+    exp:"Resting is still hard work. Your brain is constantly sorting out what you see, hear, and feel in your body. Even when 'doing nothing,' your brain is very busy.", 
+    cost:'Moderate - High baseline energy is used just to process the environment.', 
+    note:"For many Autistic people, 'resting' isn't fully relaxing. Your brain is always scanning, organizing, and making sense of the world around you. This is why you might feel exhausted even after a quiet afternoon."},
+    {maxD:68, state:'moderate', 
+    exp:'Shifting gears. You are moving your attention to a new task, but it takes a lot of fuel to pull away from what you were just processing.', 
+    cost:'Moderate to High - Changing tasks costs more energy than average.', 
+    note:"This is often called 'autistic inertia.' Changing directions or starting a new task costs a lot of physical brain energy. It is a neurological reality, not you being 'stubborn' or 'rigid.'"},
+    {maxD:100,state:'high',
+    exp:"Fully focused on the outside, but still processing on the inside. You might look like you're doing the task perfectly, but it's draining your battery much faster than it looks.", 
+    cost:'High - A huge gap between how easy it looks and how hard it feels.', 
+    note:"This is what happens under the surface during 'masking' or pushing through. You look fine on the outside, but you are burning huge amounts of energy on the inside. Doing this for too long is exactly what leads to Autistic burnout."},
   ],
   audhd:[
-    {maxD:28, state:'moderate', exp:"Resting state is not genuinely restorative. The DMN is both persistent (ADHD wiring) and heavily loaded (sensory processing). The system is 'on' before any demand is applied. The brain's starting point is already higher than usual.", cost:'Moderate - The system never reaches true baseline.', note:"AuDHD clients who report never feeling truly rested are accurately describing their neurology. Your brain's starting point, even before any task begins, is already higher than average. There is no true idle mode. This is not catastrophizing."},
-    {maxD:68, state:'high',     exp:"Both patterns compound: the persistent DMN won't quiet AND the mental load is heavy. The TPN is attempting to engage against high-resistance internal activity. Significant friction and fatigue.", cost:'High - Both patterns are active simultaneously, both networks firing at the same time.', note:"This is the 'wired but tired' AuDHD state: trying to focus while the internal processing channel remains active AND carrying a heavy sensory load. These are not additive - they compound each other, producing exhaustion that precedes the task."},
-    {maxD:100,state:'high',     exp:'Both networks running at full force simultaneously. The TPN is pushing hard for task execution while the DMN refuses to step down. Running both systems at full force with nowhere to rest.', cost:'Very High - Unsustainable. Both networks firing at the same time, competing for limited energy.', note:"This is the neurological basis of AuDHD burnout: not laziness, not avoidance - the physical depletion of a system running both networks at full force. Recovery requires genuine rest and reduced demand."},
+    {maxD:28, state:'moderate', 
+    exp:"Resting doesn't actually feel restful. Your mind is restless (ADHD) AND working hard to process the sensory world around you (Autistic). Your brain is fully 'on' before you even start your day.", 
+    cost:'Moderate - Your system never gets to truly power down.', 
+    note:"If you feel like you're never truly rested, your body is telling the truth. Because your 'idle' speed is so high, you are naturally starting with less battery than others. You are not exaggerating."},
+    {maxD:68, state:'high',
+    exp:"Heavy friction. Your busy thoughts won't quiet down AND you are carrying a heavy sensory load. Trying to focus feels like driving a car with the emergency brake on.", 
+    cost:'High - Both patterns are active at the same time, causing quick fatigue.', 
+    note:"This is the classic 'wired but tired' feeling. You are trying to focus while your brain is still running heavy background apps. The exhaustion is real, and it happens before the task even gets hard."},
+    {maxD:100,state:'high',
+    exp:'Both systems are running at max speed. You are pushing hard to get things done, but the background noise and sensory processing refuse to turn down. You are burning energy incredibly fast.', 
+    cost:'Very High - Unsustainable. Your brain is competing with itself for limited energy.', 
+    note:"This is the physical cause of AuDHD burnout. It is not laziness or avoidance—it is your battery completely emptying because your brain had to run two intense systems at once. True recovery requires lowering demands and finding real ways to rest."},
   ],
 };
 
