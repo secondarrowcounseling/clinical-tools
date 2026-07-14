@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autistic Inertia & The Sticky DMN</title>
+    <title>Autistic Inertia & The "Sticky" Brain</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -152,8 +152,8 @@
 <div class="sac-topbar"><a href="https://www.secondarrow.net" target="_blank" rel="noopener" class="sac-toplink">Second Arrow Counseling</a></div>
 
 <div class="header">
-    <h2>Autistic Inertia &amp; The "Sticky" DMN</h2>
-    <p>Explore how the brain's attentional orbit migrates toward the Predictive Loop — and the metabolic cost of breaking free.</p>
+    <h2>Autistic Inertia & The "Sticky" Brain</h2>
+    <p>Explore how the autistic brain builds massive "mental momentum" when processing information and why shifting gears to a new task drains the battery so quickly.</p>
     <div class="profile-buttons">
         <button class="profile-btn active-nt"  id="btn-nt"       onclick="setPreset('nt', this)">🧠 Neurotypical</button>
         <button class="profile-btn"            id="btn-autistic" onclick="setPreset('autistic', this)">🔄 Autistic</button>
@@ -167,44 +167,44 @@
         <p class="panel-title">Simulation Controls</p>
         <div class="slider-section">
             <div class="slider-label-row">
-                <span class="slider-label-text">DMN Loop Strength</span>
+                <span class="slider-label-text">Magnetic Pull (Mental Momentum)</span>
                 <span class="slider-val-badge" id="sticky-badge">1 / 10</span>
             </div>
             <input type="range" id="stickiness" min="1" max="10" value="1">
-            <p class="stickiness-desc" id="sticky-desc">Low resistance. Attention disengages effortlessly.</p>
+            <p class="stickiness-desc" id="sticky-desc">Low friction. The brain can shift to a new task with minimal effort.</p>
         </div>
 
-        <div class="legend">
-            <div class="legend-item">
-                <div class="legend-dot" style="background: var(--gold);"></div>
-                <div><div class="legend-name">TPN - Task Positive</div><div class="legend-sub">External world, goal execution</div></div>
-            </div>
-            <div class="legend-item">
-                <div class="legend-dot" style="background: var(--green);"></div>
-                <div><div class="legend-name">DMN - Default Mode</div><div class="legend-sub">Inward focus, self-referential</div></div>
-            </div>
-            <div class="legend-item">
-                <div class="legend-dot" style="background: var(--terra);"></div>
-                <div><div class="legend-name">Predictive Loop</div><div class="legend-sub">Pattern completion, special interest</div></div>
-            </div>
-            <div class="legend-item">
-                <div class="legend-dot" style="background: #f59e0b;"></div>
-                <div><div class="legend-name">Attention (particle)</div><div class="legend-sub">Where cognitive resources flow</div></div>
-            </div>
-            <div class="legend-item">
-                <div class="legend-dot" style="background:none; border:1.5px dashed var(--stone); width:13px; height:13px;"></div>
-                <div><div class="legend-name">Attention Orbit</div><div class="legend-sub">Where attention "lives" at rest</div></div>
-            </div>
-        </div>
+<div class="legend">
+    <div class="legend-item">
+        <div class="legend-dot" style="background: var(--gold);"></div>
+        <div><div class="legend-name">The "Doing" Brain</div><div class="legend-sub">Focusing on outside chores, tasks, and demands</div></div>
+    </div>
+    <div class="legend-item">
+        <div class="legend-dot" style="background: var(--green);"></div>
+        <div><div class="legend-name">The "Resting" Brain</div><div class="legend-sub">Wandering thoughts and processing the day</div></div>
+    </div>
+    <div class="legend-item">
+        <div class="legend-dot" style="background: var(--terra);"></div>
+        <div><div class="legend-name">The Deep Dive</div><div class="legend-sub">Special interests, pattern finding, or deep processing</div></div>
+    </div>
+    <div class="legend-item">
+        <div class="legend-dot" style="background: #f59e0b;"></div>
+        <div><div class="legend-name">Attention</div><div class="legend-sub">Where the brain's energy is flowing right now</div></div>
+    </div>
+    <div class="legend-item">
+        <div class="legend-dot" style="background:none; border:1.5px dashed var(--stone); width:13px; height:13px;"></div>
+        <div><div class="legend-name">The Comfort Zone</div><div class="legend-sub">Where attention naturally wants to stay</div></div>
+    </div>
+</div>
 
         <button class="switch-btn" id="switch-btn">
-            ⚡ Switch to Task
-            <div style="font-weight:400; font-size:0.84em; margin-top:2px;">(Activate TPN)</div>
+            ⚡ Force a Task Switch
+            <div style="font-weight:400; font-size:0.84em; margin-top:2px;">(Shift Gears)</div>
         </button>
 
         <div class="energy-section">
             <div class="energy-label-row">
-                <span class="panel-title" style="margin:0;">Cognitive Energy</span>
+                <span class="panel-title" style="margin:0;">Brain Battery</span>
                 <span class="energy-pct" id="energy-pct">100%</span>
             </div>
             <div class="energy-track"><div class="energy-fill" id="energy-fill"></div></div>
@@ -396,18 +396,18 @@
     const PROFILE_STATUS = {
         nt: {
             color: 'var(--green)',
-            main: '🔄 Attention rests in the Default Mode Network.',
-            sub:  "The NT brain's resting state keeps the DMN loosely coupled — flexible and easily redirected when a task demands attention. The Predictive Loop exists but is not a dominant attentional circuit."
+            main: 'Neurotypical: Easy Shifting',
+            sub:  "Attention rests lightly. When a new task demands attention, the brain easily breaks away from its resting state. It takes very little battery power to stop doing one thing and start doing another."
         },
         autistic: {
             color: 'var(--terra)',
-            main: '🌀 Attention is drifting toward the Predictive Loop.',
-            sub:  "The autistic brain assigns high precision to prediction errors. The Predictive Loop — routines, special interests, familiar patterns — offers a regulatory haven where surprises drop to zero. The orbit has already migrated away from the DMN. This gravitational pull is a protective adaptation, not a character flaw."
+            main: 'Autistic: Heavy Momentum',
+            sub:  "The brain processes information deeply and builds intense mental momentum. Attention gets 'pulled' toward special interests or deep processing. Shifting gears to an outside task takes much more battery power because you have to fight gravity to break away."
         },
         inertia: {
             color: 'var(--forest)',
-            main: '🧲 Attention is locked in a tight orbit around the Predictive Loop.',
-            sub:  "DMN-Predictive coupling has reached maximum strength. The brain has found its zero-surprise state. Notice the orbit has fully migrated from the DMN to the Predictive Loop -- and tightened. Breaking this orbit requires enormous metabolic \"starting torque.\" Not willpower. Neurological physics."
+            main: 'Autistic Inertia: The Magnetic Lock',
+            sub:  "This is often mistaken for stubbornness. The brain is entirely magnetically locked into a deep-processing state. Breaking this lock to change tasks requires a massive surge of battery power. If the battery is low, the person literally, physically cannot shift gears."
         }
     };
 
@@ -472,23 +472,31 @@
         stickyBadge.innerText = `${val} / 10`;
         if (val <= 3) {
             stickyBadge.style.color = 'var(--green)';
-            stickyDesc.innerText = 'Low resistance. Attention disengages from the orbit effortlessly.';
+            stickyDesc.innerText = 'Low friction. The brain can shift to a new task with minimal effort.';
             pathDmnTpn.setAttribute('stroke', '#45735d');
             pathPlTpn.setAttribute('stroke', '#45735d');
             pathDmnTpn.setAttribute('stroke-width', '3');
             pathPlTpn.setAttribute('stroke-width',  '3');
             dmnLinkRect.classList.remove('link-sticky');
-        } else if (val <= 7) {
+        } else if (val <= 6) {
             stickyBadge.style.color = 'var(--terra)';
-            stickyDesc.innerText = 'Moderate loop strength. Switching requires deliberate effort and increased metabolic cost.';
+            stickyDesc.innerText = 'Mental momentum is building. It takes conscious effort and a chunk of battery to pull yourself away from what you are doing.';
             pathDmnTpn.setAttribute('stroke', '#6d7873');
             pathPlTpn.setAttribute('stroke', '#6d7873');
             pathDmnTpn.setAttribute('stroke-width', '2.5');
             pathPlTpn.setAttribute('stroke-width',  '2.5');
             dmnLinkRect.classList.remove('link-sticky');
+        } else if (val <= 9) {
+            stickyBadge.style.color = 'var(--forest)';
+            stickyDesc.innerText = 'Heavy magnetic pull. You are deeply locked in. Shifting to a new task feels physically uncomfortable and drains the battery rapidly.';
+            pathDmnTpn.setAttribute('stroke', '#bdb7a2');
+            pathPlTpn.setAttribute('stroke', '#bdb7a2');
+            pathDmnTpn.setAttribute('stroke-width', '1.5');
+            pathPlTpn.setAttribute('stroke-width',  '1.5');
+            dmnLinkRect.classList.add('link-sticky');
         } else {
             stickyBadge.style.color = 'var(--forest)';
-            stickyDesc.innerText = 'Maximum stickiness. The orbit is locked. Switching demands extreme energy expenditure.';
+            stickyDesc.innerText = 'Total lock (Autistic Inertia). The brain is stuck on its current track. You cannot switch tasks unless you are given significant time to wind down first.';
             pathDmnTpn.setAttribute('stroke', '#bdb7a2');
             pathPlTpn.setAttribute('stroke', '#bdb7a2');
             pathDmnTpn.setAttribute('stroke-width', '1.5');
