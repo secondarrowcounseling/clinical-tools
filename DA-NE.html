@@ -180,8 +180,8 @@
 </div>
 
 <div class="header">
-    <h2>The Neurobiological Radio Tuner</h2>
-    <p>Dopamine shapes the <strong>Signal</strong> (task precision) and Norepinephrine controls the <strong>Gain</strong> (systemic arousal). Together they determine what the brain actually perceives.</p>
+    <h2>The Brain's Radio Tuner</h2>
+    <p>Imagine trying to listen to one specific radio station. <strong>Dopamine</strong> is the Signal (how clearly the station comes in) and <strong>Norepinephrine</strong> is the Volume (how loud the whole radio is playing). See how different brains tune into the world.</p>
     <div class="profile-buttons">
         <button class="profile-btn active-nt" onclick="setProfile('nt',this)">&#129504; Neurotypical</button>
         <button class="profile-btn" onclick="setProfile('adhd',this)">&#9889; ADHD</button>
@@ -199,7 +199,7 @@
                 <span class="slider-name">&#128161; Dopamine</span>
                 <span class="slider-val" id="da-val" style="color:var(--gold)">50</span>
             </div>
-            <p class="slider-sub">The <strong>Signal</strong> — precision weighting for the task. How brightly does the target stand out?</p>
+            <p class="slider-sub">The <strong>Target Signal</strong> — How deeply your brain "locks onto" a task. Does the task feel important, urgent, or interesting?</p>
             <input type="range" class="tuner-slider da-slider" min="1" max="100" value="50" id="da-slider"
                    oninput="updateDA(this.value)">
         </div>
@@ -208,7 +208,7 @@
                 <span class="slider-name">&#9889; Norepinephrine</span>
                 <span class="slider-val" id="ne-val" style="color:var(--green)">45</span>
             </div>
-            <p class="slider-sub">The <strong>Gain</strong> — systemic arousal. Low = brain fog. Medium = optimal. High = sensory flood.</p>
+            <p class="slider-sub">The <strong>Nervous System Volume</strong> — The energy flooding your brain. Low = Brain Fog. Medium = Awake. High = Overwhelmed/Flooded.</p>
             <input type="range" class="tuner-slider ne-slider" min="1" max="100" value="45" id="ne-slider"
                    oninput="updateNE(this.value)">
         </div>
@@ -221,7 +221,7 @@
     </div>
 
     <div class="canvas-panel">
-        <p class="panel-title">Perceptual Field</p>
+        <p class="panel-title">What The Brain Actually Sees</p>
         <canvas id="spotlight-canvas"></canvas>
     </div>
 
@@ -233,17 +233,17 @@
         </div>
         <div class="metric-block">
             <div class="met-row">
-                <span class="met-label">SNR Ratio</span>
+                <span class="met-label">Clarity (Signal vs Noise)</span>
                 <span class="met-val" id="snr-val" style="color:var(--green)">--</span>
             </div>
             <div class="met-track"><div class="met-fill" id="snr-fill" style="width:0%;background:var(--green)"></div></div>
             <div class="met-row">
-                <span class="met-label">Focus Quality</span>
+                <span class="met-label">Task Focus</span>
                 <span class="met-val" id="focus-val" style="color:var(--green)">--%</span>
             </div>
             <div class="met-track"><div class="met-fill" id="focus-fill" style="width:0%;background:var(--green)"></div></div>
             <div class="met-row">
-                <span class="met-label">Background Noise</span>
+                <span class="met-label">Sensory &amp; Mental Distractions</span>
                 <span class="met-val" id="noise-val" style="color:var(--grey)">--%</span>
             </div>
             <div class="met-track"><div class="met-fill" id="noise-fill" style="width:0%;background:var(--stone)"></div></div>
@@ -266,17 +266,17 @@
 /* DATA */
 const PROFILES = {
     nt:     { da: 65, ne: 45,
-              main: 'Neurotypical focus: the brain can lock onto a mundane task because dopamine highlights it just enough, and norepinephrine provides steady energy without amplifying background noise.',
-              sub:  'The Goldilocks Zone. Dopamine precision and moderate arousal converge.' },
+              main: 'Neurotypical: The Clear Channel',
+              sub:  'The brain easily turns up the signal on a task and filters out the background static. You can focus on things even if they aren\'t super exciting, and the world\'s volume feels manageable.' },
     adhd:   { da: 25, ne: 20,
-              main: 'ADHD fog: chronically low norepinephrine means the brain lacks activation energy. Even if dopamine signals intent, the signal is lost in a lethargic haze.',
-              sub:  'The brain relies on panic, urgency, or extreme novelty to trigger a massive chemical spike just to get things done.' },
+              main: 'ADHD: The Weak Signal',
+              sub:  'Your brain naturally struggles to "lock onto" a task unless it is urgent, novel, or highly interesting. Without enough signal, everyday distractions easily drown out what you want to focus on. \n\nNote for partners: It is not that they don\'t care. The brain is physically failing to highlight the task as important.' },
     autism: { da: 70, ne: 82,
-              main: 'Autistic hyper-arousal: the sensory gain is turned up to maximum. A humming refrigerator is processed with the same intensity as a fire alarm.',
-              sub:  'Dopamine spikes for predictable, pattern-based tasks (special interests), creating deep attention tunnels to escape the noise.' },
+              main: 'Autistic: The Blown-Out Speaker',
+              sub:  'Your nervous system absorbs everything - lights, sounds, tags in a shirt. The volume on the whole world is permanently turned up. It takes massive energy to focus on one task when everything in the room is broadcasting at 100%.' },
     audhd:  { da: 28, ne: 78,
-              main: 'AuDHD paradox: the under-aroused, dopamine-starved engine of ADHD meets the hyper-aroused sensory gates of Autism.',
-              sub:  'Metabolically exhausted and profoundly bored (ADHD), while simultaneously intensely overstimulated and overwhelmed by the environment (Autism).' }
+              main: 'AuDHD: The Static Storm',
+              sub:  'The ultimate paradox. The brain struggles to highlight the specific task (the ADHD weak signal) while simultaneously turning up the volume on every background distraction (the Autistic high volume). You are physically exhausted by everything, but can\'t lock onto the one thing you need to do.' }
 };
 
 /* STATE */
@@ -325,23 +325,47 @@ function computeSNR(da,ne) {
 function focusQuality(da,ne){ return Math.min(100,(computeSNR(da,ne)/10)*100); }
 
 /* ZONE */
-function getZoneInfo(da,ne) {
-    const snr=computeSNR(da,ne), neOpt=neOptimality(ne);
-    if (ne<28) return { name:'Cognitive Fog', col:'#a6aea6', badgeBg:'#a6aea610',
-        sub:'Under-arousal. The brain lacks energy to process anything.',
-        desc:'Low norepinephrine means the entire nervous system is under-activated. Even if dopamine highlights a task, there is simply insufficient "power" to execute. The mind feels sluggish, heavy, and detached.' };
-    if (ne>72) return { name:'Sensory Flood', col:'#b68d76', badgeBg:'#b68d7610',
-        sub:'Hyper-arousal. Every input processed at equal intensity.',
-        desc:'The locus coeruleus is firing at maximum. All sensory gates are open. Background noise is so intense that figure-ground distinction collapses. Everything is equally loud, bright, and urgent.' };
-    if (da<35&&snr<1.8) return { name:'Weak Signal', col:'#bdb7a2', badgeBg:'#bdb7a210',
-        sub:'Adequate arousal but poor task precision.',
-        desc:'The brain has enough norepinephrine to function, but dopamine is not effectively weighting any particular task. Scattered, directionless energy - "I have energy but nothing feels important."' };
-    if (snr>=2.5&&neOpt>0.6) return { name:'Goldilocks Focus', col:'#45735d', badgeBg:'#45735d10',
-        sub:'Optimal signal-to-noise ratio.',
-        desc:'Dopamine successfully highlights the target task, and norepinephrine provides balanced arousal without amplifying background noise. The neurotypical ideal - though individual variation means this is a zone, not a single point.' };
-    return { name:'Functional Focus', col:'#ba945e', badgeBg:'#ba945e10',
-        sub:'Task-directed but not optimal.',
-        desc:'Either dopamine or norepinephrine is slightly off-ideal. The brain can direct attention but with noticeable effort, compensatory strategies, or background interference.' };
+function getZoneInfo(da, ne) {
+    if (da < 40 && ne < 40) return {
+        name: 'The Fog', col: 'var(--grey)', nameCol: 'var(--grey)', badgeBg: '#6d787310',
+        sub: 'Low Signal, Low Volume',
+        desc: 'Running on fumes. The brain has no energy and nothing feels interesting. Trying to work in this state feels like moving through wet concrete.'
+    };
+    if (da < 40 && ne >= 40 && ne < 75) return {
+        name: 'Under-Stimulated', col: 'var(--terra)', nameCol: 'var(--terra)', badgeBg: '#b68d7610',
+        sub: 'Low Signal, Medium Volume',
+        desc: 'The radio is on, but you can\'t find a station. You have energy, but without a strong target signal, you feel restless and easily distracted.'
+    };
+    if (da < 40 && ne >= 75) return {
+        name: 'Wired but Unfocused', col: '#8b4a3a', nameCol: '#8b4a3a', badgeBg: '#8b4a3a10',
+        sub: 'Low Signal, High Volume',
+        desc: 'The panic zone. The nervous system is completely overwhelmed by sensory input or anxiety, but cannot lock onto a task to fix it. This is highly distressing.'
+    };
+    if (da >= 40 && da <= 75 && ne >= 40 && ne <= 75) return {
+        name: 'The Clear Channel', col: 'var(--green)', nameCol: 'var(--green)', badgeBg: '#45735d10',
+        sub: 'Good Signal, Manageable Volume',
+        desc: 'Optimal flow. The brain highlights the task just enough, and the background noise is manageable. Working feels smooth and sustainable.'
+    };
+    if (da > 75 && ne < 40) return {
+        name: 'Quiet Fixation', col: 'var(--gold)', nameCol: 'var(--gold)', badgeBg: '#ba945e10',
+        sub: 'High Signal, Low Volume',
+        desc: 'Locked onto something interesting, but lacking the physical energy to execute. You might be deep down a rabbit hole in your head, but struggling to physically move.'
+    };
+    if (da > 75 && ne >= 40 && ne < 75) return {
+        name: 'Hyperfocus', col: 'var(--gold)', nameCol: 'var(--gold)', badgeBg: '#ba945e10',
+        sub: 'High Signal, Medium Volume',
+        desc: 'The task is broadcasting so loudly that the rest of the world disappears. You can get massive amounts done, but may forget to eat or use the restroom.'
+    };
+    if (da > 75 && ne >= 75) return {
+        name: 'Overdrive', col: 'var(--terra)', nameCol: 'var(--terra)', badgeBg: '#b68d7610',
+        sub: 'High Signal, High Volume',
+        desc: 'Both the task and the background noise are blaring at 100%. The brain is locked on, but the engine is running too hot. This intense state leads to a massive physical crash afterward.'
+    };
+    return {
+        name: 'Transitional State', col: 'var(--stone)', nameCol: 'var(--grey)', badgeBg: '#bdb7a210',
+        sub: 'Shifting Gears',
+        desc: 'The brain is adjusting between different levels of focus and energy.'
+    };
 }
 
 /* UI */
@@ -389,7 +413,9 @@ function refreshMetrics() {
     document.getElementById('noise-fill').style.width=Math.round(nse)+'%';
     const badge=document.getElementById('zone-badge');
     badge.style.borderColor=zone.col; badge.style.background=zone.badgeBg;
-    document.getElementById('zone-name').innerText=zone.name;
+    const zoneNameEl=document.getElementById('zone-name');
+    zoneNameEl.innerText=zone.name;
+    zoneNameEl.style.color=zone.nameCol;
     document.getElementById('zone-sub').innerText=zone.sub;
     document.getElementById('state-desc').innerText=zone.desc;
 }
