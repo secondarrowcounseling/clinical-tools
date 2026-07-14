@@ -53,14 +53,12 @@
         .profile-btn.active-autistic { background: var(--terra);  color: white; border-color: var(--terra); }
         .profile-btn.active-inertia  { background: var(--forest); color: white; border-color: var(--forest); }
         .main-area { display: flex; gap: 12px; width: 100%; max-width: 1100px; }
-        /* LEFT column */
         .control-panel {
             background: var(--accent-bg); border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.08);
             padding: 16px 14px; width: 220px; flex-shrink: 0;
             display: flex; flex-direction: column; gap: 13px;
         }
-        /* RIGHT column */
         .action-panel {
             background: var(--accent-bg); border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.08);
@@ -122,7 +120,6 @@
             cursor: pointer; transition: opacity 0.2s;
         }
         .reset-btn:hover { opacity: 0.82; }
-        /* Status block inside right column */
         .action-status {
             border-top: 1px solid var(--stone);
             padding-top: 11px;
@@ -143,7 +140,6 @@
             display: flex; flex-direction: column; align-items: center;
         }
         .sim-svg { width: 100%; aspect-ratio: 840 / 540; display: block; }
-        /* Disclaimer — full-width at very bottom */
         .disclaimer {
             width: 100%; max-width: 1100px; margin-top: 10px; padding: 10px 16px;
             text-align: center; color: var(--grey); font-size: 0.74em; line-height: 1.6;
@@ -179,7 +175,7 @@
 
 <div class="main-area">
 
-    <!-- LEFT COLUMN: controls + legend -->
+    <!-- LEFT COLUMN -->
     <div class="control-panel">
         <p class="panel-title">Simulation Controls</p>
         <div class="slider-section">
@@ -194,11 +190,11 @@
         <div class="legend">
             <div class="legend-item">
                 <div class="legend-dot" style="background: var(--gold);"></div>
-                <div><div class="legend-name">The "Doing" Brain</div><div class="legend-sub">Focusing on outside chores, tasks, and demands</div></div>
+                <div><div class="legend-name">The "Doing" Brain (TPN)</div><div class="legend-sub">Focusing on outside chores, tasks, and demands</div></div>
             </div>
             <div class="legend-item">
                 <div class="legend-dot" style="background: var(--green);"></div>
-                <div><div class="legend-name">The "Resting" Brain</div><div class="legend-sub">Wandering thoughts and processing the day</div></div>
+                <div><div class="legend-name">The "Resting" Brain (DMN)</div><div class="legend-sub">Wandering thoughts and processing the day</div></div>
             </div>
             <div class="legend-item">
                 <div class="legend-dot" style="background: var(--terra);"></div>
@@ -215,7 +211,10 @@
         </div>
     </div>
 
-    <!-- CENTER COLUMN: simulation -->
+    <!-- CENTER COLUMN: simulation
+         All node y-coords shifted +20px vs original:
+           TPN: cy=105 -> 125   |  DMN/PL: cy=430 -> 450
+    -->
     <div class="sim-panel">
         <p class="panel-title" style="margin-bottom:6px;">Network Activity</p>
 
@@ -227,62 +226,66 @@
                 </filter>
             </defs>
 
-            <path id="path-dmn-pl"  d="M 182 430 L 658 430" stroke="none" fill="none"/>
-            <path id="path-pl-dmn"  d="M 658 430 L 182 430" stroke="none" fill="none"/>
+            <!-- Hidden paths for flow-dot animateMotion (y: 430->450) -->
+            <path id="path-dmn-pl"  d="M 182 450 L 658 450" stroke="none" fill="none"/>
+            <path id="path-pl-dmn"  d="M 658 450 L 182 450" stroke="none" fill="none"/>
 
-            <rect id="dmn-link-rect" x="182" y="423" width="476" height="14" rx="6" fill="#bdb7a2"/>
+            <!-- DMN-PL coupling bar (y center: 450) -->
+            <rect id="dmn-link-rect" x="182" y="443" width="476" height="14" rx="6" fill="#bdb7a2"/>
 
-            <path id="path-dmn-tpn" d="M 167 390 C 167 270, 373 195, 373 155" stroke="#45735d" stroke-width="3" fill="none"/>
-            <path id="path-pl-tpn"  d="M 673 390 C 673 270, 467 195, 467 155" stroke="#45735d" stroke-width="3" fill="none"/>
+            <!-- Network connector paths (exit/entry points shifted +20) -->
+            <path id="path-dmn-tpn" d="M 167 410 C 167 290, 373 215, 373 175" stroke="#45735d" stroke-width="3" fill="none"/>
+            <path id="path-pl-tpn"  d="M 673 410 C 673 290, 467 215, 467 175" stroke="#45735d" stroke-width="3" fill="none"/>
 
             <g id="flow-dots"></g>
 
+            <!-- Orbit indicator (cy: 430->450) -->
             <ellipse id="orbit-indicator"
-                     cx="120" cy="430" rx="82" ry="72"
+                     cx="120" cy="450" rx="82" ry="72"
                      fill="rgba(69,115,93,0.05)"
                      stroke="#45735d"
                      stroke-width="1.5"
                      stroke-dasharray="6 5"
                      opacity="0.5"/>
 
+            <!-- TPN node  cx=420, cy=125 (+20) -->
             <g id="node-tpn">
-                <circle cx="420" cy="105" r="74" fill="#ba945e" opacity="0.10"/>
-                <circle cx="420" cy="105" r="62" fill="#ba945e"/>
-                <text x="420" y="98"  text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">TPN</text>
-                <text x="420" y="113" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">(Outside World)</text>
-                <text x="420" y="128" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Task Positive Network</text>
+                <circle cx="420" cy="125" r="74" fill="#ba945e" opacity="0.10"/>
+                <circle cx="420" cy="125" r="62" fill="#ba945e"/>
+                <text x="420" y="118" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">TPN</text>
+                <text x="420" y="133" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">(Outside World)</text>
+                <text x="420" y="148" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Task Positive Network</text>
             </g>
 
+            <!-- DMN node  cx=120, cy=450 (+20) -->
             <g id="node-dmn">
-                <circle cx="120" cy="430" r="74" fill="#45735d" opacity="0.10"/>
-                <circle cx="120" cy="430" r="62" fill="#45735d"/>
-                <text x="120" y="423" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">DMN</text>
-                <text x="120" y="438" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Default Mode</text>
-                <text x="120" y="451" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Self-Referential</text>
+                <circle cx="120" cy="450" r="74" fill="#45735d" opacity="0.10"/>
+                <circle cx="120" cy="450" r="62" fill="#45735d"/>
+                <text x="120" y="443" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">DMN</text>
+                <text x="120" y="458" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Default Mode</text>
+                <text x="120" y="471" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Self-Referential</text>
             </g>
 
+            <!-- PL node  cx=720, cy=450 (+20) -->
             <g id="node-pl" style="opacity:0.3; transition: opacity 0.7s ease;">
-                <circle cx="720" cy="430" r="74" fill="#b68d76" opacity="0.10"/>
-                <circle cx="720" cy="430" r="62" fill="#b68d76"/>
-                <text x="720" y="423" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">Predictive</text>
-                <text x="720" y="438" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">Loop</text>
-                <text x="720" y="453" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Pattern / Interest</text>
+                <circle cx="720" cy="450" r="74" fill="#b68d76" opacity="0.10"/>
+                <circle cx="720" cy="450" r="62" fill="#b68d76"/>
+                <text x="720" y="443" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">Predictive</text>
+                <text x="720" y="458" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">Loop</text>
+                <text x="720" y="473" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Pattern / Interest</text>
             </g>
 
-            <g id="svg-particle" style="transform: translate(202px, 430px);">
+            <!-- Attention particle — starts at right edge of NT orbit: 120+82=202, y=450 -->
+            <g id="svg-particle" style="transform: translate(202px, 450px);">
                 <circle class="particle-ring" cx="0" cy="0" r="22" fill="#f59e0b" opacity="0.22"/>
                 <circle cx="0" cy="0" r="14" fill="#f59e0b" filter="url(#glow-amber)"/>
             </g>
 
             <g id="ripple-group"></g>
-
-            <text x="420" y="16" text-anchor="middle" fill="#a6aea6" font-size="9.5" font-family="Nunito Sans" font-style="italic">
-                Watch the orbit migrate — then press "Switch to Task" to experience the metabolic cost
-            </text>
         </svg>
     </div>
 
-    <!-- RIGHT COLUMN: task switch + battery + profile status -->
+    <!-- RIGHT COLUMN -->
     <div class="action-panel">
         <p class="panel-title">Task Switch</p>
 
@@ -309,7 +312,6 @@
 
 </div>
 
-<!-- DISCLAIMER: full-width, very bottom -->
 <div class="disclaimer">
     <strong>Psychoeducational Tool Only.</strong> This simulator is designed for educational purposes to illustrate neurobiological concepts. It does not constitute medical advice, diagnosis, or treatment. Content developed by <a href="https://www.secondarrow.net" target="_blank" rel="noopener" style="color:var(--grey);">Second Arrow Counseling</a>. For clinical concerns, consult a qualified healthcare provider.
 </div>
@@ -377,12 +379,12 @@
     }
 
     /* ================================================================
-       ORBIT SYSTEM
+       ORBIT SYSTEM  (cy: 430 -> 450 everywhere)
     ================================================================ */
     const ORBIT_CONFIGS = {
-        nt:       { cx: 120, cy: 430, rx: 82,  ry: 72, speed: 0.013, strokeColor: '#45735d',  fillColor: 'rgba(69,115,93,0.05)' },
-        autistic: { cx: 530, cy: 430, rx: 225, ry: 72, speed: 0.024, strokeColor: '#9c8470',  fillColor: 'rgba(182,141,118,0.05)' },
-        inertia:  { cx: 720, cy: 430, rx: 82,  ry: 72, speed: 0.044, strokeColor: '#b68d76',  fillColor: 'rgba(182,141,118,0.08)' },
+        nt:       { cx: 120, cy: 450, rx: 82,  ry: 72, speed: 0.013, strokeColor: '#45735d',  fillColor: 'rgba(69,115,93,0.05)' },
+        autistic: { cx: 530, cy: 450, rx: 225, ry: 72, speed: 0.024, strokeColor: '#9c8470',  fillColor: 'rgba(182,141,118,0.05)' },
+        inertia:  { cx: 720, cy: 450, rx: 82,  ry: 72, speed: 0.044, strokeColor: '#b68d76',  fillColor: 'rgba(182,141,118,0.08)' },
     };
 
     const PL_OPACITY = { nt: 0.3, autistic: 0.78, inertia: 1.0 };
@@ -423,7 +425,8 @@
     const orbitEl     = document.getElementById('orbit-indicator');
     const nodePL      = document.getElementById('node-pl');
 
-    const posTPN = { x: 420, y: 105 };
+    /* TPN center (cy shifted +20) */
+    const posTPN = { x: 420, y: 125 };
 
     let inTPN              = false;
     let orbitAngle         = 0;
@@ -494,7 +497,7 @@
             dmnLinkRect.classList.add('link-sticky');
         }
         const thickness = 10 + (val * 4);
-        dmnLinkRect.setAttribute('y',      430 - thickness / 2);
+        dmnLinkRect.setAttribute('y',      450 - thickness / 2);
         dmnLinkRect.setAttribute('height', thickness);
         dmnLinkRect.setAttribute('fill',   val > 6 ? '#35361c' : '#bdb7a2');
         dmnLinkRect.setAttribute('rx',     val > 6 ? '3' : '6');
