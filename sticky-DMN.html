@@ -53,10 +53,18 @@
         .profile-btn.active-autistic { background: var(--terra);  color: white; border-color: var(--terra); }
         .profile-btn.active-inertia  { background: var(--forest); color: white; border-color: var(--forest); }
         .main-area { display: flex; gap: 12px; width: 100%; max-width: 1100px; }
+        /* LEFT column */
         .control-panel {
             background: var(--accent-bg); border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.08);
-            padding: 16px 14px; width: 250px; flex-shrink: 0;
+            padding: 16px 14px; width: 220px; flex-shrink: 0;
+            display: flex; flex-direction: column; gap: 13px;
+        }
+        /* RIGHT column */
+        .action-panel {
+            background: var(--accent-bg); border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 16px 14px; width: 220px; flex-shrink: 0;
             display: flex; flex-direction: column; gap: 13px;
         }
         .panel-title {
@@ -64,11 +72,12 @@
             text-transform: uppercase; letter-spacing: 0.07em; margin: 0; text-align: center;
         }
         .slider-section { display: flex; flex-direction: column; gap: 7px; }
-        .slider-label-row { display: flex; justify-content: space-between; align-items: center; }
+        .slider-label-row { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
         .slider-label-text { font-weight: 700; font-size: 0.83em; }
         .slider-val-badge {
             font-size: 0.78em; font-weight: 700; padding: 2px 8px; border-radius: 4px;
             background: white; color: var(--green); transition: color 0.3s;
+            white-space: nowrap; flex-shrink: 0;
         }
         input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--green); }
         .stickiness-desc {
@@ -113,6 +122,20 @@
             cursor: pointer; transition: opacity 0.2s;
         }
         .reset-btn:hover { opacity: 0.82; }
+        /* Status block inside right column */
+        .action-status {
+            border-top: 1px solid var(--stone);
+            padding-top: 11px;
+            display: flex; flex-direction: column; gap: 6px;
+        }
+        #status-main {
+            font-weight: 700; font-size: 0.88em; margin: 0;
+            color: var(--green); line-height: 1.35;
+        }
+        #status-sub {
+            color: var(--grey); font-style: italic; font-size: 0.78em;
+            margin: 0; line-height: 1.6;
+        }
         .sim-panel {
             flex: 1; background: var(--accent-bg); border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.08);
@@ -120,14 +143,7 @@
             display: flex; flex-direction: column; align-items: center;
         }
         .sim-svg { width: 100%; aspect-ratio: 840 / 540; display: block; }
-        .status-panel {
-            background: var(--accent-bg); border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
-            padding: 12px 20px; width: 100%; max-width: 1100px;
-            margin-top: 12px; text-align: center;
-        }
-        #status-main { font-weight: 700; font-size: 0.93em; margin: 0 0 4px; color: var(--green); }
-        #status-sub  { color: var(--grey); font-style: italic; font-size: 0.85em; margin: 0; line-height: 1.6; }
+        /* Disclaimer — full-width at very bottom */
         .disclaimer {
             width: 100%; max-width: 1100px; margin-top: 10px; padding: 10px 16px;
             text-align: center; color: var(--grey); font-size: 0.74em; line-height: 1.6;
@@ -163,6 +179,7 @@
 
 <div class="main-area">
 
+    <!-- LEFT COLUMN: controls + legend -->
     <div class="control-panel">
         <p class="panel-title">Simulation Controls</p>
         <div class="slider-section">
@@ -174,28 +191,100 @@
             <p class="stickiness-desc" id="sticky-desc">Low friction. The brain can shift to a new task with minimal effort.</p>
         </div>
 
-<div class="legend">
-    <div class="legend-item">
-        <div class="legend-dot" style="background: var(--gold);"></div>
-        <div><div class="legend-name">The "Doing" Brain</div><div class="legend-sub">Focusing on outside chores, tasks, and demands</div></div>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot" style="background: var(--gold);"></div>
+                <div><div class="legend-name">The "Doing" Brain</div><div class="legend-sub">Focusing on outside chores, tasks, and demands</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: var(--green);"></div>
+                <div><div class="legend-name">The "Resting" Brain</div><div class="legend-sub">Wandering thoughts and processing the day</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: var(--terra);"></div>
+                <div><div class="legend-name">The Deep Dive</div><div class="legend-sub">Special interests, pattern finding, or deep processing</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #f59e0b;"></div>
+                <div><div class="legend-name">Attention</div><div class="legend-sub">Where the brain's energy is flowing right now</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background:none; border:1.5px dashed var(--stone); width:13px; height:13px;"></div>
+                <div><div class="legend-name">The Comfort Zone</div><div class="legend-sub">Where attention naturally wants to stay</div></div>
+            </div>
+        </div>
     </div>
-    <div class="legend-item">
-        <div class="legend-dot" style="background: var(--green);"></div>
-        <div><div class="legend-name">The "Resting" Brain</div><div class="legend-sub">Wandering thoughts and processing the day</div></div>
+
+    <!-- CENTER COLUMN: simulation -->
+    <div class="sim-panel">
+        <p class="panel-title" style="margin-bottom:6px;">Network Activity</p>
+
+        <svg id="sim-svg" class="sim-svg" viewBox="0 0 840 540" preserveAspectRatio="xMidYMid meet">
+            <defs>
+                <filter id="glow-amber" x="-60%" y="-60%" width="220%" height="220%">
+                    <feGaussianBlur stdDeviation="7" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+
+            <path id="path-dmn-pl"  d="M 182 430 L 658 430" stroke="none" fill="none"/>
+            <path id="path-pl-dmn"  d="M 658 430 L 182 430" stroke="none" fill="none"/>
+
+            <rect id="dmn-link-rect" x="182" y="423" width="476" height="14" rx="6" fill="#bdb7a2"/>
+
+            <path id="path-dmn-tpn" d="M 167 390 C 167 270, 373 195, 373 155" stroke="#45735d" stroke-width="3" fill="none"/>
+            <path id="path-pl-tpn"  d="M 673 390 C 673 270, 467 195, 467 155" stroke="#45735d" stroke-width="3" fill="none"/>
+
+            <g id="flow-dots"></g>
+
+            <ellipse id="orbit-indicator"
+                     cx="120" cy="430" rx="82" ry="72"
+                     fill="rgba(69,115,93,0.05)"
+                     stroke="#45735d"
+                     stroke-width="1.5"
+                     stroke-dasharray="6 5"
+                     opacity="0.5"/>
+
+            <g id="node-tpn">
+                <circle cx="420" cy="105" r="74" fill="#ba945e" opacity="0.10"/>
+                <circle cx="420" cy="105" r="62" fill="#ba945e"/>
+                <text x="420" y="98"  text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">TPN</text>
+                <text x="420" y="113" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">(Outside World)</text>
+                <text x="420" y="128" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Task Positive Network</text>
+            </g>
+
+            <g id="node-dmn">
+                <circle cx="120" cy="430" r="74" fill="#45735d" opacity="0.10"/>
+                <circle cx="120" cy="430" r="62" fill="#45735d"/>
+                <text x="120" y="423" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">DMN</text>
+                <text x="120" y="438" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Default Mode</text>
+                <text x="120" y="451" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Self-Referential</text>
+            </g>
+
+            <g id="node-pl" style="opacity:0.3; transition: opacity 0.7s ease;">
+                <circle cx="720" cy="430" r="74" fill="#b68d76" opacity="0.10"/>
+                <circle cx="720" cy="430" r="62" fill="#b68d76"/>
+                <text x="720" y="423" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">Predictive</text>
+                <text x="720" y="438" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">Loop</text>
+                <text x="720" y="453" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Pattern / Interest</text>
+            </g>
+
+            <g id="svg-particle" style="transform: translate(202px, 430px);">
+                <circle class="particle-ring" cx="0" cy="0" r="22" fill="#f59e0b" opacity="0.22"/>
+                <circle cx="0" cy="0" r="14" fill="#f59e0b" filter="url(#glow-amber)"/>
+            </g>
+
+            <g id="ripple-group"></g>
+
+            <text x="420" y="16" text-anchor="middle" fill="#a6aea6" font-size="9.5" font-family="Nunito Sans" font-style="italic">
+                Watch the orbit migrate — then press "Switch to Task" to experience the metabolic cost
+            </text>
+        </svg>
     </div>
-    <div class="legend-item">
-        <div class="legend-dot" style="background: var(--terra);"></div>
-        <div><div class="legend-name">The Deep Dive</div><div class="legend-sub">Special interests, pattern finding, or deep processing</div></div>
-    </div>
-    <div class="legend-item">
-        <div class="legend-dot" style="background: #f59e0b;"></div>
-        <div><div class="legend-name">Attention</div><div class="legend-sub">Where the brain's energy is flowing right now</div></div>
-    </div>
-    <div class="legend-item">
-        <div class="legend-dot" style="background:none; border:1.5px dashed var(--stone); width:13px; height:13px;"></div>
-        <div><div class="legend-name">The Comfort Zone</div><div class="legend-sub">Where attention naturally wants to stay</div></div>
-    </div>
-</div>
+
+    <!-- RIGHT COLUMN: task switch + battery + profile status -->
+    <div class="action-panel">
+        <p class="panel-title">Task Switch</p>
 
         <button class="switch-btn" id="switch-btn">
             ⚡ Force a Task Switch
@@ -211,105 +300,16 @@
             <p class="energy-note" id="energy-note">Full capacity. No transitions yet.</p>
             <button class="reset-btn" onclick="resetEnergy()">↺ Reset Energy</button>
         </div>
-    </div>
 
-    <div class="sim-panel">
-        <p class="panel-title" style="margin-bottom:6px;">Network Activity</p>
-
-        <!--
-            ViewBox: 0 0 840 540
-            Node centers (r=62):
-              TPN: cx=420, cy=105
-              DMN: cx=120, cy=430   (DMN right edge=182, top=368)
-              PL:  cx=720, cy=430   (PL left edge=658, top=368)
-            Orbit configs (cy=430 for all):
-              NT:       cx=120, rx=82  — tight orbit around DMN
-              Autistic: cx=530, rx=225 — center pulled toward PL; PL inside, DMN outside
-              Inertia:  cx=720, rx=82  — tight orbit around PL (mirrors NT)
-        -->
-        <svg id="sim-svg" class="sim-svg" viewBox="0 0 840 540" preserveAspectRatio="xMidYMid meet">
-            <defs>
-                <filter id="glow-amber" x="-60%" y="-60%" width="220%" height="220%">
-                    <feGaussianBlur stdDeviation="7" result="blur"/>
-                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                </filter>
-            </defs>
-
-            <!-- Hidden paths for flow-dot animateMotion -->
-            <path id="path-dmn-pl"  d="M 182 430 L 658 430" stroke="none" fill="none"/>
-            <path id="path-pl-dmn"  d="M 658 430 L 182 430" stroke="none" fill="none"/>
-
-            <!-- DMN-PL coupling bar: DMN right edge=182, PL left edge=658 -->
-            <rect id="dmn-link-rect" x="182" y="423" width="476" height="14" rx="6" fill="#bdb7a2"/>
-
-            <!-- Network connector paths
-                 DMN exit: upper-right of DMN (167, 390)  ->  TPN enter: lower-left of TPN (373, 155)
-                 PL  exit: upper-left  of PL  (673, 390)  ->  TPN enter: lower-right of TPN (467, 155)
-            -->
-            <path id="path-dmn-tpn" d="M 167 390 C 167 270, 373 195, 373 155" stroke="#45735d" stroke-width="3" fill="none"/>
-            <path id="path-pl-tpn"  d="M 673 390 C 673 270, 467 195, 467 155" stroke="#45735d" stroke-width="3" fill="none"/>
-
-            <g id="flow-dots"></g>
-
-            <!--
-                ORBIT INDICATOR  (updated by JS; initial state = NT)
-            -->
-            <ellipse id="orbit-indicator"
-                     cx="120" cy="430" rx="82" ry="72"
-                     fill="rgba(69,115,93,0.05)"
-                     stroke="#45735d"
-                     stroke-width="1.5"
-                     stroke-dasharray="6 5"
-                     opacity="0.5"/>
-
-            <!-- TPN node  cx=420, cy=105, r=62 -->
-            <g id="node-tpn">
-                <circle cx="420" cy="105" r="74" fill="#ba945e" opacity="0.10"/>
-                <circle cx="420" cy="105" r="62" fill="#ba945e"/>
-                <text x="420" y="98"  text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">TPN</text>
-                <text x="420" y="113" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">(Outside World)</text>
-                <text x="420" y="128" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Task Positive Network</text>
-            </g>
-
-            <!-- DMN node  cx=120, cy=430, r=62 -->
-            <g id="node-dmn">
-                <circle cx="120" cy="430" r="74" fill="#45735d" opacity="0.10"/>
-                <circle cx="120" cy="430" r="62" fill="#45735d"/>
-                <text x="120" y="423" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">DMN</text>
-                <text x="120" y="438" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Default Mode</text>
-                <text x="120" y="451" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Self-Referential</text>
-            </g>
-
-            <!-- PL node  cx=720, cy=430, r=62  (ghosted for NT) -->
-            <g id="node-pl" style="opacity:0.3; transition: opacity 0.7s ease;">
-                <circle cx="720" cy="430" r="74" fill="#b68d76" opacity="0.10"/>
-                <circle cx="720" cy="430" r="62" fill="#b68d76"/>
-                <text x="720" y="423" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">Predictive</text>
-                <text x="720" y="438" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">Loop</text>
-                <text x="720" y="453" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Pattern / Interest</text>
-            </g>
-
-            <!-- Attention particle — starts at right edge of NT orbit: 120+82=202, y=430 -->
-            <g id="svg-particle" style="transform: translate(202px, 430px);">
-                <circle class="particle-ring" cx="0" cy="0" r="22" fill="#f59e0b" opacity="0.22"/>
-                <circle cx="0" cy="0" r="14" fill="#f59e0b" filter="url(#glow-amber)"/>
-            </g>
-
-            <g id="ripple-group"></g>
-
-            <text x="420" y="16" text-anchor="middle" fill="#a6aea6" font-size="9.5" font-family="Nunito Sans" font-style="italic">
-                Watch the orbit migrate — then press "Switch to Task" to experience the metabolic cost
-            </text>
-        </svg>
+        <div class="action-status">
+            <p id="status-main">Neurotypical: Easy Shifting</p>
+            <p id="status-sub">Attention rests lightly. When a new task demands attention, the brain easily breaks away from its resting state. It takes very little battery power to stop doing one thing and start doing another.</p>
+        </div>
     </div>
 
 </div>
 
-<div class="status-panel">
-    <p id="status-main">🔄 Attention rests in the Default Mode Network.</p>
-    <p id="status-sub">The NT brain's resting state keeps the DMN loosely coupled — flexible and easily redirected when a task demands attention. The Predictive Loop exists but is not a dominant attentional circuit.</p>
-</div>
-
+<!-- DISCLAIMER: full-width, very bottom -->
 <div class="disclaimer">
     <strong>Psychoeducational Tool Only.</strong> This simulator is designed for educational purposes to illustrate neurobiological concepts. It does not constitute medical advice, diagnosis, or treatment. Content developed by <a href="https://www.secondarrow.net" target="_blank" rel="noopener" style="color:var(--grey);">Second Arrow Counseling</a>. For clinical concerns, consult a qualified healthcare provider.
 </div>
@@ -378,12 +378,6 @@
 
     /* ================================================================
        ORBIT SYSTEM
-       -----------------------------------------------------------------
-       All node centers at cy=430.
-       NT:       cx=120, rx=82  -- tight orbit around DMN only
-       Autistic: cx=530, rx=225 -- center pulled toward PL;
-                                   PL(720) inside orbit, DMN(120) outside
-       Inertia:  cx=720, rx=82  -- tight orbit around PL (mirrors NT)
     ================================================================ */
     const ORBIT_CONFIGS = {
         nt:       { cx: 120, cy: 430, rx: 82,  ry: 72, speed: 0.013, strokeColor: '#45735d',  fillColor: 'rgba(69,115,93,0.05)' },
@@ -429,7 +423,6 @@
     const orbitEl     = document.getElementById('orbit-indicator');
     const nodePL      = document.getElementById('node-pl');
 
-    /* TPN center in SVG coords */
     const posTPN = { x: 420, y: 105 };
 
     let inTPN              = false;
@@ -439,7 +432,6 @@
     let currentPreset      = 'nt';
     let energy             = 100;
 
-    /* -- Orbit indicator update -- */
     function updateOrbitIndicator(config) {
         orbitEl.setAttribute('cx',     config.cx);
         orbitEl.setAttribute('cy',     config.cy);
@@ -449,7 +441,6 @@
         orbitEl.setAttribute('fill',   config.fillColor);
     }
 
-    /* -- RAF orbit loop -- */
     function runOrbit() {
         if (inTPN) return;
         const cfg = currentOrbitConfig;
@@ -461,7 +452,6 @@
         orbitRaf = requestAnimationFrame(runOrbit);
     }
 
-    /* -- Init -- */
     updateOrbitIndicator(ORBIT_CONFIGS.nt);
     runOrbit();
     updateFlowDots('nt');
