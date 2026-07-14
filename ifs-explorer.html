@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Inner System, Second Arrow Counseling</title>
+<title>Internal Family Systems — Second Arrow Counseling</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;1,6..12,400&display=swap" rel="stylesheet">
@@ -130,7 +130,7 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text)
 
 <div class="header">
   <h2>Your Inner System</h2>
-  <p>The mind isn't one voice, it's a whole system of parts, each with its own role and its own logic. This is a map of what's happening inside, and why it makes sense.</p>
+  <p>Your mind isn't a single, uniform voice, it's an entire ecosystem of parts. For neurodivergent minds, these parts have developed brilliant, necessary strategies to navigate a world built for a different operating system. This is a map of what's happening inside, and why it makes perfect sense..</p>
 </div>
 
 <div class="three-col">
@@ -142,19 +142,19 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text)
     <div class="divider"></div>
     <button class="type-btn" id="btn-self" onclick="selectType('self')">
       <span class="btn-dot" style="background:var(--self-c)"></span>
-      <span>The Self<span class="btn-sub">Your natural center</span></span>
+      <span>The Core Self<span class="btn-sub">Your anchored center</span></span>
     </button>
     <button class="type-btn" id="btn-managers" onclick="selectType('managers')">
       <span class="btn-dot" style="background:var(--mgr-c)"></span>
-      <span>Managers<span class="btn-sub">Proactive protectors</span></span>
+      <span>Managers (The Mask)<span class="btn-sub">Proactive strategists</span></span>
     </button>
     <button class="type-btn" id="btn-firefighters" onclick="selectType('firefighters')">
       <span class="btn-dot" style="background:var(--fire-c)"></span>
-      <span>Firefighters<span class="btn-sub">Emergency responders</span></span>
+      <span>Firefighters (Regulators)<span class="btn-sub">Overload responders</span></span>
     </button>
     <button class="type-btn" id="btn-exiles" onclick="selectType('exiles')">
       <span class="btn-dot" style="background:var(--exile-c)"></span>
-      <span>Exiles<span class="btn-sub">The ones carrying the weight</span></span>
+      <span>Exiles<span class="btn-sub">The ones carrying the exhaustion</span></span>
     </button>
     <div class="spacer"></div>
     <div class="divider"></div>
@@ -211,103 +211,103 @@ body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text)
 // ══════════════════════════════════════
 const EIGHT_CS = {
   Calm:{
-    headline:'Calm: not emptiness, but steadiness.',
-    body:'In Self, Calm isn\'t the absence of feeling. It\'s an inner settledness that allows you to be with strong emotions without being swept away by them. Parts often override this when they feel unsafe, but underneath, the capacity is always there.'
+    headline:'Calm (Anchored): not emptiness, but steadiness.',
+    body:'In Self, you don\'t have to feel perfectly "zen" or physically relaxed. Being Anchored means having an inner steadiness that lets you witness a dysregulated nervous system or intense sensory input without being completely swept away by it.'
   },
   Curious:{
-    headline:'Curious: toward yourself and others.',
-    body:'Self-led curiosity is open and non-judgmental. It asks "what\'s happening here?" rather than "what\'s wrong with me?" When you\'re genuinely curious about a part, even a frustrating one, you\'re already in Self.'
+    headline:'Curious: toward your brain and body.',
+    body:'Self-led curiosity is open and non-judgmental. It asks "what is my nervous system trying to do here?" rather than "what is wrong with me?" When you are genuinely curious about a frustrated part, you are already in Self.'
   },
   Compassionate:{
-    headline:'Compassionate: without needing to fix.',
-    body:'Self-compassion in IFS isn\'t self-improvement. It\'s the ability to be with your own pain without turning away. Parts that have been carrying heavy loads need to feel this before they can begin to let go.'
+    headline:'Compassionate: without needing to fix or mask.',
+    body:Compassion here isn\'t about self-improvement. It is the ability to validate your own lived experience—including sensory pain, burnout, and executive dysfunction—without gaslighting yourself or turning away from the reality of the struggle.'
   },
   Clear:{
-    headline:'Clear: seeing without distortion.',
-    body:'When the Self leads, perception sharpens. You can see a situation more accurately because the reactive filters of protective parts aren\'t running the interpretation. Clarity isn\'t certainty, it\'s presence without the it\'s the ability to see clearly when protective parts aren\'t running the interpretation.'
+    headline:'Clear: seeing the environment accurately.',
+    body:'When the Self leads, you can see situations clearly because the reactive filters of masking or trauma aren\'t running the interpretation. You can accurately recognize when an environment or demand is the problem, not you.'
   },
   Confident:{
-    headline:'Confident: a quiet kind of knowing.',
-    body:'Self-confidence isn\'t performance. It\'s a quiet trust in your own perspective that doesn\'t need external validation to hold steady. Parts can mimic this quality, but the Self\'s version doesn\'t collapse under pressure.'
+    headline:'Confident: trusting your internal reality.',
+    body:'Confidence isn\'t about performing perfectly for the neurotypical gaze. It is a quiet trust in your own internal reality and physical needs that doesn\'t collapse just because someone else doesn\'t understand or validate them.'
   },
   Courageous:{
-    headline:'Courageous: willing to turn toward difficulty.',
-    body:'The Self can approach what protective parts have been guarding, not recklessly, but with genuine willingness. Courage in IFS looks like staying present with a part\'s pain long enough to really hear what it\'s been carrying.'
+    headline:'Courageous: willing to turn toward the exhaustion.',
+    body:'The Self can approach what protective parts have been guarding. Courage looks like a willingness to turn toward the parts of you that hold deep burnout or the grief of feeling different, staying present with them long enough to truly listen.'
   },
   Creative:{
-    headline:'Creative: flexible, not rigid.',
-    body:'When parts aren\'t running the show, the mind becomes more fluid. Solutions appear. Perspectives shift. The creativity here isn\'t about art, it\'s the what happens when the system is no longer organized entirely around managing threat.'
+    headline:'Creative: the unmasked mind at play.',
+    body:'When parts aren\'t entirely consumed by managing threats, preventing meltdowns, or masking, the mind becomes fluid. This is the natural neurodivergent brain at play: finding novel solutions, deep joy in special interests, and unique connections.'
   },
   Connected:{
-    headline:'Connected: to self and to others.',
-    body:'The Self naturally moves toward relationship, with inner parts and with other people. Protective strategies often create distance to prevent harm. When those strategies soften, connection becomes possible again, in both directions.'
+    headline:'Connected: to your authentic needs..',
+    body:'he Self naturally moves toward genuine relationship. Masking creates distance to prevent harm. When protective strategies soften, authentic connection to yourself, your body\'s signals, your deep interests, and safe people becomes possible.'
   }
 };
 
 const DATA = {
   self:{
     key:'self',color:'#ba945e',
-    infoTitle:'The Self is always there.',
-    infoBody:'The Self isn\'t something that gets damaged or lost. It gets covered. The work isn\'t to build it or fix it. It\'s to give parts enough safety that they\'re willing to step back and let it lead.'
+    infoTitle:'The Self doesn\'t need to be neurotypical to be healthy.',
+    infoBody:'Beneath the masking, the burnout, and the survival strategies lives a Self that is whole and intact. The work isn\'t to build it or fix it. It\'s to give your system enough safety and accommodation that parts are willing to step back and let the authentic Self lead.'
   },
   managers:{
-    name:'Managers',color:'#45735d',tagline:'Proactive Protectors',
-    description:'Managers run the daily system. They plan, anticipate, evaluate, and control, not out of rigidity, but because they learned that staying one step ahead was how the system stayed safe. These parts often look the most "put together" precisely because that\'s the job they were built for.',
-    infoTitle:'Managers are running a system they helped build.',
-    infoBody:'Every Manager strategy developed for a reason. The inner critic learned to get there first. The perfectionist learned that strong performance kept criticism at bay. The caretaker learned that other people\'s comfort was safer to manage than their own needs. These aren\'t flaws, they\'re adaptations.',
+    name:'Managers (The Mask)',color:'#45735d',tagline:'Proactive Strategists',
+    description:'For neurodivergent folks, these parts are often the architects of The Mask. They plan, analyze, and control—not out of rigidity, but because they learned that staying one step ahead, suppressing natural movement, or mirroring others was the only way to stay safe in an unpredictable world.',
+    infoTitle:'Masking is a brilliant, exhausting adaptation.',
+    infoBody:'Every Manager developed for a reason. The hyper-vigilant analyzer learned to manually process confusing social cues. The perfectionist learned that flawless output prevented criticism. These aren\'t flaws or "anxiety disorders", they are highly effective adaptations that take a massive toll on your battery.',
     parts:[
-      {name:'Inner Critic',
-       role:'Monitors performance and anticipates how you\'ll be perceived, then adjusts accordingly.',
-       intent:'Gets there before anyone else can. Criticism from inside hurts less than rejection from outside.',
-       behaviors:'Relentless self-evaluation, harsh comparisons, difficulty receiving positive feedback.'},
-      {name:'Perfectionist',
-       role:'Sets and enforces standards, then monitors output against them continuously.',
-       intent:'Achievement creates safety. If the work is good enough, criticism can\'t land.',
-       behaviors:'All-or-nothing thinking, difficulty finishing, starting over, avoiding what might not turn out right.'},
-      {name:'Caretaker',
-       role:'Manages relationships by prioritizing others\' comfort and keeping conflict low.',
-       intent:'Connection stays intact when you make yourself easy to be around.',
-       behaviors:'Difficulty with boundaries, reading rooms constantly, losing track of personal needs.'}
+{name:'The Masker',
+       role:'Monitors your natural impulses (stimming, tone, posture, eye contact) and adjusts them continuously.',
+       intent:'Prevents social rejection, judgment, or danger by making sure you appear neurotypical and blend in.',
+       behaviors:'Scripting conversations in advance, suppressing movement, experiencing extreme physical exhaustion after socializing.'},
+      {name:'The Analyzer',
+       role:'Constantly runs scenarios, decodes past social interactions, and looks for patterns in behavior.',
+       intent:'Tries to figure out "the rules" of neurotypical communication so you don\'t get caught off guard or misunderstood again.',
+       behaviors:'Replaying conversations on a loop, deep anxiety about being misinterpreted, over-explaining yourself.'},
+      {name:'The Fawn (People-Pleaser)',
+       role:'Manages the environment by prioritizing others\' comfort and keeping conflict as low as possible.',
+       intent:'Connection stays intact and danger is minimized if you make yourself as low-friction and agreeable as possible.',
+       behaviors:'Ignoring your own sensory boundaries, losing track of personal needs, feeling extreme guilt when saying no or taking up space.'}
     ]
   },
-  firefighters:{
-    name:'Firefighters',color:'#b68d76',tagline:'Emergency Responders',
-    description:'Firefighters don\'t plan, they react. When something gets close to a part carrying real pain, Firefighters move fast and do whatever works. They aren\'t weighing long-term costs. They\'re responding to what feels like an emergency, because to them, it is.',
-    infoTitle:'Firefighters are protecting someone.',
-    infoBody:'Behind every Firefighter behavior is a part they\'re trying to protect. Something got too close, and the Firefighter responded the way it learned to. Understanding that logic is where the work begins.',
+ firefighters:{
+    name:'Firefighters (Regulators)',color:'#b68d76',tagline:'Overload Responders',
+    description:'Firefighters don\'t plan—they react. When the system hits true overwhelm (sensory, cognitive, or emotional), these parts pull the fire alarm. They aren\'t weighing long-term costs; they are responding to what feels like an existential threat to the nervous system, forcing it to regulate or escape.',
+    infoTitle:'Meltdowns and shutdowns are protective.',
+    infoBody:'A Firefighter isn\'t "acting out." When a neurodivergent system is pushed beyond its capacity, a Firefighter takes over to force the body to regulate, disconnect, or escape. Understanding this logic—rather than punishing or shaming the behavior—is where healing begins.',
     parts:[
-      {name:'Shutdown',
-       role:'Pulls the system offline when the load becomes too much to process.',
-       intent:'Going offline is the last resort. It steps in to prevent a complete emotional flood or a breakdown that could expose the most vulnerable parts of the system.',
-       behaviors:'Dissociation, numbness, withdrawal, an inability to access words or action.'},
-      {name:'Anger Outburst',
-       role:'Creates distance and signals danger to keep people from getting too close.',
-       intent:'When nothing else works, making the environment unsafe for others keeps the vulnerable parts protected.',
-       behaviors:'Explosive anger, harsh words, pushing people away before they can leave first.'},
-      {name:'Escape',
-       role:'Introduces intensity or relief to override the pain signal.',
-       intent:'If the system can\'t tolerate what\'s present, redirect it somewhere it can.',
-       behaviors:'Bingeing, substance use, screens, hyperfocus on pleasure, seeking novelty.'}
+      {name:'Shutdown / Dissociate',
+       role:'Pulls the system completely offline when the sensory or emotional load becomes too much to process.',
+       intent:'Going offline is the last resort. It steps in to prevent a complete system crash when escaping the environment isn\'t possible.',
+       behaviors:'Going non-verbal, extreme fatigue, brain fog, feeling detached from reality, staring blankly.'},
+      {name:'The Meltdown',
+       role:'Creates intense external energy to clear a threat, demand, or overwhelming sensory input.',
+       intent:'When nothing else works, making the environment stop demanding things keeps the vulnerable system from breaking entirely.',
+       behaviors:'Explosive physical energy, crying, rigid demands for control, harsh words, fleeing the room.'},
+      {name:'The Escapist',
+       role:'Introduces high intensity or deep relief to override the pain, burnout, or under-stimulation.',
+       intent:'If the system can\'t tolerate the current environment or feelings, redirect all focus somewhere it can.',
+       behaviors:'Deep dives into special interests to numb out, doomscrolling, bingeing, dopamine-seeking, losing hours to a screen.'}
     ]
   },
   exiles:{
-    name:'Exiles',color:'#7a9eb5',tagline:'The Parts Carrying the Weight',
-    description:'Exiles are the youngest parts of the system. They carry early experiences that were too overwhelming to process at the time, moments that got stored rather than worked through. The Managers and Firefighters don\'t try to suppress them out of cruelty. They genuinely believe that if these parts surface, the whole system won\'t hold together.',
-    infoTitle:'Exiles are waiting to be heard.',
-    infoBody:'The goal in IFS isn\'t to push Exiles further down or make them disappear. It\'s to approach them carefully, with the Self leading, and offer what they never got: real attention, real understanding, and the chance to release the burden they\'ve held onto.',
+    name:'Exiles',color:'#7a9eb5',tagline:'The Parts Carrying the Exhaustion',
+    description:'Exiles are the vulnerable parts holding the pain of growing up neurodivergent in a world that didn\'t understand you. They carry the memories of chronic invalidation, sensory trauma, and the deep belief that you are fundamentally broken. Managers and Firefighters work overtime so you never have to feel this.',
+    infoTitle:'Exiles are waiting for validation, not a cure.',
+    infoBody:'The goal isn\'t to "fix" your neurodivergent traits or push Exiles further down. It is to approach these Exiles with your Self and offer them the validation they never got: that it was the environment that was broken and unaccommodating, not them.',
     parts:[
-      {name:'Not Enough',
-       role:'Carries the belief that something fundamental about you falls short.',
-       intent:'Holds the pain of that conclusion so the rest of the system doesn\'t have to stop and feel it.',
-       behaviors:'A persistent sense of inadequacy, shrinking, difficulty believing positive feedback.'},
-      {name:'Too Much',
-       role:'Carries the belief that your needs, feelings, or presence are excessive.',
-       intent:'Absorbs the message so the system can stay in relationship, by trying to take up less space.',
-       behaviors:'Deep shame around emotional expression, difficulty asking for what you need, over-apologizing.'},
-      {name:'Shame',
-       role:'Carries a conclusion about what you fundamentally are, not just what you did.',
-       intent:'Holds the deepest wound so the rest of the system can keep functioning without having to confront it directly.',
-       behaviors:'Hiding, hypervigilance around being known, fear that being truly seen would end connection.'}
+      {name:'The "Alien"',
+       role:'Carries the deep, isolating belief that you belong to a different species and will never truly fit in.',
+       intent:'Holds the grief of being fundamentally different so the Managers can keep trying to fit in without collapsing.',
+       behaviors:'Chronic loneliness even in a room full of people, fear of being truly perceived, feeling disconnected from humanity.'},
+      {name:'Too Much / Not Enough',
+       role:'Carries the confusing duality that your emotions and needs are "too much," but your capacity and energy are "not enough."',
+       intent:'Absorbs the world\'s criticism internally so you don\'t have to keep fighting it outwardly.',
+       behaviors:'Deep shame, chronic imposter syndrome, shrinking yourself, apologizing for existing.'},
+      {name:'The Overwhelmed Child',
+       role:'Holds the raw, unmasked sensory and emotional pain of past traumas and constant misunderstanding.',
+       intent:'Stores the terror of sensory overload or emotional flooding away so you can continue to function at work or school.',
+       behaviors:'Intense fear of specific environments, sudden panic, deep exhaustion, somatic physical pain.'}
     ]
   }
 };
