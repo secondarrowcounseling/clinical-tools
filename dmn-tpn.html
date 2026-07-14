@@ -1,557 +1,371 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network Co-activation Simulator | Second Arrow Counseling</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,wght@0,400;0,600;0,700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --green: #45735d;
-            --gold: #ba945e;
-            --terra: #b68d76;
-            --forest: #35361c;
-            --bg: #faf8f5;
-            --accent-bg: #F5F3EF;
-            --stone: #bdb7a2;
-            --cool-grey: #a6aea6;
-            --text: #222a26;
-            --grey: #6d7873;
-            --dmn-color: #8884d8;
-            --dmn-soft: rgba(136,132,216,0.12);
-            --tpn-color: #ff7300;
-            --tpn-soft: rgba(255,115,0,0.12);
-            --good: #45735d;
-            --warn: #ba945e;
-            --bad: #c06c5b;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Co-activation Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:#45735d; --gold:#ba945e; --terra:#b68d76;
+  --forest:#35361c; --text:#222a26; --grey:#6d7873;
+  --bg:#faf8f5; --accent-bg:#F5F3EF;
+  --stone:#bdb7a2; --cool-grey:#a6aea6; --blue:#7a9eb5;
+  --dmn-color:#7a9eb5;
+  --tpn-color:#45735d;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── BRAND BAR ── */
+.brand-bar{width:100%;max-width:1180px;display:flex;justify-content:flex-start;
+  align-items:center;padding:0 4px 10px}
+.brand-bar a{font-family:'Libre Baskerville',serif;font-size:20px;color:var(--forest);
+  text-decoration:none;letter-spacing:.01em;opacity:.9;transition:opacity .2s}
+.brand-bar a:hover{opacity:1}
 
-        body {
-            font-family: "Nunito Sans", -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 16px;
-        }
+/* ── HEADER ── */
+.header{background:var(--accent-bg);padding:13px 20px;border-radius:10px;
+  box-shadow:0 3px 6px rgba(0,0,0,.07);width:100%;max-width:1180px;
+  margin-bottom:12px;text-align:center}
+.header h2{font-family:'Libre Baskerville',serif;margin:0 0 4px;
+  font-size:1.28em;color:var(--forest)}
+.header p{color:var(--grey);margin:0 auto;font-size:.86em;
+  max-width:700px;line-height:1.5}
 
-        /* BRAND BAR */
-        .brand-bar {
-            width: 100%;
-            max-width: 1000px;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            padding: 0 4px 8px;
-        }
-        .brand-bar a {
-            font-family: "Libre Baskerville", serif;
-            font-size: 1.05em;
-            font-weight: 700;
-            color: var(--forest);
-            text-decoration: none;
-            opacity: 0.85;
-            transition: opacity 0.2s;
-            letter-spacing: 0.01em;
-        }
-        .brand-bar a:hover { opacity: 1; }
+/* ── THREE-COLUMN GRID ── */
+.three-col{display:grid;grid-template-columns:240px 1fr 272px;
+  gap:12px;width:100%;max-width:1180px}
 
-        /* DISCLAIMER */
-        .disclaimer {
-            width: 100%;
-            max-width: 1000px;
-            text-align: right;
-            font-size: 11px;
-            color: var(--grey);
-            padding: 0 4px 12px;
-            line-height: 1.5;
-        }
-        .disclaimer strong { color: var(--gold); font-weight: 600; }
+/* shared panel style */
+.panel{background:var(--accent-bg);border-radius:10px;
+  box-shadow:0 4px 6px rgba(0,0,0,.07);padding:14px;
+  display:flex;flex-direction:column;gap:11px}
 
-        /* WRAPPER */
-        .wrap { max-width: 1000px; width: 100%; }
+.sect-lbl{font-family:'Libre Baskerville',serif;font-size:.78em;font-weight:700;
+  color:var(--forest);text-transform:uppercase;letter-spacing:.06em;
+  border-bottom:1px solid var(--stone);padding-bottom:6px}
 
-        /* HEADER */
-        .hdr {
-            background: var(--accent-bg);
-            border: 1px solid var(--stone);
-            border-radius: 16px 16px 0 0;
-            padding: 28px 32px 20px;
-        }
-        .hdr h1 {
-            font-family: "Libre Baskerville", serif;
-            color: var(--forest);
-            font-size: 1.45rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-        .hdr .subtitle {
-            color: var(--grey);
-            font-size: 0.92rem;
-            line-height: 1.65;
-            max-width: 760px;
-        }
+/* ── LEFT: CONTROLS ── */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pbtn{padding:8px 5px;border-radius:7px;border:1.5px solid var(--stone);
+  background:#fff;color:var(--text);font-family:'Nunito Sans',sans-serif;
+  font-weight:700;font-size:11.5px;cursor:pointer;transition:all .2s;
+  text-align:center;line-height:1.35}
+.pbtn:hover{border-color:var(--grey);transform:translateY(-1px)}
+.pbtn .sub{font-weight:400;font-size:10px;display:block;margin-top:1px}
+.pbtn.act-nt    {background:var(--green);color:#fff;border-color:var(--green)}
+.pbtn.act-adhd  {background:var(--gold); color:#fff;border-color:var(--gold)}
+.pbtn.act-autism{background:var(--blue); color:#fff;border-color:var(--blue)}
+.pbtn.act-audhd {background:var(--terra);color:#fff;border-color:var(--terra)}
 
-        /* CARD BODY */
-        .card-body {
-            background: #fff;
-            border: 1px solid var(--stone);
-            border-top: none;
-            border-radius: 0 0 16px 16px;
-            padding: 28px 32px 36px;
-        }
+.slider-block{display:flex;flex-direction:column;gap:5px}
+.sl-hdr{display:flex;justify-content:space-between;align-items:center}
+.sl-lbl{font-weight:700;font-size:.8em;color:var(--forest)}
+.sl-val{font-weight:700;font-size:.8em;color:var(--gold)}
+.sl-sub{font-size:.7em;color:var(--grey)}
 
-        /* CONTROLS */
-        .controls {
-            background: var(--accent-bg);
-            border: 1px solid var(--stone);
-            padding: 22px;
-            border-radius: 14px;
-            margin-bottom: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-        }
-        .control-group { display: flex; flex-direction: column; gap: 8px; }
-        label {
-            font-weight: 700;
-            font-size: 0.72rem;
-            color: var(--grey);
-            letter-spacing: 0.6px;
-            text-transform: uppercase;
-        }
-        select {
-            width: 100%;
-            padding: 11px 36px 11px 14px;
-            font-size: 0.95rem;
-            font-family: "Nunito Sans", sans-serif;
-            border-radius: 10px;
-            border: 1px solid var(--stone);
-            background: #fff;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236d7873' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            color: var(--text);
-            cursor: pointer;
-            outline: none;
-            appearance: none;
-            -webkit-appearance: none;
-            transition: border-color 0.2s;
-        }
-        select:hover, select:focus { border-color: var(--grey); }
+input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:3px;
+  background:linear-gradient(to right,var(--green) var(--pct,0%),var(--stone) var(--pct,0%));
+  cursor:pointer;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;
+  width:16px;height:16px;border-radius:50%;background:var(--green);
+  border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.28);
+  cursor:pointer;transition:transform .15s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
 
-        /* SLIDER */
-        .slider-row { display: flex; align-items: center; gap: 16px; }
-        .slider-value { min-width: 80px; text-align: right; }
-        .demand-pct {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--green);
-            line-height: 1;
-        }
-        .demand-label-text { font-size: 0.72rem; color: var(--grey); margin-top: 2px; }
+.profile-card{background:#fff;border:1px solid var(--stone);border-radius:8px;
+  padding:10px 12px;flex:1}
+.pc-name{font-family:'Libre Baskerville',serif;font-size:.82em;font-weight:700;
+  color:var(--forest);margin-bottom:5px}
+.pc-desc{font-size:.75em;color:var(--grey);line-height:1.65}
 
-        input[type="range"] {
-            flex: 1;
-            -webkit-appearance: none;
-            height: 6px;
-            border-radius: 3px;
-            background: linear-gradient(to right, var(--green) var(--pct,0%), var(--stone) var(--pct,0%));
-            cursor: pointer;
-            outline: none;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px; height: 20px;
-            border-radius: 50%;
-            background: var(--green);
-            border: 3px solid #fff;
-            box-shadow: 0 0 0 1px var(--green);
-            cursor: pointer;
-            transition: transform 0.15s;
-        }
-        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+/* ── CENTER: VISUALIZATION ── */
+.center-panel{background:var(--accent-bg);border-radius:10px;
+  box-shadow:0 4px 6px rgba(0,0,0,.07);padding:14px;
+  display:flex;flex-direction:column;align-items:center;gap:14px}
 
-        /* PROFILE INFO */
-        #profile-info {
-            background: #fff;
-            border: 1px solid var(--stone);
-            border-radius: 12px;
-            padding: 18px 22px;
-            margin-bottom: 28px;
-            transition: border-color 0.3s;
-        }
-        .profile-name {
-            font-family: "Libre Baskerville", serif;
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--forest);
-            margin-bottom: 6px;
-        }
-        #profile-desc {
-            font-size: 0.82rem;
-            color: var(--grey);
-            line-height: 1.7;
-        }
+.gauges-row{display:flex;justify-content:center;gap:44px;flex:1}
 
-        /* GAUGES */
-        .gauges {
-            display: flex;
-            justify-content: center;
-            gap: 48px;
-            margin-bottom: 28px;
-        }
-        .gauge-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 0 0 140px;
-        }
-        .bar-bg {
-            height: 200px;
-            width: 60px;
-            background: var(--accent-bg);
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 14px;
-            border: 1px solid var(--stone);
-        }
-        .bar-fill {
-            position: absolute;
-            bottom: 0; left: 0;
-            width: 100%;
-            border-radius: 8px 8px 0 0;
-            transition: height 0.5s cubic-bezier(0.4,0,0.2,1);
-        }
-        #dmn-fill {
-            background: linear-gradient(to top, #6b64c4, var(--dmn-color));
-            height: 90%;
-        }
-        #tpn-fill {
-            background: linear-gradient(to top, #cc5c00, var(--tpn-color));
-            height: 10%;
-        }
-        .gauge-label {
-            font-family: "Libre Baskerville", serif;
-            font-weight: 700;
-            font-size: 1.05rem;
-            margin-bottom: 4px;
-        }
-        .gauge-label.dmn { color: var(--dmn-color); }
-        .gauge-label.tpn { color: var(--tpn-color); }
-        .gauge-subtext {
-            font-size: 0.72rem;
-            color: var(--grey);
-            text-align: center;
-            margin-bottom: 8px;
-            line-height: 1.5;
-        }
-        .gauge-value {
-            font-size: 1.15rem;
-            font-weight: 700;
-        }
+.gauge-container{display:flex;flex-direction:column;align-items:center}
 
-        /* CO-ACTIVATION */
-        .coact-section {
-            background: var(--accent-bg);
-            border: 1px solid var(--stone);
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin-bottom: 24px;
-        }
-        .coact-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .coact-title {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--grey);
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-        }
-        .coact-value-label {
-            font-size: 0.9rem;
-            font-weight: 700;
-            transition: color 0.4s;
-        }
-        .coact-track {
-            height: 8px;
-            background: var(--stone);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .coact-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.5s cubic-bezier(0.4,0,0.2,1), background 0.5s;
-        }
+.bar-bg{height:220px;width:64px;background:#fff;border-radius:10px;
+  position:relative;overflow:hidden;margin-bottom:10px;
+  border:1px solid var(--stone)}
+.bar-fill{position:absolute;bottom:0;left:0;width:100%;
+  border-radius:8px 8px 0 0;
+  transition:height .5s cubic-bezier(.4,0,.2,1)}
+#dmn-fill{background:linear-gradient(to top,#5c85a0,var(--dmn-color));height:90%}
+#tpn-fill{background:linear-gradient(to top,#2e5c47,var(--tpn-color));height:10%}
 
-        /* FEEDBACK */
-        #feedback-panel {
-            border-radius: 12px;
-            padding: 20px 24px;
-            border-left: 4px solid var(--cool-grey);
-            background: var(--accent-bg);
-            transition: border-color 0.4s, background 0.4s;
-        }
-        #feedback-panel.state-good   { border-color: var(--good); background: rgba(69,115,93,0.06); }
-        #feedback-panel.state-moderate { border-color: var(--warn); background: rgba(186,148,94,0.06); }
-        #feedback-panel.state-high   { border-color: var(--bad); background: rgba(192,108,91,0.06); }
+.gauge-label{font-family:'Libre Baskerville',serif;font-weight:700;font-size:1em;margin-bottom:2px}
+.gauge-label.dmn{color:var(--dmn-color)}
+.gauge-label.tpn{color:var(--tpn-color)}
+.gauge-subtext{font-size:.7em;color:var(--grey);text-align:center;
+  margin-bottom:5px;line-height:1.4}
+.gauge-value{font-size:1.1em;font-weight:700}
 
-        .feedback-item { margin-bottom: 12px; font-size: 0.88rem; line-height: 1.65; }
-        .feedback-item:last-child { margin-bottom: 0; }
-        .feedback-title {
-            font-weight: 700;
-            color: var(--forest);
-            margin-right: 4px;
-        }
-        #experience-text, #cost-text, #clinical-note-text { color: var(--grey); }
+.coact-section{width:100%;background:#fff;border:1px solid var(--stone);
+  border-radius:8px;padding:10px 14px}
+.coact-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.coact-title{font-size:.72em;font-weight:700;color:var(--grey);
+  text-transform:uppercase;letter-spacing:.5px}
+.coact-badge{font-size:.85em;font-weight:700;transition:color .4s}
+.coact-track{height:8px;background:var(--stone);border-radius:4px;overflow:hidden}
+.coact-fill{height:100%;border-radius:4px;
+  transition:width .5s cubic-bezier(.4,0,.2,1),background .5s}
 
-        /* FOOTER */
-        .footer-note {
-            width: 100%;
-            max-width: 1000px;
-            text-align: center;
-            font-size: 11px;
-            color: var(--grey);
-            padding: 24px 4px 8px;
-            line-height: 1.7;
-        }
-        .footer-note strong { color: var(--forest); font-weight: 700; }
-    </style>
+/* ── RIGHT: FEEDBACK ── */
+.right-panel{background:var(--accent-bg);border-radius:10px;
+  box-shadow:0 4px 6px rgba(0,0,0,.07);padding:14px;
+  display:flex;flex-direction:column;gap:8px}
+
+.state-bar{height:3px;width:100%;border-radius:2px;
+  transition:background .4s;background:var(--cool-grey);margin-bottom:2px}
+.state-bar.good{background:var(--green)}
+.state-bar.moderate{background:var(--gold)}
+.state-bar.high{background:var(--terra)}
+
+.fb-block{background:#fff;border:1px solid var(--stone);border-radius:8px;
+  padding:10px 12px}
+.fb-title{font-weight:700;font-size:.7em;color:var(--forest);
+  text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.fb-text{font-size:.78em;color:var(--grey);line-height:1.65}
+
+/* ── DISCLAIMER ── */
+.disclaimer{max-width:1180px;width:100%;text-align:center;font-size:.70em;
+  color:var(--cool-grey);line-height:1.55;margin:12px auto 6px;padding:0 12px}
+
+@media(max-width:820px){
+  .three-col{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
 
-    <div class="brand-bar">
-        <a href="https://www.secondarrow.net" target="_blank">Second Arrow Counseling</a>
-    </div>
-    <div class="disclaimer">
-        Clinical education tool.<br>Not for diagnostic use.
-    </div>
+<div class="brand-bar">
+  <a href="https://www.secondarrow.net" target="_blank" rel="noopener">Second Arrow Counseling</a>
+</div>
 
-    <div class="wrap">
-        <div class="hdr">
-            <h1>Network Co-activation Simulator</h1>
-            <p class="subtitle">
-                Visualize the relationship between the Default Mode Network (internal focus)
-                and the Task Positive Network (external focus) across neurological profiles.
-                Observe how co-activation — not just activation — drives metabolic cost.
-            </p>
-        </div>
+<div class="header">
+  <h2>Network Co-activation Simulator</h2>
+  <p>Visualize the relationship between the Default Mode Network (internal) and the Task Positive Network (external) across neurological profiles. Observe how co-activation — not just activation — drives metabolic cost.</p>
+</div>
 
-        <div class="card-body">
-            <div class="controls">
-                <div class="control-group">
-                    <label for="profile-select">Neurological Profile</label>
-                    <select id="profile-select">
-                        <option value="neurotypical">Neurotypical — The Seesaw</option>
-                        <option value="adhd">ADHD — The Tug-of-War</option>
-                        <option value="autism">Autism — The Weighted Scale</option>
-                        <option value="audhd">AuDHD — The Overloaded Circuit</option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label for="demand-slider">External Task Demand</label>
-                    <div class="slider-row">
-                        <input type="range" id="demand-slider" min="0" max="100" value="0">
-                        <div class="slider-value">
-                            <div class="demand-pct" id="demand-pct">0%</div>
-                            <div class="demand-label-text" id="demand-label">Resting</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="three-col">
 
-            <div id="profile-info">
-                <div class="profile-name" id="profile-name-display">Neurotypical</div>
-                <div id="profile-desc">Robust anti-correlation between DMN and TPN. At rest, the DMN is active for internal processing and self-referential thought. As external demand increases, the DMN suppresses cleanly and efficiently, allowing the TPN to take over. This is the textbook "seesaw" model.</div>
-            </div>
-
-            <div class="gauges">
-                <div class="gauge-container">
-                    <div class="bar-bg"><div id="dmn-fill" class="bar-fill"></div></div>
-                    <div class="gauge-label dmn">DMN</div>
-                    <div class="gauge-subtext">Default Mode Network<br>Internal / Self-Referential</div>
-                    <div id="dmn-value" class="gauge-value" style="color: var(--dmn-color);">90%</div>
-                </div>
-                <div class="gauge-container">
-                    <div class="bar-bg"><div id="tpn-fill" class="bar-fill"></div></div>
-                    <div class="gauge-label tpn">TPN</div>
-                    <div class="gauge-subtext">Task Positive Network<br>External Focus / Execution</div>
-                    <div id="tpn-value" class="gauge-value" style="color: var(--tpn-color);">10%</div>
-                </div>
-            </div>
-
-            <div class="coact-section">
-                <div class="coact-header">
-                    <span class="coact-title">Co-activation Tension</span>
-                    <span class="coact-value-label" id="coact-label">Minimal</span>
-                </div>
-                <div class="coact-track">
-                    <div class="coact-fill" id="coact-fill" style="width: 10%; background: var(--good);"></div>
-                </div>
-            </div>
-
-            <div id="feedback-panel" class="state-good">
-                <div class="feedback-item">
-                    <span class="feedback-title">Internal Experience:</span>
-                    <span id="experience-text">Resting state. The DMN is active for daydreaming, rumination, and self-referential processing. The system is at baseline.</span>
-                </div>
-                <div class="feedback-item">
-                    <span class="feedback-title">Metabolic Cost:</span>
-                    <span id="cost-text">Low — Baseline maintenance only.</span>
-                </div>
-                <div class="feedback-item" id="clinical-note-item" style="display: none;">
-                    <span class="feedback-title">Clinical Note:</span>
-                    <span id="clinical-note-text"></span>
-                </div>
-            </div>
-        </div>
+  <!-- ── LEFT: CONTROLS ── -->
+  <div class="panel">
+    <p class="sect-lbl">Neurological Profile</p>
+    <div class="profile-grid">
+      <button class="pbtn act-nt" data-p="neurotypical">Neurotypical<span class="sub">The Seesaw</span></button>
+      <button class="pbtn" data-p="adhd">ADHD<span class="sub">Tug-of-War</span></button>
+      <button class="pbtn" data-p="autism">Autism<span class="sub">Weighted Scale</span></button>
+      <button class="pbtn" data-p="audhd">AuDHD<span class="sub">Overloaded Circuit</span></button>
     </div>
 
-    <div class="footer-note">
-        <strong>Second Arrow Counseling</strong> — Erin Taylor, LCSW<br>
-        This tool is intended for educational and psychoeducational use only. It represents simplified models of complex neurological processes
-        and does not constitute clinical assessment, diagnosis, or treatment.
+    <div class="slider-block">
+      <div class="sl-hdr">
+        <span class="sl-lbl">External Task Demand</span>
+        <span class="sl-val" id="demand-pct">0%</span>
+      </div>
+      <span class="sl-sub" id="demand-label">Resting / Idle</span>
+      <input type="range" id="demand-slider" min="0" max="100" value="0">
     </div>
+
+    <div class="profile-card">
+      <div class="pc-name" id="profile-name-display">Neurotypical</div>
+      <div class="pc-desc" id="profile-desc">Robust anti-correlation between DMN and TPN. As external demand increases, the DMN suppresses cleanly and efficiently, allowing the TPN to take over. The textbook "seesaw" — one goes up, the other comes down.</div>
+    </div>
+  </div>
+
+  <!-- ── CENTER: VISUALIZATION ── -->
+  <div class="center-panel">
+    <p class="sect-lbl" style="align-self:flex-start;width:100%">Network Activity</p>
+    <div class="gauges-row">
+      <div class="gauge-container">
+        <div class="bar-bg"><div id="dmn-fill" class="bar-fill"></div></div>
+        <div class="gauge-label dmn">DMN</div>
+        <div class="gauge-subtext">Default Mode Network<br>Internal / Self-Referential</div>
+        <div id="dmn-value" class="gauge-value" style="color:var(--dmn-color)">90%</div>
+      </div>
+      <div class="gauge-container">
+        <div class="bar-bg"><div id="tpn-fill" class="bar-fill"></div></div>
+        <div class="gauge-label tpn">TPN</div>
+        <div class="gauge-subtext">Task Positive Network<br>External Focus / Execution</div>
+        <div id="tpn-value" class="gauge-value" style="color:var(--tpn-color)">10%</div>
+      </div>
+    </div>
+
+    <div class="coact-section">
+      <div class="coact-header">
+        <span class="coact-title">Co-activation Tension</span>
+        <span class="coact-badge" id="coact-label">Minimal</span>
+      </div>
+      <div class="coact-track">
+        <div class="coact-fill" id="coact-fill" style="width:10%;background:var(--green)"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT: FEEDBACK ── -->
+  <div class="right-panel">
+    <p class="sect-lbl">Current State</p>
+    <div class="state-bar good" id="state-bar"></div>
+
+    <div class="fb-block">
+      <div class="fb-title">Internal Experience</div>
+      <div class="fb-text" id="experience-text">Resting state. The DMN is active for daydreaming, rumination, and self-referential processing. The system is at baseline.</div>
+    </div>
+
+    <div class="fb-block">
+      <div class="fb-title">Metabolic Cost</div>
+      <div class="fb-text" id="cost-text">Low — Baseline maintenance only.</div>
+    </div>
+
+    <div class="fb-block" id="clinical-note-item" style="display:none">
+      <div class="fb-title">Clinical Note</div>
+      <div class="fb-text" id="clinical-note-text"></div>
+    </div>
+  </div>
+
+</div><!-- end .three-col -->
+
+<div class="disclaimer">
+  <strong>Second Arrow Counseling</strong> — Erin Taylor, LCSW &nbsp;|&nbsp;
+  Psychoeducational tool only. This simulator is designed for educational purposes to illustrate neurobiological concepts. It does not constitute medical advice, diagnosis, or treatment.
+</div>
 
 <script>
-    const profileSelect   = document.getElementById('profile-select');
-    const demandSlider    = document.getElementById('demand-slider');
-    const demandPct       = document.getElementById('demand-pct');
-    const demandLbl       = document.getElementById('demand-label');
-    const dmnFill         = document.getElementById('dmn-fill');
-    const tpnFill         = document.getElementById('tpn-fill');
-    const dmnValue        = document.getElementById('dmn-value');
-    const tpnValue        = document.getElementById('tpn-value');
-    const feedbackPanel   = document.getElementById('feedback-panel');
-    const experienceText  = document.getElementById('experience-text');
-    const costText        = document.getElementById('cost-text');
-    const clinicalItem    = document.getElementById('clinical-note-item');
-    const clinicalText    = document.getElementById('clinical-note-text');
-    const coactFill       = document.getElementById('coact-fill');
-    const coactLabel      = document.getElementById('coact-label');
-    const profileNameDisp = document.getElementById('profile-name-display');
-    const profileDesc     = document.getElementById('profile-desc');
+const demandSlider    = document.getElementById('demand-slider');
+const demandPct       = document.getElementById('demand-pct');
+const demandLbl       = document.getElementById('demand-label');
+const dmnFill         = document.getElementById('dmn-fill');
+const tpnFill         = document.getElementById('tpn-fill');
+const dmnValue        = document.getElementById('dmn-value');
+const tpnValue        = document.getElementById('tpn-value');
+const coactFill       = document.getElementById('coact-fill');
+const coactLabel      = document.getElementById('coact-label');
+const stateBar        = document.getElementById('state-bar');
+const experienceText  = document.getElementById('experience-text');
+const costText        = document.getElementById('cost-text');
+const clinicalItem    = document.getElementById('clinical-note-item');
+const clinicalText    = document.getElementById('clinical-note-text');
+const profileName     = document.getElementById('profile-name-display');
+const profileDesc     = document.getElementById('profile-desc');
+const pbtns           = document.querySelectorAll('.pbtn');
 
-    const PROFILES = {
-        neurotypical: {
-            name: 'Neurotypical',
-            desc: 'Robust anti-correlation between DMN and TPN. At rest, the DMN is active for internal processing. As external demand increases, the DMN suppresses cleanly, allowing the TPN to take over efficiently. This is the textbook "seesaw" — one goes up, the other comes down.',
-            dmn: d => 90 - d * 0.80,
-            tpn: d => 10 + d * 0.80,
-        },
-        adhd: {
-            name: 'ADHD — Interest-Based Nervous System',
-            desc: 'The DMN\'s "off-switch" is impaired. It remains sticky and resistant to suppression as task demand rises, so the TPN must work significantly harder while fighting against a persistently active internal narrator. This is the neurological basis of distractibility — not a willpower failure.',
-            dmn: d => 90 - d * 0.25,
-            tpn: d => 10 + d * 0.72,
-        },
-        autism: {
-            name: 'Autism — Sensory & Interoceptive Processing Load',
-            desc: 'The DMN runs at a higher baseline due to intensive sensory processing, pattern recognition, and interoception demands that continuously occupy internal bandwidth. Context-switching carries a steeper metabolic cost. DMN suppression can occur, but the transition is less smooth and requires deliberate effort.',
-            dmn: d => 92 - d * 0.46,
-            tpn: d =>  8 + d * 0.73,
-        },
-        audhd: {
-            name: 'AuDHD — Compounded Co-activation',
-            desc: 'The ADHD sticky off-switch meets the autism elevated processing load. Both internal noise (ADHD-DMN) and sensory/interoceptive burden (Autism-DMN) are present simultaneously, and neither suppresses well under demand. The system runs hot before any task begins — the origin of the "wired but tired" state.',
-            dmn: d => 94 - d * 0.18,
-            tpn: d => 10 + d * 0.66,
-        },
-    };
+let currentProfile = 'neurotypical';
 
-    const FEEDBACK = {
-        neurotypical: [
-            { maxD: 28,  state: 'good',     exp: 'Resting state. The DMN is active for daydreaming, rumination, and self-referential processing. The system is at baseline.', cost: 'Low — Baseline maintenance only.', note: null },
-            { maxD: 68,  state: 'moderate', exp: 'Transitioning. The internal narrator begins quieting as external attention engages. Mild, efficient effort.', cost: 'Moderate — Clean transition underway.', note: null },
-            { maxD: 100, state: 'good',     exp: 'Clear focus achieved. The DMN is successfully suppressed and attention is cleanly allocated to the external task.', cost: 'Moderate — Efficient energy use relative to task demand.', note: null },
-        ],
-        adhd: [
-            { maxD: 28,  state: 'good',     exp: 'Resting state — often restless. The DMN is active but may be dysregulated, producing unwanted rumination, hyperfocus on low-priority internal stimuli, or time-blindness.', cost: 'Low-Moderate — Baseline is slightly elevated.', note: null },
-            { maxD: 68,  state: 'moderate', exp: 'Friction state. Attempting to engage the task while the DMN persists. Distractibility is high. The internal narrator is not quieting.', cost: 'Moderate-High — Working against internal resistance.', note: 'This is the neurological basis of ADHD distractibility — the DMN\'s off-switch is genuinely impaired, not under voluntary control. This is not a character trait.' },
-            { maxD: 100, state: 'high',     exp: 'Network competition. The TPN is executing, but the DMN continues to broadcast simultaneously. Working while the brain plays loud background noise. Interest-based hyperfocus may temporarily resolve this in high-salience tasks.', cost: 'High — Sustained co-activation is metabolically draining.', note: 'Interest and emotional salience can trigger hyperfocus in ADHD, temporarily resolving the competition. This is why engagement and meaning so dramatically affect functioning — they change the neurological equation.' },
-        ],
-        autism: [
-            { maxD: 28,  state: 'moderate', exp: 'Resting state involves active internal work: sensory integration, pattern recognition, interoceptive monitoring. This is not "doing nothing" — it is high-bandwidth processing.', cost: 'Moderate — Elevated baseline due to continuous sensory and interoceptive demands.', note: 'For autistic individuals, "rest" often involves significant internal cognitive and sensory processing. This is why social interaction after a quiet period can still feel depleting — the baseline was never truly low.' },
-            { maxD: 68,  state: 'moderate', exp: 'Context-switching is underway but carries a higher transition cost. Suppression of the DMN occurs, but less smoothly. Processing inertia creates friction.', cost: 'Moderate-High — Steeper transition cost than neurotypical.', note: 'Autistic inertia is visible here: the cost of switching from internal processing mode to external demand is significantly higher. This is not rigidity — it is a real neurological switching cost.' },
-            { maxD: 100, state: 'high',     exp: 'Task focus is achievable, but residual sensory and interoceptive processing continues to run in the background. Performance may appear typical while internal cost is substantially higher.', cost: 'High — The gap between visible performance and actual metabolic cost is large.', note: 'This is the neurological substrate of autistic masking: external performance can look intact while internal energy expenditure is far higher. The sustained gap between performance and cost is a direct pathway to post-exertional crashes.' },
-        ],
-        audhd: [
-            { maxD: 28,  state: 'moderate', exp: 'Resting state is not genuinely restorative. The DMN is both sticky (ADHD) and heavily loaded (sensory/interoceptive). The system is "on" before any demand is applied. The floor is already elevated.', cost: 'Moderate — The system never reaches true baseline.', note: 'AuDHD clients who report never feeling truly rested are accurately describing their neurology. The neurological floor of activation is genuinely elevated at rest — this is not catastrophizing.' },
-            { maxD: 68,  state: 'high',     exp: 'Both dynamics compound: the sticky DMN won\'t suppress AND the internal processing load is heavy. The TPN is attempting to engage against high-resistance, high-load internal activity. Significant friction and fatigue.', cost: 'High — Compounded co-activation. Both problems are active simultaneously.', note: 'This is the "wired but tired" AuDHD state: trying to focus while unable to quiet internal noise AND carrying a heavy sensory load. These are not additive — they compound each other, producing exhaustion that precedes the task.' },
-            { maxD: 100, state: 'high',     exp: 'Maximum co-activation. The TPN is pushing hard for task execution while the DMN refuses to release. The system is burning from both ends. Sustained time in this state is a direct pathway to AuDHD burnout.', cost: 'Very High — Unsustainable. Both networks simultaneously competing for limited metabolic resources.', note: 'This is the neurological basis of AuDHD burnout: not laziness, not avoidance — the physical depletion of a system running at maximum co-activation. Recovery requires genuine rest and reduced demand, not simply stopping the triggering task.' },
-        ],
-    };
+const PROFILES = {
+  neurotypical: {
+    name:'Neurotypical',
+    desc:'Robust anti-correlation between DMN and TPN. As external demand increases, the DMN suppresses cleanly and efficiently, allowing the TPN to take over. The textbook "seesaw" — one goes up, the other comes down.',
+    dmn:d=>90-d*0.80, tpn:d=>10+d*0.80,
+  },
+  adhd: {
+    name:'ADHD — Interest-Based Nervous System',
+    desc:'The DMN\'s deactivation response is differently calibrated. It remains sticky and resistant to suppression as task demand rises, so the TPN must work harder while fighting against a persistently active internal narrator. This is the neurological basis of distractibility, not a willpower failure.',
+    dmn:d=>90-d*0.25, tpn:d=>10+d*0.72,
+  },
+  autism: {
+    name:'Autism — Sensory & Interoceptive Processing Load',
+    desc:'The DMN runs at a higher baseline due to intensive sensory processing, pattern recognition, and interoception demands. Context-switching carries a steeper metabolic cost. DMN suppression can occur, but the transition is less smooth and requires deliberate effort.',
+    dmn:d=>92-d*0.46, tpn:d=>8+d*0.73,
+  },
+  audhd: {
+    name:'AuDHD — Compounded Co-activation',
+    desc:'The ADHD sticky deactivation response meets the autism elevated processing load. Both internal noise and sensory/interoceptive load are present simultaneously, and neither suppresses well under demand. The system runs hot before any task begins. This is the origin of "wired but tired."',
+    dmn:d=>94-d*0.18, tpn:d=>10+d*0.66,
+  },
+};
 
-    function getFeedback(profile, demand) {
-        for (const tier of FEEDBACK[profile]) {
-            if (demand <= tier.maxD) return tier;
-        }
-        return FEEDBACK[profile].at(-1);
-    }
+const FEEDBACK = {
+  neurotypical:[
+    {maxD:28, state:'good',     exp:'Resting state. The DMN is active for daydreaming, rumination, and self-referential processing. The system is at baseline.', cost:'Low — Baseline maintenance only.', note:null},
+    {maxD:68, state:'moderate', exp:'Transitioning. The internal narrator begins quieting as external attention engages. Mild, efficient effort.', cost:'Moderate — Clean transition underway.', note:null},
+    {maxD:100,state:'good',     exp:'Clear focus achieved. The DMN is successfully suppressed and attention is cleanly allocated to the external task.', cost:'Moderate — Efficient energy use relative to task demand.', note:null},
+  ],
+  adhd:[
+    {maxD:28, state:'good',     exp:'Resting state — often restless. The DMN may produce ongoing rumination, hyperfocus on internally-prioritized stimuli, or time-blindness.', cost:'Low-Moderate — Baseline is slightly elevated.', note:null},
+    {maxD:68, state:'moderate', exp:'Friction state. Attempting to engage the task while the DMN persists. Distractibility is high. The internal narrator is not quieting.', cost:'Moderate-High — Working against internal resistance.', note:'This is the neurological basis of ADHD distractibility. The DMN holds its activation under demand, persisting well into task-focused states. This is not a character trait.'},
+    {maxD:100,state:'high',     exp:'Network competition. The TPN is executing, but the DMN continues to broadcast simultaneously — working while the brain plays loud background noise. High-interest tasks may temporarily resolve this.', cost:'High — Sustained co-activation is metabolically draining.', note:'Interest and emotional salience can trigger hyperfocus in ADHD, temporarily resolving the competition. This is why engagement and meaning so dramatically affect daily experience. They change the neurological equation.'},
+  ],
+  autism:[
+    {maxD:28, state:'moderate', exp:'Resting state involves active internal work: sensory integration, pattern recognition, interoceptive monitoring. This is not "doing nothing" — it is high-bandwidth processing.', cost:'Moderate — Elevated baseline due to continuous sensory and interoceptive demands.', note:'For autistic individuals, "rest" often involves significant internal processing. This is why social interaction after a quiet period can still feel depleting — the baseline was never truly low.'},
+    {maxD:68, state:'moderate', exp:'Context-switching is underway but carries a higher transition cost. DMN suppression occurs, but less smoothly. Processing inertia creates friction.', cost:'Moderate-High — Steeper transition cost than neurotypical.', note:'Autistic inertia is visible here: the cost of switching from internal processing mode to external demand is significantly higher. This is not rigidity — it is a real neurological switching cost.'},
+    {maxD:100,state:'high',     exp:'Task focus is achievable, but residual sensory and interoceptive processing continues to run in the background. Performance may appear externally indistinguishable while internal cost is substantially higher.', cost:'High — The gap between visible performance and actual metabolic cost is large.', note:'This is the neurological substrate of autistic masking: external performance can look intact while internal energy expenditure is far higher. The sustained gap between performance and cost is a direct pathway to post-exertional crashes.'},
+  ],
+  audhd:[
+    {maxD:28, state:'moderate', exp:'Resting state is not genuinely restorative. The DMN is both sticky (ADHD) and heavily loaded (sensory/interoceptive). The system is "on" before any demand is applied. The floor is already elevated.', cost:'Moderate — The system never reaches true baseline.', note:'AuDHD clients who report never feeling truly rested are accurately describing their neurology. The neurological floor of activation is genuinely elevated at rest — this is not catastrophizing.'},
+    {maxD:68, state:'high',     exp:'Both dynamics compound: the sticky DMN won\'t suppress AND the internal processing load is heavy. The TPN is attempting to engage against high-resistance, high-load internal activity. Significant friction and fatigue.', cost:'High — Compounded co-activation. Both problems are active simultaneously.', note:'This is the "wired but tired" AuDHD state: trying to focus while unable to quiet internal noise AND carrying a heavy sensory load. These are not additive — they compound each other, producing exhaustion that precedes the task.'},
+    {maxD:100,state:'high',     exp:'Maximum co-activation. The TPN is pushing hard for task execution while the DMN refuses to release. The system is burning from both ends. Sustained time in this state is a direct pathway to AuDHD burnout.', cost:'Very High — Unsustainable. Both networks simultaneously competing for limited metabolic resources.', note:'This is the neurological basis of AuDHD burnout: not laziness, not avoidance — the physical depletion of a system running at maximum co-activation. Recovery requires genuine rest and reduced demand.'},
+  ],
+};
 
-    function update() {
-        const profile = profileSelect.value;
-        const demand  = parseInt(demandSlider.value, 10);
+function getFeedback(profile,demand){
+  for(const t of FEEDBACK[profile]) if(demand<=t.maxD) return t;
+  return FEEDBACK[profile].at(-1);
+}
 
-        demandSlider.style.setProperty('--pct', demand + '%');
+function update(){
+  const demand = parseInt(demandSlider.value,10);
+  demandSlider.style.setProperty('--pct',demand+'%');
+  demandPct.textContent = demand+'%';
+  demandLbl.textContent = demand<20?'Resting / Idle':demand<50?'Light Task':demand<80?'Moderate Task':'High Demand';
 
-        demandPct.textContent = demand + '%';
-        demandLbl.textContent = demand < 20 ? 'Resting' : demand < 50 ? 'Light Task' : demand < 80 ? 'Moderate Task' : 'High Demand';
+  const p = PROFILES[currentProfile];
+  const dmnLevel = Math.max(5,Math.min(100,p.dmn(demand)));
+  const tpnLevel = Math.max(5,Math.min(100,p.tpn(demand)));
 
-        const p = PROFILES[profile];
-        const dmnLevel = Math.max(5, Math.min(100, p.dmn(demand)));
-        const tpnLevel = Math.max(5, Math.min(100, p.tpn(demand)));
+  dmnFill.style.height = dmnLevel+'%';
+  tpnFill.style.height = tpnLevel+'%';
+  dmnValue.textContent = Math.round(dmnLevel)+'%';
+  tpnValue.textContent = Math.round(tpnLevel)+'%';
 
-        dmnFill.style.height = dmnLevel + '%';
-        tpnFill.style.height = tpnLevel + '%';
-        dmnValue.textContent = Math.round(dmnLevel) + '%';
-        tpnValue.textContent = Math.round(tpnLevel) + '%';
+  profileName.textContent = p.name;
+  profileDesc.textContent = p.desc;
 
-        profileNameDisp.textContent = p.name;
-        profileDesc.textContent     = p.desc;
+  const coact = Math.round(Math.min(dmnLevel,tpnLevel));
+  coactFill.style.width = coact+'%';
+  let cc, ct;
+  if(coact<25){cc='var(--green)'; ct='Minimal';}
+  else if(coact<45){cc='var(--gold)'; ct='Moderate';}
+  else if(coact<65){cc='var(--terra)'; ct='High';}
+  else{cc='#8b4a3a'; ct='Severe';}
+  coactFill.style.background = cc;
+  coactLabel.textContent = ct;
+  coactLabel.style.color = cc;
 
-        const coact = Math.round(Math.min(dmnLevel, tpnLevel));
-        coactFill.style.width = coact + '%';
+  const fb = getFeedback(currentProfile,demand);
+  stateBar.className = 'state-bar '+fb.state;
+  experienceText.textContent = fb.exp;
+  costText.textContent = fb.cost;
+  if(fb.note){
+    clinicalItem.style.display='block';
+    clinicalText.textContent=fb.note;
+  } else {
+    clinicalItem.style.display='none';
+  }
+}
 
-        let coactColor, coactText;
-        if      (coact < 25) { coactColor = 'var(--good)';   coactText = 'Minimal';  }
-        else if (coact < 45) { coactColor = 'var(--warn)';   coactText = 'Moderate'; }
-        else if (coact < 65) { coactColor = 'var(--terra)';  coactText = 'High';     }
-        else                 { coactColor = 'var(--bad)';    coactText = 'Severe';   }
-
-        coactFill.style.background    = coactColor;
-        coactLabel.textContent        = coactText;
-        coactLabel.style.color        = coactColor;
-
-        const fb = getFeedback(profile, demand);
-        feedbackPanel.className      = 'state-' + fb.state;
-        experienceText.textContent   = fb.exp;
-        costText.textContent         = fb.cost;
-
-        if (fb.note) {
-            clinicalItem.style.display  = 'block';
-            clinicalText.textContent    = fb.note;
-        } else {
-            clinicalItem.style.display  = 'none';
-        }
-    }
-
-    profileSelect.addEventListener('change', update);
-    demandSlider.addEventListener('input',   update);
+// Profile button handling
+pbtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    pbtns.forEach(b=>b.className='pbtn');
+    const p = btn.dataset.p;
+    const classMap={neurotypical:'act-nt',adhd:'act-adhd',autism:'act-autism',audhd:'act-audhd'};
+    btn.classList.add(classMap[p]);
+    currentProfile = p;
     update();
-</script>
+  });
+});
 
+demandSlider.addEventListener('input',update);
+update();
+</script>
 </body>
 </html>
