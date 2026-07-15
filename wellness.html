@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health & Wellness Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Macro Layout using CSS Grid -->
+  <div class="dashboard-container">
+    
+    <aside class="sidebar">
+      <h2>Wellness App</h2>
+      <!-- Micro Layout using Flexbox -->
+      <nav class="nav-menu">
+        <a href="#">Overview</a>
+        <a href="#">Activity Log</a>
+        <a href="#">Nutrition</a>
+        <a href="#">Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <h1>Today's Overview</h1>
+        <input type="date" id="date-picker"> <!-- HTML5 Date Input -->
+      </header>
+
+      <!-- Dashboard Widgets using CSS Grid -->
+      <section class="widget-grid">
+        
+        <!-- Water Tracker Widget -->
+        <article class="card">
+          <h3>Hydration Tracker</h3>
+          <p>Goal: 8 Glasses</p>
+          <div class="hydration-control">
+            <input type="number" id="water-input" min="1" max="8" value="1" placeholder="Glasses">
+            <button id="add-water-btn">Log Water</button>
+          </div>
+          <p id="water-status">Glasses logged today: 0</p>
+        </article>
+
+        <!-- Activity Widget -->
+        <article class="card">
+          <h3>Daily Activity</h3>
+          <p>Steps: 5,432 / 10,000</p>
+          <progress value="5432" max="10000"></progress>
+        </article>
+
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
+
+
+/* styles.css */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  background-color: #f4f7f6;
+}
+
+/* Page-level layout using Grid */
+.dashboard-container {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  background-color: #2c3e50;
+  color: white;
+  padding: 20px;
+}
+
+/* Component-level layout using Flexbox */
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Adds space between flex items */
+  margin-top: 30px;
+}
+
+.nav-menu a {
+  color: white;
+  text-decoration: none;
+}
+
+.main-content {
+  padding: 30px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+/* Widget grid using auto-fill for responsiveness without media queries */
+.widget-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hydration-control {
+  display: flex;
+  gap: 10px;
+}
+```
+
+// app.js
+// 1. Select the elements from the DOM
+const addWaterBtn = document.getElementById('add-water-btn');
+const waterInput = document.getElementById('water-input');
+const waterStatus = document.getElementById('water-status');
+
+// State variable to track total water
+let totalGlasses = 0;
+
+// 2. Add an event listener to handle the click event
+addWaterBtn.addEventListener('click', function() {
+  // Get the value from the input field
+  const glassesToAdd = parseInt(waterInput.value);
+
+  // Validate the input and update the total
+  if (glassesToAdd > 0) {
+    totalGlasses += glassesToAdd;
+    
+    // 3. Update the DOM dynamically
+    waterStatus.textContent = `Glasses logged today: ${totalGlasses}`;
+    
+    // Provide a simple alert if the goal is met
+    if (totalGlasses >= 8) {
+      alert("Congratulations! You've met your hydration goal for today!");
+    }
+  }
+});
