@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Understanding Your Nervous System — Second Arrow Counseling</title>
+  <title>Understanding Your Nervous System | Second Arrow Counseling</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:opsz,wght@6..12,300;6..12,400;6..12,600;6..12,700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --green: #45735d;
-      --gold: #ba945e;
-      --terra: #b68d76;
-      --forest: #35361c;
-      --text: #222a26;
-      --grey: #6d7873;
-      --bg: #faf8f5;
-      --accent-bg: #F5F3EF;
-      --stone: #bdb7a2;
-      --cool-grey: #a6aea6;
+      --green:      #45735d;
+      --gold:       #ba945e;
+      --terra:      #b68d76;
+      --forest:     #35361c;
+      --text:       #222a26;
+      --grey:       #6d7873;
+      --bg:         #faf8f5;
+      --accent-bg:  #F5F3EF;
+      --stone:      #bdb7a2;
+      --cool-grey:  #a6aea6;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -27,11 +27,11 @@
       min-height: 100vh;
     }
 
-    /* TOPBAR */
+    /* ── TOPBAR ── */
     .topbar {
       display: flex;
       align-items: center;
-      padding: 12px 32px;
+      padding: 13px 36px;
       border-bottom: 1px solid var(--stone);
       background: var(--bg);
     }
@@ -42,191 +42,198 @@
       text-decoration: none;
     }
 
-    /* MAIN */
-    .main {
-      max-width: 1020px;
+    /* ── WRAP ── */
+    .wrap {
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 28px 32px 40px;
+      padding: 28px 36px 48px;
     }
 
-    /* PROGRESS */
+    /* ── PROGRESS ── */
     .progress {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       margin-bottom: 26px;
     }
     .p-dot {
       width: 7px; height: 7px;
       border-radius: 50%;
       background: var(--stone);
-      transition: all 0.35s ease;
+      transition: all 0.3s;
     }
     .p-dot.active {
       background: var(--green);
-      width: 24px;
+      width: 26px;
       border-radius: 3.5px;
     }
     .p-label {
-      font-size: 11px;
-      color: var(--cool-grey);
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
       margin-left: 8px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--cool-grey);
     }
 
-    /* LAYER HEADER */
-    .lh-eyebrow {
+    /* ── LAYER HEADER ── */
+    .eyebrow {
       font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.13em;
+      letter-spacing: 0.14em;
       color: var(--cool-grey);
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
-    .lh-title {
+    .page-title {
       font-family: 'Libre Baskerville', serif;
       font-size: 30px;
       color: var(--forest);
-      margin-bottom: 6px;
       letter-spacing: -0.01em;
+      margin-bottom: 5px;
     }
-    .lh-sub {
+    .page-sub {
       font-size: 15px;
       color: var(--grey);
-      font-weight: 300;
       font-style: italic;
-      margin-bottom: 28px;
+      font-weight: 300;
+      margin-bottom: 30px;
       line-height: 1.5;
     }
 
-    /* VISUAL GRID */
-    .visual-grid {
+    /* ── CONTENT GRID ── */
+    .content-grid {
       display: grid;
-      grid-template-columns: 1fr 230px 1fr;
-      gap: 22px;
-      align-items: center;
+      grid-template-columns: 1fr 310px;
+      gap: 26px;
+      align-items: start;
     }
 
-    /* SIGNAL COLUMNS */
-    .sig-col {
+    /* ── TEXT COLUMN ── */
+    .text-col {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-    }
-    .sig-col-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.11em;
-      color: var(--cool-grey);
-      margin-bottom: 3px;
-    }
-    .sig-ext .sig-col-label { text-align: right; }
-    .sig-int .sig-col-label { text-align: left; }
-
-    .sig-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 13px;
-      border: 1.5px solid var(--stone);
-      border-radius: 8px;
-      background: var(--accent-bg);
-      cursor: pointer;
-      font-family: 'Nunito Sans', sans-serif;
-      font-size: 13px;
-      color: var(--grey);
-      transition: all 0.2s ease;
-      white-space: nowrap;
-      width: 100%;
-    }
-    .sig-ext .sig-btn { justify-content: flex-end; }
-    .sig-btn:hover {
-      border-color: var(--green);
-      color: var(--forest);
-      background: #ecf2ee;
-    }
-    .sig-btn.lit {
-      border-color: var(--green);
-      color: var(--forest);
-      background: #ecf2ee;
-      box-shadow: 0 0 0 3px rgba(69,115,93,0.13);
-    }
-    .sig-btn .ico { font-size: 16px; flex-shrink: 0; }
-
-    /* SVG */
-    .diagram-wrap { position: relative; width: 230px; }
-    #diag { width: 100%; height: auto; overflow: visible; }
-
-    /* NTS idle pulse */
-    .nts-ring {
-      transform-box: fill-box;
-      transform-origin: center;
-      animation: ring-idle 3.5s ease-in-out infinite;
-    }
-    @keyframes ring-idle {
-      0%, 100% { opacity: 0.2; transform: scale(1); }
-      50%       { opacity: 0.55; transform: scale(1.4); }
+      gap: 13px;
     }
 
-    /* Scan sweep */
-    .scan-sweep {
-      animation: sweep 4s ease-in-out infinite;
-    }
-    @keyframes sweep {
-      0%   { transform: translateY(80px); opacity: 0; }
-      20%  { opacity: 1; }
-      80%  { opacity: 1; }
-      100% { transform: translateY(-10px); opacity: 0; }
-    }
-
-    /* READOUT */
-    .readout {
-      margin-top: 18px;
+    .section-card {
       background: var(--accent-bg);
       border: 1px solid var(--stone);
-      border-left: 3px solid var(--green);
-      border-radius: 9px;
-      padding: 13px 18px;
-      min-height: 62px;
-      transition: all 0.25s ease;
+      border-radius: 12px;
+      padding: 18px 22px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.08);
     }
-    .readout-name {
-      font-size: 11px;
+
+    .section-num {
+      font-size: 9px;
       text-transform: uppercase;
-      letter-spacing: 0.09em;
-      color: var(--green);
+      letter-spacing: 0.14em;
+      color: var(--cool-grey);
       margin-bottom: 4px;
-      font-weight: 700;
     }
-    .readout-text {
+
+    .section-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 15.5px;
+      color: var(--forest);
+      margin-bottom: 9px;
+    }
+
+    .section-body {
       font-size: 13.5px;
       color: var(--grey);
-      line-height: 1.55;
+      line-height: 1.75;
+    }
+    .section-body strong {
+      color: var(--text);
+      font-weight: 700;
     }
 
-    /* GROUNDING */
+    .nd-callout {
+      margin-top: 12px;
+      border-left: 3px solid var(--gold);
+      padding: 10px 14px;
+      background: rgba(186,148,94,0.09);
+      border-radius: 0 8px 8px 0;
+    }
+    .nd-callout p {
+      font-size: 13.5px;
+      color: var(--grey);
+      line-height: 1.7;
+    }
+    .nd-callout strong { color: var(--text); }
+
+    /* ── DIAGRAM COLUMN ── */
+    .diag-col {
+      position: sticky;
+      top: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .diag-frame {
+      width: 100%;
+      border: 1px solid var(--stone);
+      border-radius: 14px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+      overflow: hidden;
+      position: relative;
+      background: white;
+    }
+
+    #diag-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* SVG overlaid on image */
+    #overlay-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* Legend */
+    .legend {
+      width: 100%;
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--cool-grey);
+    }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .legend-dot  { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── GROUNDING ── */
     .grounding {
-      margin-top: 13px;
+      margin-top: 22px;
       background: var(--accent-bg);
       border: 1px solid var(--stone);
-      border-radius: 9px;
-      padding: 14px 22px;
+      border-radius: 10px;
+      padding: 15px 24px;
       text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.08);
     }
     .grounding p {
       font-size: 14px;
       color: var(--grey);
       font-style: italic;
+      line-height: 1.65;
     }
 
-    /* NAV */
+    /* ── NAV ── */
     .nav-row {
       display: flex;
       justify-content: flex-end;
       margin-top: 20px;
     }
     .btn-next {
-      padding: 10px 24px;
+      padding: 11px 26px;
       background: var(--green);
       color: white;
       border: none;
@@ -239,27 +246,26 @@
       transition: background 0.2s;
     }
     .btn-next:hover { background: var(--forest); }
-    .btn-next:disabled { background: var(--stone); cursor: default; }
 
-    /* DISCLAIMER */
+    /* ── DISCLAIMER ── */
     .disclaimer {
-      max-width: 1020px;
-      margin: 0 auto 24px;
-      padding: 0 32px;
+      max-width: 1100px;
+      margin: 6px auto 28px;
+      padding: 0 36px;
       font-size: 11px;
       color: var(--cool-grey);
-      line-height: 1.65;
       text-align: center;
+      line-height: 1.7;
     }
   </style>
 </head>
 <body>
 
-<header class="topbar">
+<div class="topbar">
   <a href="https://secondarrow.net">Second Arrow Counseling</a>
-</header>
+</div>
 
-<div class="main">
+<div class="wrap">
 
   <div class="progress">
     <span class="p-dot active"></span>
@@ -270,232 +276,267 @@
     <span class="p-label">Layer 1 of 5</span>
   </div>
 
-  <p class="lh-eyebrow">Layer 1</p>
-  <h1 class="lh-title">The Scanner</h1>
-  <p class="lh-sub">Your nervous system is always reading the room - and your body.</p>
+  <p class="eyebrow">Layer 1</p>
+  <h1 class="page-title">The Scanner &amp; The Highway</h1>
+  <p class="page-sub">How your nervous system reads the world - before you do.</p>
 
-  <div class="visual-grid">
+  <div class="content-grid">
 
-    <!-- External signals -->
-    <div class="sig-col sig-ext">
-      <p class="sig-col-label">External</p>
-      <button class="sig-btn" data-sig="light"  data-idx="0" data-cat="ext"><span>Light &amp; Visual</span><span class="ico">&#9728;&#65039;</span></button>
-      <button class="sig-btn" data-sig="sound"  data-idx="1" data-cat="ext"><span>Sound</span><span class="ico">&#128266;</span></button>
-      <button class="sig-btn" data-sig="change" data-idx="2" data-cat="ext"><span>Change &amp; Surprise</span><span class="ico">&#128256;</span></button>
-      <button class="sig-btn" data-sig="social" data-idx="3" data-cat="ext"><span>Social Cues</span><span class="ico">&#128101;</span></button>
-      <button class="sig-btn" data-sig="touch"  data-idx="4" data-cat="ext"><span>Touch &amp; Texture</span><span class="ico">&#9995;</span></button>
+    <!-- ── TEXT ── -->
+    <div class="text-col">
+
+      <div class="section-card">
+        <p class="section-num">01 &middot; Neuroception</p>
+        <h2 class="section-title">The Constant Scanner</h2>
+        <p class="section-body">Your nervous system runs a continuous background process - scanning your environment and your internal organs for signals of safety or threat. This happens automatically, entirely below the level of conscious thought. Before you have the chance to interpret a tone of voice, notice a flickering light, or decide how to react, the scan is already complete. This process is called <strong>neuroception</strong>, and it never switches off.</p>
+      </div>
+
+      <div class="section-card">
+        <p class="section-num">02 &middot; Anatomy</p>
+        <h2 class="section-title">The Hardware: The Vagus Nerve</h2>
+        <p class="section-body">The main physical highway carrying all this scanned data is called the <strong>vagus nerve</strong>. It is a massive network of nerve fibers wandering from your brainstem all the way down through your heart, lungs, and gut.</p>
+      </div>
+
+      <div class="section-card">
+        <p class="section-num">03 &middot; The 80/20 Rule</p>
+        <h2 class="section-title">The Body Speaks First</h2>
+        <p class="section-body">Here is what the anatomy of that nerve shows us: roughly <strong>80% of the signals in the vagus nerve travel upward</strong> - from the body to the brain. Only about 20% travel downward. Your brain isn't commanding a passive body; it is constantly responding to a continuous flood of data coming up from your gut, your heart, and your senses.</p>
+      </div>
+
+      <div class="section-card">
+        <p class="section-num">04 &middot; NTS</p>
+        <h2 class="section-title">The Visceral Inbox</h2>
+        <p class="section-body">The brain's receiving station for all of this incoming data is the <strong>Nucleus Tractus Solitarius (NTS)</strong>. Think of it as your brain's visceral inbox.</p>
+        <div class="nd-callout">
+          <p>For neurodivergent systems - like Autism and ADHD - the scanner is highly sensitive. It picks up exponentially more sensory and environmental data, meaning this inbox is almost always <strong>overflowing</strong>.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <p class="section-num">05 &middot; Why It Matters</p>
+        <h2 class="section-title">Why "Just Calm Down" Doesn't Work</h2>
+        <p class="section-body">This anatomy explains why cognitive strategies like "think positive" or "take a deep breath" often fall flat in moments of real distress. The vagus nerve is already flooding the brain's inbox with overwhelming physical evidence that something is wrong. You cannot simply think your way past a body that is shouting.</p>
+      </div>
+
     </div>
 
-    <!-- Center diagram -->
-    <div class="diagram-wrap">
-      <svg id="diag" viewBox="0 0 200 445" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
-        <defs>
-          <clipPath id="body-clip">
-            <rect x="34" y="195" width="132" height="157" rx="18"/>
-          </clipPath>
-          <linearGradient id="sweep-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stop-color="#45735d" stop-opacity="0"/>
-            <stop offset="50%"  stop-color="#45735d" stop-opacity="0.12"/>
-            <stop offset="100%" stop-color="#45735d" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
+    <!-- ── DIAGRAM ── -->
+    <div class="diag-col">
+      <div class="diag-frame">
 
-        <!-- Brain box -->
-        <rect x="35" y="8" width="130" height="63" rx="12"
-              fill="#F5F3EF" stroke="#bdb7a2" stroke-width="1.5"/>
-        <text x="100" y="25" text-anchor="middle"
-              font-family="Nunito Sans, sans-serif"
-              font-size="8" fill="#a6aea6" letter-spacing="1.5">THE BRAIN</text>
-        <circle class="nts-ring" cx="100" cy="47" r="15"
-                fill="none" stroke="#45735d" stroke-width="1.5" opacity="0.25"/>
-        <circle id="nts-dot" cx="100" cy="47" r="7" fill="#45735d"/>
-        <text x="100" y="64" text-anchor="middle"
-              font-family="Nunito Sans, sans-serif"
-              font-size="7.5" fill="#45735d" font-weight="700">NTS &middot; Visceral Inbox</text>
+        <!-- The anatomical image -->
+        <img id="diag-img"
+             src="https://raw.githubusercontent.com/secondarrowcounseling/clinical-tools/main/diagram.png"
+             alt="Anatomical diagram showing the vagus nerve pathway from brainstem through heart, lungs, and gut">
 
-        <!-- 80% pathway -->
-        <line x1="84"  y1="71" x2="84"  y2="195" stroke="#45735d" stroke-width="2.5" stroke-linecap="round"/>
-        <line x1="116" y1="71" x2="116" y2="195" stroke="#45735d" stroke-width="2.5" stroke-linecap="round"/>
-        <polygon points="84,71  79,86  89,86"  fill="#45735d"/>
-        <polygon points="116,71 111,86 121,86" fill="#45735d"/>
-        <rect x="56" y="123" width="88" height="20" rx="4" fill="#ecf2ee"/>
-        <text x="100" y="137" text-anchor="middle"
-              font-family="Nunito Sans, sans-serif"
-              font-size="8.5" fill="#45735d" font-weight="700">80% body &#8594; brain</text>
+        <!--
+          SVG overlay: viewBox="0 0 750 1550"
+          Key coordinates mapped to image anatomy:
+            NTS (brainstem base):   (415, 308)
+            Heart:                  (420, 790)
+            Left lung (viewer):     (255, 715)
+            Right lung (viewer):    (510, 720)
+            Gut (intestines):       (375, 1220)
 
-        <!-- Body box -->
-        <rect x="34" y="195" width="132" height="157" rx="18"
-              fill="#F5F3EF" stroke="#bdb7a2" stroke-width="1.5"/>
-        <rect class="scan-sweep" x="34" y="195" width="132" height="32"
-              fill="url(#sweep-grad)" clip-path="url(#body-clip)"/>
-        <text x="100" y="280" text-anchor="middle"
-              font-family="Nunito Sans, sans-serif"
-              font-size="11" fill="#6d7873">Your Body</text>
+          Bezier paths from NTS to each organ follow the visible
+          vagus nerve bundle in the image.
+        -->
+        <svg id="overlay-svg"
+             viewBox="0 0 750 1550"
+             preserveAspectRatio="xMidYMid meet"
+             xmlns="http://www.w3.org/2000/svg">
 
-        <!-- External entry points -->
-        <circle id="ep-ext-0" cx="34" cy="224" r="4" fill="#bdb7a2" opacity="0.6"/>
-        <circle id="ep-ext-1" cx="34" cy="247" r="4" fill="#bdb7a2" opacity="0.6"/>
-        <circle id="ep-ext-2" cx="34" cy="270" r="4" fill="#bdb7a2" opacity="0.6"/>
-        <circle id="ep-ext-3" cx="34" cy="293" r="4" fill="#bdb7a2" opacity="0.6"/>
-        <circle id="ep-ext-4" cx="34" cy="316" r="4" fill="#bdb7a2" opacity="0.6"/>
+          <!-- NTS pulsing ring -->
+          <circle id="nts-ring" cx="415" cy="308" r="18"
+                  fill="none" stroke="#45735d" stroke-width="2" opacity="0.22"/>
+          <!-- NTS core dot -->
+          <circle id="nts-dot" cx="415" cy="308" r="9" fill="#45735d" opacity="0.88"/>
 
-        <!-- Internal entry points -->
-        <circle id="ep-int-0" cx="166" cy="224" r="4" fill="#ba945e" opacity="0.6"/>
-        <circle id="ep-int-1" cx="166" cy="247" r="4" fill="#ba945e" opacity="0.6"/>
-        <circle id="ep-int-2" cx="166" cy="270" r="4" fill="#ba945e" opacity="0.6"/>
-        <circle id="ep-int-3" cx="166" cy="293" r="4" fill="#ba945e" opacity="0.6"/>
-        <circle id="ep-int-4" cx="166" cy="316" r="4" fill="#ba945e" opacity="0.6"/>
+          <!-- NTS label chip -->
+          <rect x="432" y="290" width="148" height="24" rx="5"
+                fill="rgba(245,243,239,0.92)" stroke="#bdb7a2" stroke-width="1"/>
+          <text x="506" y="306" text-anchor="middle"
+                font-family="Nunito Sans, sans-serif"
+                font-size="12.5" fill="#45735d" font-weight="700">NTS · Visceral Inbox</text>
 
-        <!-- 20% pathway -->
-        <line x1="100" y1="352" x2="100" y2="418"
-              stroke="#bdb7a2" stroke-width="1.5" stroke-dasharray="4,3"/>
-        <polygon points="100,418 95,405 105,405" fill="#bdb7a2"/>
-        <rect x="56" y="376" width="88" height="20" rx="4" fill="#F5F3EF"/>
-        <text x="100" y="390" text-anchor="middle"
-              font-family="Nunito Sans, sans-serif"
-              font-size="8.5" fill="#a6aea6">20% brain &#8594; body</text>
+          <!-- Animated signal dots render here -->
+          <g id="sig-canvas"></g>
+        </svg>
 
-        <!-- Signal animation canvas -->
-        <g id="sig-canvas"></g>
-      </svg>
+      </div>
+
+      <!-- Legend -->
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#45735d"></div>
+          <span>Body &rarr; Brain (80%)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#ba945e"></div>
+          <span>Brain &rarr; Body (20%)</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Internal signals -->
-    <div class="sig-col sig-int">
-      <p class="sig-col-label">Internal</p>
-      <button class="sig-btn" data-sig="gut"     data-idx="0" data-cat="int"><span class="ico">&#128260;</span><span>Gut State</span></button>
-      <button class="sig-btn" data-sig="heart"   data-idx="1" data-cat="int"><span class="ico">&#128151;</span><span>Heart Rate</span></button>
-      <button class="sig-btn" data-sig="muscles" data-idx="2" data-cat="int"><span class="ico">&#128170;</span><span>Muscle Tension</span></button>
-      <button class="sig-btn" data-sig="energy"  data-idx="3" data-cat="int"><span class="ico">&#9889;</span><span>Energy Level</span></button>
-      <button class="sig-btn" data-sig="sensory" data-idx="4" data-cat="int"><span class="ico">&#127754;</span><span>Sensory Load</span></button>
-    </div>
-
-  </div>
-
-  <div class="readout" id="readout">
-    <p class="readout-name" id="rname">Click any signal source to explore</p>
-    <p class="readout-text" id="rtext">The scanner reads both environmental inputs and internal body data - continuously, subconsciously, before conscious thought.</p>
-  </div>
+  </div><!-- /content-grid -->
 
   <div class="grounding">
-    <p>Pause. Notice one signal your scanner is picking up right now.</p>
+    <p>Pause. Can you notice one signal your scanner is picking up right now - something from outside, and something from inside?</p>
   </div>
 
   <div class="nav-row">
-    <button class="btn-next" disabled>Next: Layer 2 &rarr;</button>
+    <button class="btn-next">Next: Layer 2 &rarr;</button>
   </div>
 
 </div>
 
-<p class="disclaimer">This tool is intended for psychoeducational purposes only. It does not constitute medical advice, diagnosis, or treatment. The information presented is a simplified representation of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.</p>
+<p class="disclaimer">This tool is intended for psychoeducational purposes within a therapeutic context and does not constitute medical advice, diagnosis, or treatment. Content reflects simplified representations of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.</p>
 
 <script>
-  const DATA = {
-    light:   { name: 'Light & Visual Environment',
-               text: 'Visual input - brightness, clutter, contrast, and motion - is constant physiological data sent upward before you consciously process any of it.' },
-    sound:   { name: 'Sound',
-               text: 'Volume, tone, rhythm, and unpredictability are all processed as real physiological data. The body registers sound before the mind interprets meaning.' },
-    change:  { name: 'Change & Unpredictability',
-               text: 'The nervous system actively scans for patterns. An unexpected shift in schedule, environment, or demand registers as a signal before any conscious thought.' },
-    social:  { name: 'Social Cues',
-               text: 'Facial expressions, tone of voice, proximity, and eye contact are continuously read as safety or threat data - below the level of thought.' },
-    touch:   { name: 'Touch & Texture',
-               text: 'Tactile input - fabric, temperature, pressure, pain - is a constant stream of physiological data feeding into the brain\'s visceral inbox.' },
-    gut:     { name: 'Gut State',
-               text: 'The enteric nervous system holds roughly 100 million neurons and sends a continuous stream of signals upward. Gut feelings are physiologically real.' },
-    heart:   { name: 'Heart Rate',
-               text: 'Heart rate and blood pressure data travel upward through the vagus nerve, giving the brain live updates on the body\'s current arousal state.' },
-    muscles: { name: 'Muscle Tension',
-               text: 'The body holds tension as physiological data. Tight shoulders, a clenched jaw, a braced core - these send ongoing signals upward to the scanner.' },
-    energy:  { name: 'Energy Level',
-               text: 'Metabolic state - available fuel, fatigue, and inflammatory signals - is detected and sent upward as a continuous read on the body\'s capacity.' },
-    sensory: { name: 'Sensory Load',
-               text: 'The cumulative weight of all incoming sensory data - the total load on the system at any moment - is tracked and reported upward in real time.' }
-  };
+  /*
+   * Vagus nerve paths in viewBox="0 0 750 1550" coordinates.
+   * Each path is a cubic bezier: [x0,y0, cx1,cy1, cx2,cy2, x1,y1]
+   * t=0 is NTS (brain end), t=1 is organ end.
+   *
+   * All paths originate at NTS (415, 308) and follow the
+   * yellow nerve bundle visible in the anatomical image.
+   */
+  const ORGANS = [
+    {
+      name:  'heart',
+      color: '#45735d',
+      // NTS down neck, slight right curve to heart center
+      pts:   [415, 308,  412, 490,  418, 640,  420, 790],
+      dur:   1150
+    },
+    {
+      name:  'leftLung',
+      color: '#45735d',
+      // NTS down neck then branches left toward left lung
+      pts:   [415, 308,  411, 460,  330, 580,  255, 715],
+      dur:   1100
+    },
+    {
+      name:  'rightLung',
+      color: '#45735d',
+      // NTS down neck then branches right
+      pts:   [415, 308,  413, 460,  490, 580,  510, 720],
+      dur:   1100
+    },
+    {
+      name:  'gut',
+      color: '#45735d',
+      // NTS all the way down through the trunk to intestines
+      pts:   [415, 308,  410, 600,  393, 940,  375, 1220],
+      dur:   1750
+    }
+  ];
 
-  const ENTRY_Y = [224, 247, 270, 293, 316];
-
-  function cubicBezier(t, p0, p1, p2, p3) {
+  function bez(t, p0, p1, p2, p3) {
     const m = 1 - t;
     return m*m*m*p0 + 3*m*m*t*p1 + 3*m*t*t*p2 + t*t*t*p3;
   }
-  function easeIO(t) { return t < 0.5 ? 2*t*t : -1 + (4-2*t)*t; }
+  function easeIO(t) {
+    return t < 0.5 ? 2*t*t : -1 + (4-2*t)*t;
+  }
+  function getPoint(organ, t) {
+    const p = organ.pts;
+    return {
+      x: bez(t, p[0], p[2], p[4], p[6]),
+      y: bez(t, p[1], p[3], p[5], p[7])
+    };
+  }
 
-  function fireSignal(cat, idx) {
-    const canvas = document.getElementById('sig-canvas');
-    const color  = cat === 'ext' ? '#45735d' : '#ba945e';
-    const startX = cat === 'ext' ? 34 : 166;
-    const startY = ENTRY_Y[idx];
-    const c1x    = cat === 'ext' ? 68 : 132;
-    const c1y    = startY - 28;
+  let active = 0;
+  const MAX_ACTIVE = 6;
+  const canvas = document.getElementById('sig-canvas');
+
+  function fireSignal(isAfferent) {
+    if (active >= MAX_ACTIVE) return;
+    active++;
+
+    const organ   = ORGANS[Math.floor(Math.random() * ORGANS.length)];
+    const color   = isAfferent ? '#45735d' : '#ba945e';
+    const r       = isAfferent ? 6 : 4.5;
+    const dur     = organ.dur * (isAfferent ? 1.0 : 1.25);
 
     const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    dot.setAttribute('r', '5');
+    dot.setAttribute('r',    r);
     dot.setAttribute('fill', color);
     canvas.appendChild(dot);
 
-    const dur = 700, t0 = performance.now();
+    const t0 = performance.now();
     function step(now) {
-      const raw = Math.min((now - t0) / dur, 1);
-      const t   = easeIO(raw);
-      const cx  = cubicBezier(t, startX, c1x, 100, 100);
-      const cy  = cubicBezier(t, startY, c1y, 155, 47);
-      dot.setAttribute('cx', cx);
-      dot.setAttribute('cy', cy);
-      dot.setAttribute('opacity', raw < 0.75 ? 0.92 : 0.92*(1-(raw-0.75)/0.25));
-      if (raw < 1) requestAnimationFrame(step);
-      else { canvas.removeChild(dot); pulseNTS(); }
+      const raw  = Math.min((now - t0) / dur, 1);
+      const ease = easeIO(raw);
+      // afferent: organ→NTS = t goes 1→0; efferent: NTS→organ = t goes 0→1
+      const param = isAfferent ? (1 - ease) : ease;
+      const pt    = getPoint(organ, param);
+
+      let opacity = 1;
+      if (raw < 0.10) opacity = raw / 0.10;
+      if (raw > 0.85) opacity = 1 - (raw - 0.85) / 0.15;
+
+      dot.setAttribute('cx',      pt.x);
+      dot.setAttribute('cy',      pt.y);
+      dot.setAttribute('opacity', opacity);
+
+      if (raw < 1) {
+        requestAnimationFrame(step);
+      } else {
+        canvas.removeChild(dot);
+        active--;
+        if (isAfferent) pulseNTS();
+      }
     }
     requestAnimationFrame(step);
   }
 
+  /* NTS pulse on each afferent arrival */
   let ntsBusy = false;
   function pulseNTS() {
     if (ntsBusy) return;
     ntsBusy = true;
     const dot = document.getElementById('nts-dot');
     let n = 0;
-    function pulse() {
-      if (n >= 3) { dot.setAttribute('r', '7'); ntsBusy = false; return; }
-      const t0 = performance.now(), dur = 280;
+    function doPulse() {
+      if (n >= 2) { dot.setAttribute('r', 9); ntsBusy = false; return; }
+      const t0  = performance.now();
+      const dur = 300;
       function s(now) {
         const p = Math.min((now-t0)/dur, 1);
-        dot.setAttribute('r', p < 0.5 ? 7+6*(p*2) : 13-6*((p-0.5)*2));
+        dot.setAttribute('r', p < 0.5 ? 9 + 7*(p*2) : 16 - 7*((p-0.5)*2));
         if (p < 1) requestAnimationFrame(s);
-        else { n++; pulse(); }
+        else { n++; doPulse(); }
       }
       requestAnimationFrame(s);
     }
-    pulse();
+    doPulse();
   }
 
-  function flashEntry(cat, idx) {
-    const ep = document.getElementById('ep-' + cat + '-' + idx);
-    if (!ep) return;
-    ep.setAttribute('r', '7');
-    ep.setAttribute('opacity', '1');
-    ep.setAttribute('fill', cat === 'ext' ? '#45735d' : '#ba945e');
+  /* NTS idle ring breathe */
+  let ringT = 0;
+  (function animRing() {
+    ringT += 0.006;
+    const s = 1 + 0.55 * (0.5 + 0.5 * Math.sin(ringT));
+    const o = 0.06 + 0.20 * (0.5 + 0.5 * Math.sin(ringT));
+    document.getElementById('nts-ring').setAttribute('r',       18 * s);
+    document.getElementById('nts-ring').setAttribute('opacity', o);
+    requestAnimationFrame(animRing);
+  })();
+
+  /* Scheduler: 80% afferent, 20% efferent */
+  function scheduleNext() {
     setTimeout(() => {
-      ep.setAttribute('r', '4');
-      ep.setAttribute('opacity', '0.6');
-    }, 500);
+      fireSignal(Math.random() < 0.80);
+      scheduleNext();
+    }, 450 + Math.random() * 900);
   }
 
-  document.querySelectorAll('.sig-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const sig = this.dataset.sig;
-      const idx = parseInt(this.dataset.idx);
-      const cat = this.dataset.cat;
-      const d   = DATA[sig];
-
-      document.getElementById('rname').textContent = d.name;
-      document.getElementById('rtext').textContent = d.text;
-      document.querySelectorAll('.sig-btn').forEach(b => b.classList.remove('lit'));
-      this.classList.add('lit');
-      flashEntry(cat, idx);
-      fireSignal(cat, idx);
-    });
-  });
+  /* Initial burst */
+  [60, 340, 700, 1100].forEach(d => setTimeout(() => fireSignal(true),  d));
+  setTimeout(() => fireSignal(false), 1600);
+  setTimeout(scheduleNext, 500);
 </script>
 </body>
 </html>
