@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polygenic Architecture - Neurodivergent Profile Builder</title>
+    <title>The Genetic Mixing Board | Second Arrow Counseling</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -217,19 +217,19 @@
 </div>
 
 <div class="header">
-    <h2>Polygenic Architecture &amp; Neurodivergent Profiles</h2>
-    <p>No single gene determines a neurodivergent profile. Hundreds of small-effect variants across multiple biological systems accumulate - shaped and amplified by environment - to cross an expression threshold.</p>
+    <h2>The Genetic Mixing Board</h2>
+    <p>There isn't just one single 'switch' that makes someone neurodivergent. Instead, think of your brain like a giant music soundboard. We all have hundreds of tiny genetic 'volume sliders.' When several sliders are turned up at the same time, and then amplified by life experiences, they combine to create your unique way of experiencing the world.</p>
 </div>
 
 <div class="main-area">
 
     <!-- LEFT: Gene Cluster Sliders -->
     <div class="cluster-panel">
-        <p class="panel-title">Gene Cluster Effects</p>
+        <p class="panel-title">Your Internal Settings (Traits &amp Sensitivities)</p>
         <div id="cluster-cards"></div>
         <div class="env-block">
             <div class="env-row">
-                <span class="env-label">&#127807; Environmental Load</span>
+                <span class="env-label">&#127807; Stress, difficult life events, or a challenging environment act like an amplifier plugged into the soundboard, turning the overall volume way up.</span>
                 <span class="env-val" id="env-val">0</span>
             </div>
             <p class="env-sub">Trauma, adversity, chronic stress — epigenetic amplifiers</p>
@@ -240,7 +240,7 @@
 
     <!-- CENTER: Canvas -->
     <div class="canvas-panel">
-        <p class="panel-title">Cumulative Load Architecture</p>
+        <p class="panel-title">The Total Mix</p>
         <canvas id="main-canvas"></canvas>
     </div>
 
@@ -249,32 +249,34 @@
         <p class="panel-title">Emerging Profile</p>
 
         <div class="profile-badge" id="profile-badge">
-            <div class="profile-name" id="profile-name">Typical Range</div>
-            <div class="profile-sub"  id="profile-sub">Genetic architecture within standard variation</div>
+            <div class="profile-name" id="profile-name">Balanced / Quiet Mix</div>
+            <div class="profile-sub"  id="profile-sub">The volume sliders are currently at a level where your brain processes things in a pretty typical, day-to-day way. You aren't experiencing overwhelming internal noise.</div>
         </div>
 
         <div class="metric-block">
             <div class="met-row">
-                <span class="met-label">Genetic Load</span>
+                <span class="met-label">Base Volume 
+		<br>(Genetic Baseline)</span>
                 <span class="met-val" id="gval" style="color:var(--green)">0</span>
             </div>
             <div class="met-track"><div class="met-fill" id="gfill" style="width:0%;background:var(--green)"></div></div>
 
             <div class="met-row">
-                <span class="met-label">Env. Load</span>
+                <span class="met-label">Life Amplifier 
+		<br>(Stress Level)</span>
                 <span class="met-val" id="eval2" style="color:var(--gold)">0</span>
             </div>
             <div class="met-track"><div class="met-fill" id="efill" style="width:0%;background:var(--gold)"></div></div>
 
             <div class="met-row">
-                <span class="met-label">Total Score</span>
+                <span class="met-label">Total Volume</span>
                 <span class="met-val" id="tval" style="color:var(--forest)">0</span>
             </div>
             <div class="met-track"><div class="met-fill" id="tfill" style="width:0%;background:var(--forest)"></div></div>
         </div>
 
         <div class="dominant-block">
-            <div class="dom-label">Dominant System</div>
+            <div class="dom-label">Strongest Theme</div>
             <div class="dom-name" id="dom-name">&#8212;</div>
             <div class="dom-desc" id="dom-desc">Adjust sliders to activate</div>
         </div>
@@ -307,28 +309,47 @@ const T_EXPR = 52;
 const T_HIGH = 70;
 
 const PROFILES = [
-    { min:0,      label:'Typical Range',
-      sub:'Genetic architecture within standard variation. Traits present but below expression threshold.',
-      main:'No threshold crossed \u2014 genetic architecture within typical variation',
-      detail:'Small-effect variants exist across all human genomes. Below this threshold, the cumulative load does not significantly alter neurocognitive profile.', col:'#45735d' },
-    { min:T_SUB,  label:'Subclinical Traits',
-      sub:'Mild processing differences. May notice sensory or attentional quirks without a full profile.',
-      main:'Subclinical load \u2014 traits present without full profile expression',
-      detail:'Some systems show elevated variant load. At this range, traits may be noticeable in high-demand environments but may not yet meet diagnostic criteria.', col:'#bdb7a2' },
-    { min:T_EMRG, label:'Emerging Profile',
-      sub:'Cumulative load approaching threshold. Multiple systems contributing to a distinct processing style.',
-      main:'Approaching expression threshold \u2014 multiple systems converging',
-      detail:'Polygenic architecture is converging across systems. This is the range where environmental factors become especially significant as amplifiers.', col:'#ba945e' },
-    { min:T_EXPR, label:'Neurodivergent Expression',
-      sub:'Threshold crossed. Cumulative variant load produces a meaningfully different cognitive and sensory profile.',
-      main:'Expression threshold crossed \u2014 neurodivergent architecture active',
-      detail:'No single gene caused this. Dozens of small-effect variants across multiple systems accumulated past threshold \u2014 the core argument against single-gene theories of neurodivergence.', col:'#b68d76' },
-    { min:T_HIGH, label:'High Load Profile',
-      sub:'Significant load across genetic and environmental systems. May present with complex or comorbid features.',
-      main:'High cumulative load \u2014 complex neurodivergent architecture',
-      detail:'When genetic and environmental amplifiers are both elevated, the resulting profile is often more complex, with potential comorbidities and heightened sensory or regulatory demands.', col:'#35361c' }
+    { 
+        min: 0,      
+        label: 'Balanced / Quiet Mix',
+        sub: 'The volume sliders are currently at a level where your brain processes things in a pretty typical, day-to-day way. You aren\'t experiencing overwhelming internal noise.',
+        main: 'The total volume is within a comfortable range. While you have unique traits, they aren\'t combining in a way that creates an overwhelming neurodivergent shift right now.',
+        detail: 'Everyone has their own unique internal settings. At this volume, your traits work quietly in the background without radically changing how you process the day-to-day world.', 
+        col: '#45735d' 
+    },
+    { 
+        min: T_SUB,  
+        label: 'The Subtle Hum',
+        sub: 'Mild processing differences. You might notice a few sensory quirks or attentional rhythms that stand out slightly from the crowd.',
+        main: 'A few sliders are turned up — specific traits are beginning to hum.',
+        detail: 'Some parts of your internal settings are turned up a bit higher than average. You might notice these unique traits showing up more clearly when you are tired, overwhelmed, or in high-demand environments.', 
+        col: '#bdb7a2' 
+    },
+    { 
+        min: T_EMRG, 
+        label: 'The Dynamic Mix',
+        sub: 'Your internal volume is stepping up. Multiple traits are starting to blend together into a noticeably unique processing style.',
+        main: 'Approaching a turning point — several traits are joining together.',
+        detail: 'Different parts of your internal soundboard are combining. This is the range where life stress or an unsupportive environment acts like an amplifier, suddenly making these traits feel much louder and more impactful.', 
+        col: '#ba945e' 
+    },
+    { 
+        min: T_EXPR, 
+        label: 'Distinct Neurodivergent Mix',
+        sub: 'The volume has crossed a point where the music changes completely. When these specific sliders are turned up high enough, your brain begins to process the world in a distinctly neurodivergent way (like ADHD or Autism). It\'s not broken, it\'s just a different acoustic mix.',
+        main: 'A distinct shifting point — your unique brain wiring is fully active.',
+        detail: 'No single gene caused this. Dozens of tiny internal settings and life experiences all combined to cross a threshold. This is beautiful proof that your brain isn\'t broken by a "glitch"—it\'s just tuned to a completely different station.', 
+        col: '#b68d76' 
+    },
+    { 
+        min: T_HIGH, 
+        label: 'Deep & Intense Mix',
+        sub: 'High volume across multiple internal settings and life stressors. You experience the world with intense depth, which can feel both powerful and deeply exhausting.',
+        main: 'Max volume — an incredibly vivid and complex way of experiencing the world.',
+        detail: 'When both your natural sensitivities and life\'s stresses are turned up all the way, the internal noise can become overwhelming. This profile often requires extra self-compassion, careful energy management, and specialized support to navigate.', 
+        col: '#35361c' 
+    }
 ];
-
 /* ── State ─────────────────────────────────────────────────────────────────── */
 let cvals        = Array(CLUSTERS.length).fill(0);
 let envLoad      = 0;
