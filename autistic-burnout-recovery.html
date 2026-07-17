@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autistic Burnout - My Recovery Path | Second Arrow Counseling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;1,6..12,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#45735d; --gold:#ba945e; --terra:#b68d76;
+  --forest:#35361c; --text:#222a26; --grey:#6d7873;
+  --bg:#faf8f5; --accent-bg:#f5f3ef; --stone:#bdb7a2; --cool-grey:#a6aea6;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:14px 12px 40px;}
+
+/* ── BRAND BAR ── */
+.brand-bar{width:100%;max-width:800px;display:flex;justify-content:flex-start;
+  align-items:center;padding:0 4px 10px;}
+.brand-bar a{font-family:'Libre Baskerville',serif;font-size:20px;color:var(--forest);
+  text-decoration:none;letter-spacing:.01em;opacity:.9;}
+.brand-bar a:hover{opacity:1;}
+
+/* ── HEADER CARD ── */
+.header{background:var(--accent-bg);padding:18px 24px;border-radius:10px;
+  box-shadow:0 3px 6px rgba(0,0,0,.07);width:100%;max-width:800px;
+  margin-bottom:16px;text-align:center;}
+.header h2{font-family:'Libre Baskerville',serif;font-size:1.35em;color:var(--forest);margin-bottom:6px;}
+.header p{color:var(--grey);font-size:.88em;line-height:1.6;max-width:720px;margin:0 auto;}
+
+/* ── CONTENT AREA ── */
+.content-area{width:100%;max-width:800px;display:flex;flex-direction:column;gap:14px;}
+
+/* ── ADAPTIVE CONFIGURATORS PANEL ── */
+.profile-panel{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.05);
+  padding:18px 22px;display:flex;flex-direction:column;gap:14px;border:1px solid rgba(0,0,0,0.02);}
+.config-row{display:flex;flex-direction:column;gap:6px;}
+.config-lbl{font-size:11px;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:0.04em;}
+.state-selectors{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+@media(max-width:500px){.state-selectors{grid-template-columns:1fr;}}
+.state-btn{background:var(--bg);border:1.5px solid var(--accent-bg);padding:10px;border-radius:6px;
+  font-family:'Nunito Sans',sans-serif;font-size:12.5px;font-weight:600;color:var(--text);cursor:pointer;
+  text-align:center;transition:all 0.15s;}
+.state-btn:hover{background:var(--accent-bg);border-color:var(--stone);}
+.state-btn.selected{color:#fff;font-weight:700;}
+#btn-state-emergency.selected{background:var(--terra);border-color:var(--terra);}
+#btn-state-low.selected{background:var(--gold);border-color:var(--gold);}
+#btn-state-stabilizing.selected{background:var(--green);border-color:var(--green);}
+
+.toggle-row{display:flex;align-items:flex-start;gap:12px;cursor:pointer;background:var(--bg);
+  padding:12px;border-radius:8px;border:1.5px solid transparent;transition:all 0.15s;user-select:none;}
+.toggle-row:hover{border-color:var(--stone);}
+.toggle-row.active{background:#fff;border-color:var(--gold);box-shadow:0 2px 6px rgba(186,148,94,0.08);}
+.toggle-row .chk{width:18px;height:18px;border-radius:4px;border:2px solid var(--stone);
+  flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.toggle-row .chk::after{content:'';width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;
+  transform:rotate(-45deg) translateY(-1px);opacity:0;}
+.toggle-row.active .chk{background:var(--gold);border-color:var(--gold);}
+.toggle-row.active .chk::after{opacity:1;}
+.toggle-text{font-size:13px;font-weight:600;color:var(--text);line-height:1.4;}
+.toggle-row.active .toggle-text{color:var(--forest);font-weight:700;}
+
+.menu-section-title{font-family:'Libre Baskerville',serif;font-size:1.15em;color:var(--forest);
+  margin:10px 0 2px;padding-left:2px;border-bottom:2px solid var(--accent-bg);padding-bottom:6px;}
+
+/* ── INTERACTIVE FOLDING ACCORDION CARDS ── */
+.action-card{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.05);
+  border-left:4px solid var(--stone);display:flex;flex-direction:column;overflow:hidden;transition:all 0.2s ease;}
+
+.card-trigger{padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;background:#fff;}
+.card-trigger:hover{background:var(--accent-bg);}
+.trigger-meta{display:flex;flex-direction:column;gap:3px;padding-right:12px;}
+.card-title{font-family:'Libre Baskerville',serif;font-size:1.05em;color:var(--forest);}
+.card-desc{font-size:13px;color:var(--grey);line-height:1.4;font-style:italic;}
+
+.chevron-icon{font-size:16px;color:var(--stone);transition:transform 0.25s ease;font-weight:bold;}
+.action-card.active .chevron-icon{transform:rotate(180deg);color:var(--forest);}
+
+/* Hidden Body Drawer */
+.card-body{display:none;padding:0 22px 20px;background:#fff;border-top:1px solid var(--accent-bg);flex-direction:column;gap:12px;}
+.action-card.active .card-body{display:flex;}
+
+.options-group{display:flex;flex-direction:column;gap:6px;margin-top:12px;}
+.option-row{display:flex;align-items:flex-start;gap:12px;background:var(--bg);
+  padding:10px 12px;border-radius:6px;cursor:pointer;border:1px solid transparent;transition:all 0.12s;}
+.option-row:hover{background:var(--accent-bg);border-color:var(--stone);}
+.option-row.checked{background:#fff;border-color:var(--green);box-shadow:0 2px 6px rgba(69,115,93,0.06);}
+
+.option-row .chk{width:16px;height:18px;border-radius:4px;border:2px solid var(--stone);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.12s;}
+.option-row .chk::after{content:'';width:8px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;
+  transform:rotate(-45deg) translateY(-1px);opacity:0;}
+.option-row.checked .chk{background:var(--green);border-color:var(--green);}
+.option-row.checked .chk::after{opacity:1;}
+.option-text{font-size:13px;color:var(--text);line-height:1.4;}
+.option-row.checked .option-text{color:var(--forest);font-weight:600;}
+
+/* Custom Text Add Fields */
+.custom-item-box{display:flex;gap:8px;margin-top:4px;background:var(--bg);padding:8px;border-radius:6px;}
+.custom-item-box input{flex-grow:1;padding:6px 10px;font-family:'Nunito Sans',sans-serif;font-size:12.5px;
+  border:1.5px solid var(--accent-bg);background:#fff;border-radius:4px;outline:none;}
+.custom-item-box input:focus{border-color:var(--stone);}
+.btn-add-item{background:var(--stone);color:#fff;border:none;border-radius:4px;padding:0 12px;font-weight:700;font-size:12.5px;cursor:pointer;}
+.btn-add-item:hover{background:var(--grey);}
+
+/* Color Coding Accordion Themes */
+.c-identify{border-left-color:var(--stone);}
+.c-retreat{border-left-color:var(--terra);}
+.c-restructure{border-left-color:var(--gold);}
+.c-reenergize{border-left-color:var(--green);}
+.c-reintegrate{border-left-color:var(--forest);}
+
+/* ── MASKING PROFILE MATRIX ── */
+.matrix-card{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.05);padding:18px 22px;display:flex;flex-direction:column;gap:12px;}
+.matrix-grid{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+.matrix-row{display:grid;grid-template-columns:130px 1fr;align-items:center;gap:12px;background:var(--bg);padding:8px 12px;border-radius:8px;}
+@media(max-width:550px){.matrix-row{grid-template-columns:1fr;gap:6px;}}
+.matrix-env{font-size:12.5px;font-weight:700;color:var(--forest);}
+.matrix-selectors{display:flex;gap:6px;}
+.matrix-btn{flex-grow:1;background:#fff;border:1.5px solid var(--stone);border-radius:4px;padding:6px 10px;
+  font-family:'Nunito Sans',sans-serif;font-size:11.5px;font-weight:600;color:var(--grey);cursor:pointer;text-align:center;transition:all 0.15s;}
+.matrix-btn:hover{background:var(--accent-bg);color:var(--text);}
+.matrix-btn.selected{background:var(--forest);color:#fff;border-color:var(--forest);font-weight:700;}
+
+/* ── DYNAMIC SUMMARY ARTIFACT PANEL ── */
+.summary-panel{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);
+  padding:22px 26px;border:1.5px dashed var(--stone);display:flex;flex-direction:column;gap:12px;margin-top:6px;}
+.summary-panel h3{font-family:'Libre Baskerville',serif;font-size:1.1em;color:var(--forest);}
+.summary-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:var(--bg);padding:12px;border-radius:8px;font-size:12.5px;}
+@media(max-width:500px){.summary-meta-grid{grid-template-columns:1fr;}}
+.meta-item span{font-weight:700;color:var(--forest);}
+.summary-list{list-style:none;display:flex;flex-direction:column;gap:8px;padding-left:2px;}
+.summary-list-item{font-size:13px;line-height:1.5;color:var(--text);position:relative;padding-left:14px;}
+.summary-list-item::before{content:'•';color:var(--green);font-weight:bold;position:absolute;left:0;top:0;}
+.empty-msg{font-size:13px;color:var(--grey);font-style:italic;}
+
+/* ── ACTION BAR ── */
+.action-bar{display:flex;justify-content:flex-end;align-items:center;margin-top:4px;}
+.btn-print{padding:10px 28px;border-radius:24px;border:none;
+  background:var(--green);color:#fff;font-family:'Nunito Sans',sans-serif;
+  font-size:13.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
+.btn-print:hover{background:var(--forest);transform:translateY(-1px);}
+
+.disclaimer{max-width:800px;width:100%;text-align:center;font-size:11px;
+  color:var(--cool-grey);line-height:1.6;margin:24px auto 0;padding:0 12px;font-style:italic;}
+
+/* ── PRINT STYLESHEET ── */
+@media print {
+  body {background:#fff !important;color:#000 !important;padding:0;margin:0;}
+  .brand-bar, .profile-panel, .options-group, .custom-item-box, .matrix-grid, .action-bar, .disclaimer {display:none !important;}
+  .header {box-shadow:none !important;border:1px solid #000 !important;background:#fff !important;padding:12px;margin-bottom:20px;}
+  .header h2 {font-size:1.4em !important;} .header p {font-size:10pt !important;color:#000 !important;}
+  .action-card, .matrix-card {display:none !important;}
+  .summary-panel {box-shadow:none !important;border:1px solid #000 !important;background:#fff !important;padding:16px !important;}
+  .summary-meta-grid {background:#f5f3ef !important;border:1px solid #ccc !important;}
+  .summary-meta-grid * {color:#000 !important;}
+  .empty-msg {color:#000 !important;} .summary-list-item {color:#000 !important;}
+  .summary-list-item::before {color:#000 !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- BRAND BAR -->
+<div class="brand-bar">
+  <a href="https://www.secondarrow.net" target="_blank" rel="noopener">Second Arrow Counseling</a>
+</div>
+
+<!-- HEADER CARD -->
+<div class="header">
+  <h2>My Recovery Path</h2>
+  <p>Autistic burnout is an environmental problem, not a personal failure. This adaptive framework helps you outline a recovery strategy built around your real-world constraints. Adjust your profile values below, expand each stage to select relevant micro-adjustments, or input your own ideas to build a session summary.</p>
+</div>
+
+<!-- CONTENT AREA -->
+<div class="content-area">
+
+  <!-- PROFILE SELECTION PANEL -->
+  <div class="profile-panel">
+    <div class="config-row">
+      <span class="config-lbl">1. Select Current Capacity State</span>
+      <div class="state-selectors">
+        <button class="state-btn" id="btn-state-emergency" onclick="setProfileState('emergency')">Emergency Mode</button>
+        <button class="state-btn" id="btn-state-low" onclick="setProfileState('low')">Low Capacity</button>
+        <button class="state-btn" id="btn-state-stabilizing" onclick="setProfileState('stabilizing')">Stabilizing Mode</button>
+      </div>
+    </div>
+    <div class="config-row" style="margin-top: 4px;">
+      <span class="config-lbl">2. Structural Realities</span>
+      <div class="toggle-row" id="barrier-toggle" onclick="toggleBarrier()">
+        <div class="chk"></div>
+        <span class="toggle-text">I face situational or financial limitations that prevent me from entirely leaving or changing my current environment.</span>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="menu-section-title" id="menu-headline">Adaptive Protocol Options</h3>
+
+  <!-- STAGE 1: IDENTIFY -->
+  <div class="action-card c-identify" id="card-identify">
+    <div class="card-trigger" onclick="toggleCard('identify')">
+      <div class="trigger-meta">
+        <h4 class="card-title">Stage 1: Identify Demand Triggers</h4>
+        <p class="card-desc">Where are the specific environmental sources that are overdrawing your current capacity limits?</p>
+      </div>
+      <span class="chevron-icon" id="chev-identify">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <div class="options-group" id="opts-identify"></div>
+      <div class="custom-item-box">
+        <input type="text" id="add-identify" placeholder="Add your own inquiry or idea...">
+        <button class="btn-add-item" onclick="addCustomRow('identify')">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 2: RETREAT -->
+  <div class="action-card c-retreat" id="card-retreat">
+    <div class="card-trigger" onclick="toggleCard('retreat')">
+      <div class="trigger-meta">
+        <h4 class="card-title">Stage 2: Strategic Retreat</h4>
+        <p class="card-desc">How can you reduce your processing load immediately to preserve baseline safety reserves?</p>
+      </div>
+      <span class="chevron-icon" id="chev-retreat">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <div class="options-group" id="opts-retreat"></div>
+      <div class="custom-item-box">
+        <input type="text" id="add-retreat" placeholder="Add your own inquiry or idea...">
+        <button class="btn-add-item" onclick="addCustomRow('retreat')">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 3: RESTRUCTURE -->
+  <div class="action-card c-restructure" id="card-restructure">
+    <div class="card-trigger" onclick="toggleCard('restructure')">
+      <div class="trigger-meta">
+        <h4 class="card-title">Stage 3: Environmental Modification</h4>
+        <p class="card-desc">What micro-modifications or boundary conditions can prevent returning to the elements that caused the crash?</p>
+      </div>
+      <span class="chevron-icon" id="chev-restructure">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <div class="options-group" id="opts-restructure"></div>
+      <div class="custom-item-box">
+        <input type="text" id="add-restructure" placeholder="Add your own inquiry or idea...">
+        <button class="btn-add-item" onclick="addCustomRow('restructure')">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 4: RE-ENERGIZE -->
+  <div class="action-card c-reenergize" id="card-reenergize">
+    <div class="card-trigger" onclick="toggleCard('reenergize')">
+      <div class="trigger-meta">
+        <h4 class="card-title">Stage 4: System Re-energizing</h4>
+        <p class="card-desc">What small, restorative experiences can you predictably introduce to build back system reserves?</p>
+      </div>
+      <span class="chevron-icon" id="chev-reenergize">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <div class="options-group" id="opts-reenergize"></div>
+      <div class="custom-item-box">
+        <input type="text" id="add-reenergize" placeholder="Add your own inquiry or idea...">
+        <button class="btn-add-item" onclick="addCustomRow('reenergize')">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 5: REINTEGRATE -->
+  <div class="action-card c-reintegrate" id="card-reintegrate">
+    <div class="card-trigger" onclick="toggleCard('reintegrate')">
+      <div class="trigger-meta">
+        <h4 class="card-title">Stage 5: Gradual Reintegration</h4>
+        <p class="card-desc">How can you phase return load slowly while maintaining safety exits for processing relapse?</p>
+      </div>
+      <span class="chevron-icon" id="chev-reintegrate">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <div class="options-group" id="opts-reintegrate"></div>
+      <div class="custom-item-box">
+        <input type="text" id="add-reintegrate" placeholder="Add your own inquiry or idea...">
+        <button class="btn-add-item" onclick="addCustomRow('reintegrate')">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOCIAL MASKING PROFILE MATRIX CARD -->
+  <div class="matrix-card" id="card-matrix">
+    <h4 class="card-title">Social Masking Allocation Plan</h4>
+    <p class="card-desc">Camouflaging requires significant effort and energy. Set tactical parameters for safety moderation per environment.</p>
+    <div class="matrix-grid">
+      <div class="matrix-row">
+        <span class="matrix-env">Domestic / Home:</span>
+        <div class="matrix-selectors">
+          <button class="matrix-btn" id="m-home-off" onclick="setMatrix('home', 'off')">Drop Mask Safely</button>
+          <button class="matrix-btn" id="m-home-mod" onclick="setMatrix('home', 'mod')">Mask in Moderation</button>
+        </div>
+      </div>
+      <div class="matrix-row">
+        <span class="matrix-env">Work / School:</span>
+        <div class="matrix-selectors">
+          <button class="matrix-btn" id="m-prof-mod" onclick="setMatrix('prof', 'mod')">Mask for Safety</button>
+          <button class="matrix-btn" id="m-prof-off" onclick="setMatrix('prof', 'off')">Prioritize Authenticity</button>
+        </div>
+      </div>
+      <div class="matrix-row">
+        <span class="matrix-env">Public Spaces:</span>
+        <div class="matrix-selectors">
+          <button class="matrix-btn" id="m-pub-safe" onclick="setMatrix('pub', 'safe')">Full Safety Mode</button>
+          <button class="matrix-btn" id="m-pub-mod" onclick="setMatrix('pub', 'mod')">Mask in Moderation</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DYNAMIC SUMMARY ARTIFACT PANEL -->
+  <div class="summary-panel">
+    <h3>My Active Recovery Plan</h3>
+    <div class="summary-meta-grid">
+      <div class="meta-item">Current State: <span id="sum-state">Unselected</span></div>
+      <div class="meta-item">Environmental Profile: <span id="sum-barrier">Standard Setup</span></div>
+      <div class="meta-item" style="grid-column: span 2; margin-top: 4px; padding-top: 4px; border-top: 1px dashed rgba(0,0,0,0.06);">
+        Masking Boundaries: Home (<span id="sum-m-home">...</span>) • Professional (<span id="sum-m-prof">...</span>) • Public (<span id="sum-m-pub">...</span>)
+      </div>
+    </div>
+    <ul class="summary-list" id="summary-actions-list">
+      <li class="empty-msg" id="sum-empty-text">No items selected yet. Expand the sections above to customize your current active focus indicators.</li>
+    </ul>
+  </div>
+
+  <!-- ACTION BAR -->
+  <div class="action-bar">
+    <button class="btn-print" onclick="window.print()">Print Recovery Plan</button>
+  </div>
+
+</div><!-- /content-area -->
+
+<p class="disclaimer">This adaptive template planner is engineered strictly for psychoeducational baseline sorting and tracking within an affirming context. It does not generate medical parameters or objective diagnostic scores. Developed by Second Arrow Counseling.</p>
+
+<script>
+const PACK_STANDARD = {
+  identify: [
+    "Can I list my primary high-demand life obligations across work, schedules, or household duties?",
+    "Am I able to identify the exact sensory conditions that consistently tip me into operational overload?",
+    "Where am I automatically introducing social compensation efforts that drain my communication loops?"
+  ],
+  retreat: [
+    "Is a formal medical leave of absence or sick leave protocol accessible for my current role?",
+    "Can I temporarily step away from non-essential social expectations and optional group tasks?",
+    "Am I building regular windows to sit entirely undisturbed inside a low-stimulus, quiet room?",
+    "Have I told my primary circle that stepping away is a medical necessity and completely non-personal?"
+  ],
+  restructure: [
+    "What steps can I take to permanently exit or reduce the specific environmental triggers that caused this crash?",
+    "Can I place clear, long-term limits on my weekly calendar to protect my internal resources?",
+    "Am I able to partner with an experienced affirmations specialist to restructure my task pacing?",
+    "How can I establish reliable support connections or accommodations within the neurodivergent community?"
+  ],
+  reenergize: [
+    "Can I intentionally carve out uncompromised blocks of time to connect with my special interests?",
+    "Am I allowing myself space for uninhibited somatic grounding, including stimming or free movement?",
+    "Am I actively recognizing and tracking minor everyday accomplishments without judging my productivity?"
+  ],
+  reintegrate: [
+    "Do my current metric trends show that my baseline energy levels have stabilized at a predictable level?",
+    "Can I slowly return to daily tasks or workplace environments at a scaled-down, part-time level?",
+    "Am I starting with exactly half of the total output load that I assume I am capable of managing?",
+    "Do I have an immediate safety plan to pull back to Stage 2 (Retreat) if early indicators of relapse appear?"
+  ]
+};
+
+const PACK_BARRIER = {
+  identify: [
+    "Which tasks inside my unchangeable daily routing pull the heaviest amount of energy from my reserves?",
+    "Where can I introduce micro sensory-shields within spaces I cannot completely leave behind?",
+    "Can I pinpoint text-based or visual changes to minimize verbal conversation overload?"
+  ],
+  retreat: [
+    "Can I explore partial adjustments, such as hybrid work-from-home options or short shift edits?",
+    "Am I able to turn down extra favors or secondary obligations outside of basic survival needs?",
+    "Where can I find small micro-intervals of silence (such as dark rooms or quiet vehicle breaks)?",
+    "Can I notify close contacts that I have very low capacity and need a period of reduced expectations?"
+  ],
+  restructure: [
+    "Can I request targeted adjustments on-site, such as visual screens or noise-blocking rules?",
+    "How can I restructure the small areas of my home or workspace that are under my personal control?",
+    "Am I utilizing outsourcing or delegation for high-drain errands, like grocery delivery options?",
+    "Can I look for low-pressure digital validation networks to offset the isolating impacts of my space?"
+  ],
+  reenergize: [
+    "Am I able to claim just 10 or 15 minutes a day to protect an interest that restores me?",
+    "Can I use small, private windows for somatic containment, stretching, or soothing stim updates?",
+    "Am I celebrating minor focus points (like basic hydration or rest blocks) to protect my morale?"
+  ],
+  reintegrate: [
+    "Are my processing baselines showing steady signs of containment within my unchangeable strain settings?",
+    "Can I reintroduce missing tasks one isolated increment at a time to check my limits safely?",
+    "Am I enforcing an explicit ceiling on extra daily objectives to block sudden overdraw spikes?",
+    "Do I have a rapid pull-back plan ready to use if indicators show I am approaching a limit again?"
+  ]
+};
+
+const appState = {
+  capacity: 'low',
+  hasBarriers: false,
+  selections: new Set(),
+  customItems: { identify: [], retreat: [], restructure: [], reenergize: [], reintegrate: [] },
+  matrix: { home: '...', prof: '...', pub: '...' }
+};
+
+function init() {
+  setProfileState('low');
+  setMatrix('home', 'off');
+  setMatrix('prof', 'mod');
+  setMatrix('pub', 'safe');
+}
+
+function toggleCard(cat) {
+  const card = document.getElementById('card-' + cat);
+  const isOpen = card.classList.contains('active');
+  document.querySelectorAll('.action-card').forEach(c => c.classList.remove('active'));
+  if (!isOpen) card.classList.add('active');
+}
+
+function setProfileState(mode) {
+  appState.capacity = mode;
+  document.getElementById('btn-state-emergency').classList.remove('selected');
+  document.getElementById('btn-state-low').classList.remove('selected');
+  document.getElementById('btn-state-stabilizing').classList.remove('selected');
+  document.getElementById('btn-state-' + mode).classList.add('selected');
+  
+  const cards = ['identify', 'restructure', 'reenergize', 'reintegrate', 'matrix'];
+  const headline = document.getElementById('menu-headline');
+  
+  cards.forEach(c => {
+    const el = document.getElementById('card-' + c);
+    if(el) el.style.display = 'flex';
+  });
+  headline.textContent = "Adaptive Protocol Options";
+
+  if (mode === 'emergency') {
+    cards.forEach(c => {
+      const el = document.getElementById('card-' + c);
+      if(el) el.style.display = 'none';
+    });
+    headline.textContent = "Active Crisis Focus Area";
+    document.getElementById('sum-state').textContent = "Emergency Mode (Pure Rest Focus)";
+    document.getElementById('card-retreat').classList.add('active');
+  } else if (mode === 'low') {
+    document.getElementById('sum-state').textContent = "Low Capacity (Survival & Protection)";
+  } else if (mode === 'stabilizing') {
+    document.getElementById('sum-state').textContent = "Stabilizing Mode (Graduated Iterations)";
+  }
+  renderOptions();
+}
+
+function toggleBarrier() {
+  appState.hasBarriers = !appState.hasBarriers;
+  const toggle = document.getElementById('barrier-toggle');
+  if (appState.hasBarriers) {
+    toggle.classList.add('active');
+    document.getElementById('sum-barrier').textContent = "Modified (Local Micro-Accommodations)";
+  } else {
+    toggle.classList.remove('active');
+    document.getElementById('sum-barrier').textContent = "Standard Setup";
+  }
+  appState.selections.clear();
+  renderOptions();
+}
+
+function renderOptions() {
+  const currentSourcePack = appState.hasBarriers ? PACK_BARRIER : PACK_STANDARD;
+  ['identify', 'retreat', 'restructure', 'reenergize', 'reintegrate'].forEach(cat => {
+    renderGroup(cat, currentSourcePack[cat]);
+  });
+  updateSummaryList();
+}
+
+function renderGroup(catCode, itemsArray) {
+  const container = document.getElementById('opts-' + catCode);
+  container.innerHTML = '';
+  
+  // Render Pre-populated Options
+  itemsArray.forEach((textString, idx) => {
+    buildRowElement(container, textString);
+  });
+
+  // Append user-added custom lines
+  appState.customItems[catCode].forEach(textString => {
+    buildRowElement(container, textString);
+  });
+}
+
+function buildRowElement(container, textString) {
+  const isChecked = appState.selections.has(textString);
+  const row = document.createElement('div');
+  row.className = 'option-row' + (isChecked ? ' checked' : '');
+  row.onclick = () => {
+    if (appState.selections.has(textString)) {
+      appState.selections.delete(textString);
+      row.classList.remove('checked');
+    } else {
+      appState.selections.add(textString);
+      row.classList.add('checked');
+    }
+    updateSummaryList();
+  };
+  const chk = document.createElement('div'); chk.className = 'chk';
+  const textEl = document.createElement('span'); textEl.className = 'option-text'; textEl.textContent = textString;
+  row.appendChild(chk); row.appendChild(textEl);
+  container.appendChild(row);
+}
+
+function addCustomRow(catCode) {
+  const inputEl = document.getElementById('add-' + catCode);
+  const text = inputEl.value.trim();
+  if(!text) return;
+  
+  appState.customItems[catCode].push(text);
+  appState.selections.add(text);
+  inputEl.value = '';
+  
+  const currentSourcePack = appState.hasBarriers ? PACK_BARRIER : PACK_STANDARD;
+  renderGroup(catCode, currentSourcePack[catCode]);
+  updateSummaryList();
+}
+
+function setMatrix(environment, code) {
+  if (environment === 'home') {
+    document.getElementById('m-home-off').classList.remove('selected'); document.getElementById('m-home-mod').classList.remove('selected');
+    document.getElementById('m-home-' + code).classList.add('selected');
+    appState.matrix.home = code === 'off' ? 'Drop Mask Safely' : 'Mask in Moderation';
+    document.getElementById('sum-m-home').textContent = appState.matrix.home;
+  } else if (environment === 'prof') {
+    document.getElementById('m-prof-mod').classList.remove('selected'); document.getElementById('m-prof-off').classList.remove('selected');
+    document.getElementById('m-prof-' + code).classList.add('selected');
+    appState.matrix.prof = code === 'mod' ? 'Mask for Safety' : 'Prioritize Authenticity';
+    document.getElementById('sum-m-prof').textContent = appState.matrix.prof;
+  } else if (environment === 'pub') {
+    document.getElementById('m-pub-safe').classList.remove('selected'); document.getElementById('m-pub-mod').classList.remove('selected');
+    document.getElementById('m-pub-' + code).classList.add('selected');
+    appState.matrix.pub = code === 'safe' ? 'Full Safety Mode' : 'Mask in Moderation';
+    document.getElementById('sum-m-pub').textContent = appState.matrix.pub;
+  }
+}
+
+function updateSummaryList() {
+  const container = document.getElementById('summary-actions-list');
+  const emptyMsg = document.getElementById('sum-empty-text');
+  container.querySelectorAll('.summary-list-item').forEach(el => el.remove());
+  
+  if (appState.selections.size === 0) {
+    emptyMsg.style.display = 'block';
+  } else {
+    emptyMsg.style.display = 'none';
+    appState.selections.forEach(textString => {
+      const li = document.createElement('li'); li.className = 'summary-list-item'; li.textContent = textString;
+      container.appendChild(li);
+    });
+  }
+}
+
+init();
+</script>
+</body>
+</html>

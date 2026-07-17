@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autistic Burnout - My Energy Inventory | Second Arrow Counseling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;1,6..12,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#45735d; --gold:#ba945e; --terra:#b68d76;
+  --forest:#35361c; --text:#222a26; --grey:#6d7873;
+  --bg:#faf8f5; --accent-bg:#f5f3ef; --stone:#bdb7a2; --cool-grey:#a6aea6;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:14px 12px 40px;}
+
+/* ── BRAND BAR ── */
+.brand-bar{width:100%;max-width:850px;display:flex;justify-content:flex-start;
+  align-items:center;padding:0 4px 10px;}
+.brand-bar a{font-family:'Libre Baskerville',serif;font-size:20px;color:var(--forest);
+  text-decoration:none;letter-spacing:.01em;opacity:.9;}
+.brand-bar a:hover{opacity:1;}
+
+/* ── HEADER CARD ── */
+.header{background:var(--accent-bg);padding:18px 24px;border-radius:10px;
+  box-shadow:0 3px 6px rgba(0,0,0,.07);width:100%;max-width:850px;
+  margin-bottom:16px;text-align:center;}
+.header h2{font-family:'Libre Baskerville',serif;font-size:1.35em;color:var(--forest);margin-bottom:6px;}
+.header p{color:var(--grey);font-size:.88em;line-height:1.6;max-width:720px;margin:0 auto;}
+
+/* ── CONTENT AREA ── */
+.content-area{width:100%;max-width:850px;display:flex;flex-direction:column;gap:16px;}
+
+/* ── VISUAL BALANCE METER ── */
+.balance-panel{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);
+  padding:20px 24px;text-align:center;display:flex;flex-direction:column;gap:12px;}
+.balance-title{font-family:'Libre Baskerville',serif;font-size:1.05em;color:var(--forest);}
+.balance-track-wrap{display:flex;align-items:center;gap:12px;margin:4px 0;}
+.balance-lbl-side{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.04em;min-width:75px;}
+.balance-lbl-side.drn{color:var(--terra);text-align:right;}
+.balance-lbl-side.rst{color:var(--green);text-align:left;}
+.balance-track{height:14px;background:var(--accent-bg);border-radius:7px;flex-grow:1;position:relative;overflow:hidden;border:1px solid rgba(0,0,0,0.03);}
+.balance-fill{height:100%;width:50%;background:var(--stone);transition:width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s;}
+.balance-text{font-size:13px;color:var(--grey);font-weight:600;font-style:italic;}
+
+/* ── STAGING POOL ── */
+.staging-panel{background:var(--accent-bg);border-radius:12px;padding:16px 18px;
+  box-shadow:inset 0 2px 6px rgba(0,0,0,0.04);display:flex;flex-direction:column;gap:10px;}
+.staging-title{font-size:11px;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:0.06em;text-align:center;}
+.staging-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:45px;}
+
+/* Base Chip Styling */
+.chip{font-family:'Nunito Sans',sans-serif;font-size:12px;padding:6px 12px;border-radius:20px;
+  cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:6px;
+  transition:all 0.2s ease;font-weight:600;border:1.5px solid transparent;}
+
+.chip-pool{background:#fff;border-color:var(--stone);color:var(--text);}
+.chip-pool:hover{border-color:var(--grey);transform:translateY(-1px);}
+
+/* ── TWO COLUMN INVENTORY ── */
+.inventory-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:650px){.inventory-grid{grid-template-columns:1fr;}}
+
+.inventory-column{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);
+  padding:18px 20px;display:flex;flex-direction:column;gap:12px;min-height:300px;border-top:4px solid var(--stone);}
+.inventory-column.col-drains{border-top-color:var(--terra);}
+.inventory-column.col-restorers{border-top-color:var(--green);}
+
+.col-header{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:4px;border-bottom:1px solid var(--accent-bg);}
+.col-header h3{font-family:'Libre Baskerville',serif;font-size:1.05em;color:var(--forest);}
+.col-score{font-family:'Libre Baskerville',serif;font-size:1.15em;font-weight:700;}
+.col-drains .col-score{color:var(--terra);}
+.col-restorers .col-score{color:var(--green);}
+
+.active-list{display:flex;flex-direction:column;gap:8px;flex-grow:1;}
+
+/* Active Routed Chip Styling */
+.active-item{background:var(--accent-bg);border-radius:8px;padding:8px 10px;
+  display:flex;flex-direction:column;gap:6px;border:1px solid rgba(0,0,0,0.03);position:relative;}
+
+.active-item-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.active-item-title{font-size:12.5px;font-weight:700;color:var(--forest);line-height:1.4;}
+
+/* Weight Select Segmented Control */
+.weight-selector{display:flex;background:#fff;border-radius:4px;border:1px solid var(--stone);overflow:hidden;align-self:flex-start;}
+.weight-btn{border:none;background:#fff;font-family:'Nunito Sans',sans-serif;font-size:10px;
+  font-weight:700;padding:3px 8px;cursor:pointer;color:var(--grey);transition:all 0.15s;}
+.weight-btn:not(:last-child){border-right:1px solid var(--stone);}
+.weight-btn:hover{background:var(--accent-bg);}
+
+.col-drains .weight-btn.selected{background:var(--terra);color:#fff;}
+.col-restorers .weight-btn.selected{background:var(--green);color:#fff;}
+
+/* Delete Button */
+.btn-remove{background:none;border:none;color:var(--cool-grey);cursor:pointer;font-size:14px;
+  line-height:1;transition:color 0.15s;padding:2px 4px;font-weight:bold;}
+.btn-remove:hover{color:var(--text);}
+
+/* Custom input box */
+.custom-add-box{display:flex;gap:6px;margin-top:auto;padding-top:12px;border-top:1px solid var(--accent-bg);}
+.custom-add-box input{flex-grow:1;padding:6px 10px;font-family:'Nunito Sans',sans-serif;font-size:12.5px;
+  border:1.5px solid var(--accent-bg);background:var(--bg);border-radius:6px;outline:none;transition:all 0.2s;}
+.custom-add-box input:focus{border-color:var(--stone);background:#fff;}
+.btn-add{background:var(--stone);color:#fff;border:none;border-radius:6px;padding:0 12px;font-weight:700;
+  font-size:12.5px;cursor:pointer;transition:background 0.2s;}
+.btn-add:hover{background:var(--grey);}
+.limit-msg{font-size:10.5px;color:var(--terra);text-align:center;display:none;font-weight:600;}
+
+/* ── ACTION BUTTON BAR ── */
+.action-bar{display:flex;justify-content:flex-end;align-items:center;margin-top:8px;}
+.btn-print{padding:10px 28px;border-radius:24px;border:none;
+  background:var(--green);color:#fff;font-family:'Nunito Sans',sans-serif;
+  font-size:13.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
+.btn-print:hover{background:var(--forest);transform:translateY(-1px);}
+
+.disclaimer{max-width:850px;width:100%;text-align:center;font-size:11px;
+  color:var(--cool-grey);line-height:1.6;margin:24px auto 0;padding:0 12px;font-style:italic;}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   ── PRINT VIEW STYLESHEET ──
+   ────────────────────────────────────────────────────────────────────────── */
+@media print {
+  body {background:#fff !important;color:#000 !important;padding:0;margin:0;}
+  .brand-bar, .staging-panel, .custom-add-box, .btn-remove, .action-bar, .disclaimer {display:none !important;}
+  
+  .header {box-shadow:none !important;border:1px solid #000 !important;background:#fff !important;padding:12px;margin-bottom:20px;}
+  .header h2 {font-size:1.4em !important;}
+  .header p {font-size:10pt !important;color:#000 !important;}
+
+  .balance-panel {box-shadow:none !important;border:1px solid #000 !important;background:#fff !important;padding:12px;margin-bottom:20px;}
+  .balance-track {border:1px solid #000 !important;background:#f0f0f0 !important;}
+  .balance-fill {background:#666 !important;}
+
+  .inventory-grid {display:grid !important;grid-template-columns:1fr 1fr !important;gap:15px !important;}
+  .inventory-column {box-shadow:none !important;border:1px solid #000 !important;background:#fff !important;min-height:500px !important;padding:12px !important;}
+  .inventory-column.col-drains {border-top:4px solid #000 !important;}
+  .inventory-column.col-restorers {border-top:4px solid #000 !important;}
+
+  .active-item {background:#f9f9f9 !important;border:1px solid #ccc !important;padding:6px 8px !important;}
+  .weight-selector {border:1px solid #333 !important;}
+  .weight-btn {color:#000 !important;background:#fff !important;border-right:1px solid #333 !important;}
+  .weight-btn.selected {background:#333 !important;color:#fff !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+</style>
+</head>
+<body>
+
+<!-- BRAND BAR -->
+<div class="brand-bar">
+  <a href="https://www.secondarrow.net" target="_blank" rel="noopener">Second Arrow Counseling</a>
+</div>
+
+<!-- HEADER CARD -->
+<div class="header">
+  <h2>My Energy Inventory</h2>
+  <p>This energy inventory helps you map what drains your battery and what restores it. Use the starting chips below or add your own specific factors. Adjust the strength of each item to see a realistic balance of your daily demands and recovery sources.</p>
+</div>
+
+<!-- CONTENT AREA -->
+<div class="content-area">
+
+  <!-- VISUAL BALANCE METER -->
+  <div class="balance-panel">
+    <h3 class="balance-title">System Balance Indicator</h3>
+    <div class="balance-track-wrap">
+      <span class="balance-lbl-side drn">Drains</span>
+      <div class="balance-track">
+        <div id="balance-bar" class="balance-fill"></div>
+      </div>
+      <span class="balance-lbl-side rst">Restorers</span>
+    </div>
+    <span id="balance-status" class="balance-text">Loading Inventory State...</span>
+  </div>
+
+  <!-- STAGING POOL -->
+  <div class="staging-panel" id="pool-section">
+    <h4 class="staging-title">Available Starting Factors (Click to Route)</h4>
+    <div class="staging-chips" id="pool-container">
+      <!-- Generated Dynamically -->
+    </div>
+  </div>
+
+  <!-- TWO COLUMN INVENTORY -->
+  <div class="inventory-grid">
+    
+    <!-- LEFT: DRAINS -->
+    <div class="inventory-column col-drains">
+      <div class="col-header">
+        <h3>Energy Drains</h3>
+        <span class="col-score" id="score-drains">0</span>
+      </div>
+      <div class="active-list" id="list-drains">
+        <!-- Routed Drains -->
+      </div>
+      <div class="custom-add-box">
+        <input type="text" id="add-drain-input" placeholder="Add custom drain..." onkeydown="handleCustomInput(event, 'drain')">
+        <button class="btn-add" onclick="addCustomItem('drain')">Add</button>
+      </div>
+      <div class="limit-msg" id="limit-drain">Space limit reached (max 8 custom items).</div>
+    </div>
+
+    <!-- RIGHT: RESTORERS -->
+    <div class="inventory-column col-restorers">
+      <div class="col-header">
+        <h3>Energy Restorers</h3>
+        <span class="col-score" id="score-restorers">0</span>
+      </div>
+      <div class="active-list" id="list-restorers">
+        <!-- Routed Restorers -->
+      </div>
+      <div class="custom-add-box">
+        <input type="text" id="add-restorer-input" placeholder="Add custom restorer..." onkeydown="handleCustomInput(event, 'restorer')">
+        <button class="btn-add" onclick="addCustomItem('restorer')">Add</button>
+      </div>
+      <div class="limit-msg" id="limit-restorer">Space limit reached (max 8 custom items).</div>
+    </div>
+
+  </div><!-- /inventory-grid -->
+
+  <!-- ACTION BUTTON BAR -->
+  <div class="action-bar">
+    <button class="btn-print" onclick="window.print()">Print / Save PDF</button>
+  </div>
+
+</div><!-- /content-area -->
+
+<p class="disclaimer">This tool is intended for psychoeducational purposes only. It does not constitute medical advice, diagnosis, or treatment. The information presented is a simplified representation of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.<br>
+<strong>Second Arrow Counseling — Erin Taylor, LCSW</strong></p>
+
+<script>
+// Starting pre-populated chips data
+const INITIAL_CHIPS = [
+  { id: 'p1', text: 'Masking in social situations', type: 'drain', active: false, weight: 2 },
+  { id: 'p2', text: 'Unstructured or unwritten social rules', type: 'drain', active: false, weight: 2 },
+  { id: 'p3', text: 'Intense sensory environments', type: 'drain', active: false, weight: 2 },
+  { id: 'p4', text: 'Sudden plan or schedule changes', type: 'drain', active: false, weight: 2 },
+  { id: 'p5', text: 'Complex administrative tasks', type: 'drain', active: false, weight: 2 },
+  { id: 'p6', text: 'Ignoring physical limits or body signals', type: 'drain', active: false, weight: 2 },
+
+  { id: 'p7', text: 'Deep solitude and quiet', type: 'restorer', active: false, weight: 2 },
+  { id: 'p8', text: 'Engaging with a special interest', type: 'restorer', active: false, weight: 2 },
+  { id: 'p9', text: 'Somatic movement or stimming', type: 'restorer', active: false, weight: 2 },
+  { id: 'p10', text: 'Total routine predictability', type: 'restorer', active: false, weight: 2 },
+  { id: 'p11', text: 'Sensory decompression (dark/quiet)', type: 'restorer', active: false, weight: 2 },
+  { id: 'p12', text: 'Low-demand processing time', type: 'restorer', active: false, weight: 2 }
+];
+
+const state = {
+  chips: [...INITIAL_CHIPS],
+  customDrains: [],
+  customRestorers: []
+};
+
+// Render initial state
+function init() {
+  renderPool();
+  renderColumns();
+}
+
+// Render available chips in the central staging pool
+function renderPool() {
+  const pool = document.getElementById('pool-container');
+  pool.innerHTML = '';
+  
+  let visibleCount = 0;
+  state.chips.forEach(chip => {
+    if (!chip.active) {
+      visibleCount++;
+      const el = document.createElement('div');
+      el.className = 'chip chip-pool';
+      el.textContent = chip.text;
+      el.onclick = () => routeChip(chip.id);
+      pool.appendChild(el);
+    }
+  });
+
+  // If all default chips are assigned, hide the pool header text elegantly
+  const poolSection = document.getElementById('pool-section');
+  if (visibleCount === 0) {
+    poolSection.style.display = 'none';
+  } else {
+    poolSection.style.display = 'flex';
+  }
+}
+
+// Route a pre-populated chip from staging pool to column or vice versa
+function routeChip(id) {
+  const chip = state.chips.find(c => c.id === id);
+  if (chip) {
+    chip.active = !chip.active;
+    if (!chip.active) {
+      chip.weight = 2; // Reset weight when returned to pool
+    }
+    renderPool();
+    renderColumns();
+  }
+}
+
+// Render active items in both Columns
+function renderColumns() {
+  const drainList = document.getElementById('list-drains');
+  const restorerList = document.getElementById('list-restorers');
+  
+  drainList.innerHTML = '';
+  restorerList.innerHTML = '';
+
+  let totalDrainPoints = 0;
+  let totalRestorerPoints = 0;
+
+  // 1. Process Pre-populated Drains
+  state.chips.filter(c => c.type === 'drain' && c.active).forEach(chip => {
+    totalDrainPoints += chip.weight;
+    drainList.appendChild(createItemElement(chip, false));
+  });
+
+  // 2. Process Custom Drains
+  state.customDrains.forEach((chip, index) => {
+    totalDrainPoints += chip.weight;
+    drainList.appendChild(createItemElement(chip, true, index));
+  });
+
+  // 3. Process Pre-populated Restorers
+  state.chips.filter(c => c.type === 'restorer' && c.active).forEach(chip => {
+    totalRestorerPoints += chip.weight;
+    restorerList.appendChild(createItemElement(chip, false));
+  });
+
+  // 4. Process Custom Restorers
+  state.customRestorers.forEach((chip, index) => {
+    totalRestorerPoints += chip.weight;
+    restorerList.appendChild(createItemElement(chip, true, index));
+  });
+
+  // Update Column Metrics
+  document.getElementById('score-drains').textContent = totalDrainPoints;
+  document.getElementById('score-restorers').textContent = totalRestorerPoints;
+
+  calculateBalance(totalDrainPoints, totalRestorerPoints);
+}
+
+// Create DOM structure for active inventory items
+function createItemElement(chip, isCustom, index) {
+  const container = document.createElement('div');
+  container.className = 'active-item';
+
+  const topRow = document.createElement('div');
+  topRow.className = 'active-item-top';
+
+  const title = document.createElement('span');
+  title.className = 'active-item-title';
+  title.textContent = chip.text;
+  topRow.appendChild(title);
+
+  const removeBtn = document.createElement('button');
+  removeBtn.className = 'btn-remove';
+  removeBtn.innerHTML = '&times;';
+  removeBtn.title = isCustom ? 'Delete custom factor' : 'Return to available pool';
+  removeBtn.onclick = () => {
+    if (isCustom) {
+      removeCustomItem(chip.type, index);
+    } else {
+      routeChip(chip.id);
+    }
+  };
+  topRow.appendChild(removeBtn);
+  container.appendChild(topRow);
+
+  // Segmented Weight Control Bar
+  const selector = document.createElement('div');
+  selector.className = 'weight-selector';
+
+  const levels = [
+    { label: 'Low', val: 1 },
+    { label: 'Med', val: 2 },
+    { label: 'High', val: 3 }
+  ];
+
+  levels.forEach(lvl => {
+    const btn = document.createElement('button');
+    btn.className = 'weight-btn' + (chip.weight === lvl.val ? ' selected' : '');
+    btn.textContent = lvl.label;
+    btn.onclick = () => {
+      chip.weight = lvl.val;
+      renderColumns();
+    };
+    selector.appendChild(btn);
+  });
+
+  container.appendChild(selector);
+  return container;
+}
+
+// Custom text input key handlers
+function handleCustomInput(event, type) {
+  if (event.key === 'Enter') {
+    addCustomItem(type);
+  }
+}
+
+// Add custom chip to specified column
+function addCustomItem(type) {
+  const inputId = type === 'drain' ? 'add-drain-input' : 'add-restorer-input';
+  const inputEl = document.getElementById(inputId);
+  const text = inputEl.value.trim();
+  const limitEl = document.getElementById('limit-' + type);
+
+  if (!text) return;
+
+  const targetArray = type === 'drain' ? state.customDrains : state.customRestorers;
+
+  // Prevent overflow past 8 items to preserve page layout limit
+  if (targetArray.length >= 8) {
+    limitEl.style.display = 'block';
+    return;
+  } else {
+    limitEl.style.display = 'none';
+  }
+
+  targetArray.push({
+    text: text,
+    type: type,
+    weight: 2
+  });
+
+  inputEl.value = '';
+  renderColumns();
+}
+
+// Remove custom chip from specified column
+function removeCustomItem(type, index) {
+  const targetArray = type === 'drain' ? state.customDrains : state.customRestorers;
+  const limitEl = document.getElementById('limit-' + type);
+  
+  targetArray.splice(index, 1);
+  limitEl.style.display = 'none'; // Clear any active warning notices
+  renderColumns();
+}
+
+// Calculate the systemic balance state
+function calculateBalance(drains, restorers) {
+  const bar = document.getElementById('balance-bar');
+  const status = document.getElementById('balance-status');
+  const total = drains + restorers;
+
+  if (total === 0) {
+    bar.style.width = '50%';
+    bar.style.backgroundColor = 'var(--stone)';
+    status.textContent = 'Awaiting values. Add or select factors below to measure energy distribution.';
+    return;
+  }
+
+  // Calculate percentage weight favoring restorers
+  const restorerRatio = restorers / total;
+  const percentage = Math.round(restorerRatio * 100);
+  
+  bar.style.width = percentage + '%';
+
+  // Apply conditional semantic classifications
+  if (percentage <= 35) {
+    bar.style.backgroundColor = 'var(--terra)';
+    status.textContent = 'Heavily Draining — Your energy outputs significantly exceed your current sources of recovery.';
+  } else if (percentage > 35 && percentage < 48) {
+    bar.style.backgroundColor = 'var(--gold)';
+    status.textContent = 'Moderately Draining — Demands are drawing down on your system faster than you can recharge.';
+  } else if (percentage >= 48 && percentage <= 52) {
+    bar.style.backgroundColor = 'var(--stone)';
+    status.textContent = 'Balanced — Your energy consumption is roughly aligned with active rest and recovery.';
+  } else {
+    bar.style.backgroundColor = 'var(--green)';
+    status.textContent = 'Restoring — Your current environment has active supports in place to replenish system reserves.';
+  }
+}
+
+// Initialize on page load
+init();
+</script>
+</body>
+</html>

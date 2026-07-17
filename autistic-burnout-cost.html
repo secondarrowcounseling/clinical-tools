@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autistic Burnout - Mapping Daily Demands | Second Arrow Counseling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;1,6..12,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#45735d; --gold:#ba945e; --terra:#b68d76;
+  --forest:#35361c; --text:#222a26; --grey:#6d7873;
+  --bg:#faf8f5; --accent-bg:#f5f3ef; --stone:#bdb7a2; --cool-grey:#a6aea6;
+  
+  /* Category Accent Tones */
+  --c-sensory:#b05c5c;
+  --c-social:#ba945e;
+  --c-executive:#45735d;
+  --c-masking:#5a6b80;
+  --c-change:#7c628c;
+  --c-internal:#8c7662;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:14px 12px 40px;}
+
+/* ── BRAND BAR ── */
+.brand-bar{width:100%;max-width:800px;display:flex;justify-content:flex-start;
+  align-items:center;padding:0 4px 10px;}
+.brand-bar a{font-family:'Libre Baskerville',serif;font-size:20px;color:var(--forest);
+  text-decoration:none;letter-spacing:.01em;opacity:.9;}
+.brand-bar a:hover{opacity:1;}
+
+/* ── HEADER CARD ── */
+.header{background:var(--accent-bg);padding:18px 24px;border-radius:10px;
+  box-shadow:0 3px 6px rgba(0,0,0,.07);width:100%;max-width:800px;
+  margin-bottom:16px;text-align:center;}
+.header h2{font-family:'Libre Baskerville',serif;font-size:1.35em;color:var(--forest);margin-bottom:6px;}
+.header p{color:var(--grey);font-size:.88em;line-height:1.6;max-width:720px;margin:0 auto;}
+
+/* ── CONTENT AREA ── */
+.content-area{width:100%;max-width:800px;display:flex;flex-direction:column;gap:16px;}
+
+/* ── SLIDERS WRAPPER ── */
+.sliders-list{display:flex;flex-direction:column;gap:14px;}
+
+.slider-card{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);
+  padding:20px 22px;border-left:4px solid var(--stone);display:flex;flex-direction:column;gap:10px;}
+
+.card-hdr{display:flex;justify-content:space-between;align-items:baseline;}
+.card-hdr h3{font-family:'Libre Baskerville',serif;font-size:1.05em;color:var(--forest);}
+.card-val{font-family:'Libre Baskerville',serif;font-size:1.25em;font-weight:700;color:var(--grey);min-width:45px;text-align:right;}
+
+.spark-box{font-size:13px;color:var(--grey);line-height:1.6;background:var(--accent-bg);
+  padding:10px 12px;border-radius:6px;font-style:italic;}
+
+/* Input element customization */
+.input-row{display:flex;align-items:center;gap:12px;margin:6px 0 2px;}
+input[type=range]{-webkit-appearance:none;width:100%;height:8px;border-radius:4px;
+  background:rgba(0,0,0,.08);outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;
+  border-radius:50%;background:var(--stone);border:2px solid #fff;
+  box-shadow:0 1px 4px rgba(0,0,0,.2);cursor:pointer;transition:transform 0.1s;}
+input[type=range]::-webkit-slider-thumb:active{transform:scale(1.2);}
+
+/* Custom Text Note Input */
+.text-input-wrap{display:flex;flex-direction:column;gap:4px;margin-top:2px;}
+.text-input-wrap label{font-size:11.5px;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:0.02em;}
+.custom-text-box{width:100%;padding:8px 12px;font-family:'Nunito Sans',sans-serif;font-size:13px;
+  border:1.5px solid var(--accent-bg);background:var(--bg);border-radius:6px;color:var(--text);
+  outline:none;transition:border-color 0.2s, background-color 0.2s;}
+.custom-text-box:focus{border-color:var(--stone);background:#fff;}
+
+/* Category Theme Variables Mapping */
+.s-sensory{border-left-color:var(--c-sensory);}
+.s-sensory input[type=range]::-webkit-slider-thumb{background:var(--c-sensory);}
+.s-sensory .card-val{color:var(--c-sensory);}
+
+.s-social{border-left-color:var(--c-social);}
+.s-social input[type=range]::-webkit-slider-thumb{background:var(--c-social);}
+.s-social .card-val{color:var(--c-social);}
+
+.s-executive{border-left-color:var(--c-executive);}
+.s-executive input[type=range]::-webkit-slider-thumb{background:var(--c-executive);}
+.s-executive .card-val{color:var(--c-executive);}
+
+.s-masking{border-left-color:var(--c-masking);}
+.s-masking input[type=range]::-webkit-slider-thumb{background:var(--c-masking);}
+.s-masking .card-val{color:var(--c-masking);}
+
+.s-change{border-left-color:var(--c-change);}
+.s-change input[type=range]::-webkit-slider-thumb{background:var(--c-change);}
+.s-change .card-val{color:var(--c-change);}
+
+.s-internal{border-left-color:var(--c-internal);}
+.s-internal input[type=range]::-webkit-slider-thumb{background:var(--c-internal);}
+.s-internal .card-val{color:var(--c-internal);}
+
+/* ── VISUAL LOAD MAP PANELS ── */
+.load-map-panel{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);
+  padding:22px 26px;margin-top:4px;}
+.load-map-panel h3{font-family:'Libre Baskerville',serif;font-size:1.1em;color:var(--forest);margin-bottom:4px;}
+.load-map-panel p.sub{font-size:13px;color:var(--grey);margin-bottom:18px;}
+
+.map-grid{display:flex;flex-direction:column;gap:12px;}
+.map-row{display:flex;flex-direction:column;gap:4px;}
+.map-meta{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;font-weight:700;}
+.map-lbl{color:var(--forest);display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+.map-note-tag{font-weight:400;font-size:11px;color:var(--grey);font-style:italic;}
+.map-val{color:var(--grey);font-family:'Nunito Sans',sans-serif;}
+.map-track{height:10px;background:var(--accent-bg);border-radius:5px;overflow:hidden;position:relative;}
+.map-fill{height:100%;width:0%;border-radius:5px;transition:width 0.2s ease;}
+
+/* ── STEP NAVIGATION ── */
+.step-nav{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+.btn-back{padding:10px 24px;border-radius:24px;border:2px solid var(--stone);
+  background:#fff;font-family:'Nunito Sans',sans-serif;font-size:13.5px;
+  color:var(--grey);cursor:pointer;transition:all .15s;text-decoration:none;}
+.btn-back:hover{border-color:var(--gold);color:var(--forest);}
+.btn-next{padding:10px 28px;border-radius:24px;border:none;
+  background:var(--green);color:#fff;font-family:'Nunito Sans',sans-serif;
+  font-size:13.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
+.btn-next:hover{background:var(--forest);transform:translateY(-1px);}
+
+.disclaimer{max-width:800px;width:100%;text-align:center;font-size:11px;
+  color:var(--cool-grey);line-height:1.6;margin:24px auto 0;padding:0 12px;font-style:italic;}
+</style>
+</head>
+<body>
+
+<!-- BRAND BAR -->
+<div class="brand-bar">
+  <a href="https://www.secondarrow.net" target="_blank" rel="noopener">Second Arrow Counseling</a>
+</div>
+
+<!-- HEADER CARD -->
+<div class="header">
+  <h2>Mapping Your Daily Demands</h2>
+  <p>Autistic burnout occurs when long-term everyday demands consistently exceed your system's energy reserves. Because everyone's environment is unique, this page uses simple scales to help you estimate the general pressure inside different areas of your life. Adjust the sliders to reflect your current load, and optionally type in any specific factors you want to anchor for our conversation.</p>
+</div>
+
+<!-- CONTENT AREA -->
+<div class="content-area">
+
+  <!-- SLIDERS WRAPPER -->
+  <div class="sliders-list">
+    
+    <!-- CATEGORY 1: SENSORY -->
+    <div class="slider-card s-sensory">
+      <div class="card-hdr">
+        <h3>Sensory Demands</h3>
+        <span class="card-val" id="val-lbl-sensory">0</span>
+      </div>
+      <div class="spark-box">Think about ambient background environments: fluorescent light grids, unpredictable community noise, temperature variations, or persistent clothing texture friction.</div>
+      <div class="input-row">
+        <input type="range" id="sl-sensory" min="0" max="10" value="0" oninput="updateLoad('sensory')">
+      </div>
+      <div class="text-input-wrap">
+        <label for="txt-sensory">Type a specific sensory factor (optional):</label>
+        <input type="text" id="txt-sensory" class="custom-text-box" placeholder="e.g., Office ventilation noise, bright kitchen layout..." oninput="updateText('sensory')">
+      </div>
+    </div>
+
+    <!-- CATEGORY 2: SOCIAL -->
+    <div class="slider-card s-social">
+      <div class="card-hdr">
+        <h3>Social &amp; Interaction Demands</h3>
+        <span class="card-val" id="val-lbl-social">0</span>
+      </div>
+      <div class="spark-box">Think about communication rules: interpreting ambiguous text channels, managing small talk loops, or predicting unwritten social performance standards.</div>
+      <div class="input-row">
+        <input type="range" id="sl-social" min="0" max="10" value="0" oninput="updateLoad('social')">
+      </div>
+      <div class="text-input-wrap">
+        <label for="txt-social">Type a specific social factor (optional):</label>
+        <input type="text" id="txt-social" class="custom-text-box" placeholder="e.g., Vague workplace email strings, back-to-back meetings..." oninput="updateText('social')">
+      </div>
+    </div>
+
+    <!-- CATEGORY 3: EXECUTIVE -->
+    <div class="slider-card s-executive">
+      <div class="card-hdr">
+        <h3>Executive &amp; Logistic Demands</h3>
+        <span class="card-val" id="val-lbl-executive">0</span>
+      </div>
+      <div class="spark-box">Think about everyday organization: managing intricate forms or administrative files, task sequencing friction, or dealing with sudden interruptions mid-task.</div>
+      <div class="input-row">
+        <input type="range" id="sl-executive" min="0" max="10" value="0" oninput="updateLoad('executive')">
+      </div>
+      <div class="text-input-wrap">
+        <label for="txt-executive">Type a specific executive factor (optional):</label>
+        <input type="text" id="txt-executive" class="custom-text-box" placeholder="e.g., Weekly meal decisions, complex application files..." oninput="updateText('executive')">
+      </div>
+    </div>
+
+    <!-- CATEGORY 4: MASKING -->
+    <div class="slider-card s-masking">
+      <div class="card-hdr">
+        <h3>Masking &amp; Compensation</h3>
+        <span class="card-val" id="val-lbl-masking">0</span>
+      </div>
+      <div class="spark-box">Think about intentional pacing: manually simulating standard expressions or vocal tones, suppressing physical grounding movements, or enduring discomfort silently.</div>
+      <div class="input-row">
+        <input type="range" id="sl-masking" min="0" max="10" value="0" oninput="updateLoad('masking')">
+      </div>
+      <div class="text-input-wrap">
+        <label for="txt-masking">Type a specific masking factor (optional):</label>
+        <input type="text" id="txt-masking" class="custom-text-box" placeholder="e.g., Forcing engagement cues during group text threads..." oninput="updateText('masking')">
+      </div>
+    </div>
+
+    <!-- CATEGORY 5: CHANGE -->
+    <div class="slider-card s-change">
+      <div class="card-hdr">
+        <h3>Routine &amp; Transition Disruption</h3>
+        <span class="card-val" id="val-lbl-change">0</span>
+      </div>
+      <div class="spark-box">Think about unexpected adjustments: sudden schedule edits, unscheduled transit variations, or stepping into unmapped roles or spaces.</div>
+      <div class="input-row">
+        <input type="range" id="sl-change" min="0" max="10" value="0" oninput="updateLoad('change')">
+      </div>
+      <div class="text-input-wrap">
+        <label for="txt-change">Type a specific transition factor (optional):</label>
+        <input type="text" id="txt-change" class="custom-text-box" placeholder="e.g., Unannounced scheduling variations at work..." oninput="updateText('change')">
+      </div>
+    </div>
+
+    <!-- CATEGORY 6: INTERNAL -->
+    <div class="slider-card s-internal">
+      <div class="card-hdr">
+        <h3>Internal Bodily Stress</h3>
+        <span class="card-val" id="val-lbl-internal">0</span>
+      </div>
+      <div class="spark-box">Think about physiological updates: muted or delayed hunger signals, managing chronic health vulnerability, or processing systemic hormonal fluctuations.</div>
+      <div class="input-row">
+        <input type="range" id="sl-internal" min="0" max="10" value="0" oninput="updateLoad('internal')">
+      </div>
+      <div class="text-input-wrap">
+        <label for="txt-internal">Type a specific internal factor (optional):</label>
+        <input type="text" id="txt-internal" class="custom-text-box" placeholder="e.g., Muted interceptive hunger cues, recurring health strains..." oninput="updateText('internal')">
+      </div>
+    </div>
+
+  </div><!-- /sliders-list -->
+
+  <!-- VISUAL SUMMARY MAP PANEL -->
+  <div class="load-map-panel">
+    <h3>System Load Map</h3>
+    <p class="sub">Visual compilation of your active demands. Identified high-value indicators emphasize areas where specific adaptation or environment changes can reduce systemic pressure.</p>
+    
+    <div class="map-grid">
+      <!-- Sensory Row -->
+      <div class="map-row">
+        <div class="map-meta">
+          <span class="map-lbl">Sensory Demands <span id="map-note-sensory" class="map-note-tag"></span></span>
+          <span class="map-val" id="fill-val-sensory">0%</span>
+        </div>
+        <div class="map-track"><div class="map-fill" id="fill-bar-sensory" style="background:var(--c-sensory);"></div></div>
+      </div>
+      <!-- Social Row -->
+      <div class="map-row">
+        <div class="map-meta">
+          <span class="map-lbl">Social &amp; Interaction Demands <span id="map-note-social" class="map-note-tag"></span></span>
+          <span class="map-val" id="fill-val-social">0%</span>
+        </div>
+        <div class="map-track"><div class="map-fill" id="fill-bar-social" style="background:var(--c-social);"></div></div>
+      </div>
+      <!-- Executive Row -->
+      <div class="map-row">
+        <div class="map-meta">
+          <span class="map-lbl">Executive &amp; Logistic Demands <span id="map-note-executive" class="map-note-tag"></span></span>
+          <span class="map-val" id="fill-val-executive">0%</span>
+        </div>
+        <div class="map-track"><div class="map-fill" id="fill-bar-executive" style="background:var(--c-executive);"></div></div>
+      </div>
+      <!-- Masking Row -->
+      <div class="map-row">
+        <div class="map-meta">
+          <span class="map-lbl">Masking &amp; Compensation <span id="map-note-masking" class="map-note-tag"></span></span>
+          <span class="map-val" id="fill-val-masking">0%</span>
+        </div>
+        <div class="map-track"><div class="map-fill" id="fill-bar-masking" style="background:var(--c-masking);"></div></div>
+      </div>
+      <!-- Change Row -->
+      <div class="map-row">
+        <div class="map-meta">
+          <span class="map-lbl">Routine &amp; Transition Disruption <span id="map-note-change" class="map-note-tag"></span></span>
+          <span class="map-val" id="fill-val-change">0%</span>
+        </div>
+        <div class="map-track"><div class="map-fill" id="fill-bar-change" style="background:var(--c-change);"></div></div>
+      </div>
+      <!-- Internal Row -->
+      <div class="map-row">
+        <div class="map-meta">
+          <span class="map-lbl">Internal Bodily Stress <span id="map-note-internal" class="map-note-tag"></span></span>
+          <span class="map-val" id="fill-val-internal">0%</span>
+        </div>
+        <div class="map-track"><div class="map-fill" id="fill-bar-internal" style="background:var(--c-internal);"></div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /content-area -->
+
+<p class="disclaimer">This tool is intended for psychoeducational purposes only. It does not constitute medical advice, diagnosis, or treatment. The information presented is a simplified representation of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.<br>
+<strong>Second Arrow Counseling — Erin Taylor, LCSW</strong>
+</p>
+
+<script>
+function updateLoad(cat) {
+  const slider = document.getElementById('sl-' + cat);
+  const value = parseInt(slider.value);
+  
+  // Update numerical index next to title
+  document.getElementById('val-lbl-' + cat).textContent = value;
+  
+  // Calculate load map value out of 100%
+  const percentage = value * 10;
+  document.getElementById('fill-val-' + cat).textContent = percentage + '%';
+  document.getElementById('fill-bar-' + cat).style.width = percentage + '%';
+}
+
+function updateText(cat) {
+  const textBox = document.getElementById('txt-' + cat);
+  const textValue = textBox.value.trim();
+  const noteTag = document.getElementById('map-note-' + cat);
+  
+  // If the user typed a specific factor, show a truncated anchor tag in the load map
+  if (textValue.length > 0) {
+    noteTag.textContent = '— "' + (textValue.length > 28 ? textValue.substring(0, 25) + '...' : textValue) + '"';
+  } else {
+    noteTag.textContent = '';
+  }
+}
+
+function proceedToLayer3() {
+  // Linear progression link pointing to upcoming file block
+  window.location.href = 'autistic-burnout-layer3.html';
+}
+
+// Trigger initial baseline sizing checks across cards
+['sensory', 'social', 'executive', 'masking', 'change', 'internal'].forEach(cat => {
+  updateLoad(cat);
+});
+</script>
+</body>
+</html>

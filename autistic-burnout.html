@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autistic Burnout - Is This Burnout? | Second Arrow Counseling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;1,6..12,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#45735d; --gold:#ba945e; --terra:#b68d76;
+  --forest:#35361c; --text:#222a26; --grey:#6d7873;
+  --bg:#faf8f5; --accent-bg:#f5f3ef; --stone:#bdb7a2; --cool-grey:#a6aea6;
+  --e-col:#b05c5c; --c-col:#ba945e; --a-col:#45735d; --o-col:#5a6b80;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:14px 12px 40px;}
+
+/* ── BRAND BAR ── */
+.brand-bar{width:100%;max-width:760px;display:flex;justify-content:flex-start;
+  align-items:center;padding:0 4px 10px;}
+.brand-bar a{font-family:'Libre Baskerville',serif;font-size:20px;color:var(--forest);
+  text-decoration:none;letter-spacing:.01em;opacity:.9;}
+.brand-bar a:hover{opacity:1;}
+
+/* ── HEADER CARD ── */
+.header{background:var(--accent-bg);padding:14px 22px;border-radius:10px;
+  box-shadow:0 3px 6px rgba(0,0,0,.07);width:100%;max-width:760px;
+  margin-bottom:8px;text-align:center;}
+.header h2{font-family:'Libre Baskerville',serif;font-size:1.3em;color:var(--forest);margin-bottom:5px;}
+.header p{color:var(--grey);font-size:.86em;line-height:1.6;max-width:680px;margin:0 auto;}
+
+/* ── CONTENT AREA ── */
+.content-area{width:100%;max-width:760px;}
+
+/* ── PROGRESS BAR ── */
+.progress-wrap{display:flex;align-items:center;gap:0;margin-bottom:24px;
+  background:var(--accent-bg);border-radius:10px;padding:6px 10px;
+  box-shadow:0 2px 5px rgba(0,0,0,.05);}
+.step-dot{flex:1;display:flex;flex-direction:column;align-items:center;
+  gap:4px;cursor:pointer;padding:4px 2px;border-radius:6px;transition:background .12s;}
+.step-dot:hover .dot{opacity:.8;}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--stone);
+  transition:background .2s,transform .2s;}
+.step-dot.done .dot{background:var(--green);}
+.step-dot.active .dot{background:var(--forest);transform:scale(1.3);}
+.dot-label{font-size:9px;color:var(--cool-grey);text-align:center;line-height:1.3;
+  max-width:60px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.step-dot.active .dot-label{color:var(--forest);}
+.step-dot.done .dot-label{color:var(--green);}
+
+/* ── STEP PANELS ── */
+.step-panel{display:none;animation:fadeIn .25s ease;}
+.step-panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── INTRO STEP ── */
+.intro-card{background:#fff;border-radius:12px;padding:28px 32px;
+  box-shadow:0 2px 10px rgba(0,0,0,.07);border-left:4px solid var(--gold);}
+.intro-card h3{font-family:'Libre Baskerville',serif;font-size:1.1em;color:var(--forest);margin-bottom:12px;}
+.intro-card p{font-size:14px;line-height:1.85;color:var(--text);margin-bottom:12px;}
+.intro-card p:last-child{margin-bottom:0;}
+.intro-card strong{color:var(--forest);}
+
+/* ── ECAO STEP ── */
+.ecao-step{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.07);overflow:hidden;}
+.ecao-header{padding:20px 24px 16px;display:flex;align-items:center;gap:16px;
+  border-bottom:1px solid var(--accent-bg);}
+.letter-badge{width:48px;height:48px;border-radius:10px;display:flex;
+  align-items:center;justify-content:center;
+  font-family:'Libre Baskerville',serif;font-size:24px;font-weight:700;color:#fff;flex-shrink:0;}
+.ecao-meta{flex:1;}
+.ecao-meta h3{font-family:'Libre Baskerville',serif;font-size:1.1em;color:var(--forest);margin-bottom:3px;}
+.ecao-meta p{font-size:12.5px;color:var(--grey);line-height:1.55;}
+.ecao-count{font-size:26px;font-weight:800;font-family:'Nunito Sans',sans-serif;
+  color:var(--stone);transition:color .2s;min-width:28px;text-align:right;}
+
+.what-this-means{margin:0 24px;padding:12px 14px;background:var(--accent-bg);
+  border-radius:8px;font-size:13px;color:var(--grey);line-height:1.7;
+  font-style:italic;border-left:3px solid var(--stone);margin-top:16px;}
+.what-this-means strong{color:var(--forest);font-style:normal;}
+
+.check-list{list-style:none;padding:14px 20px 20px;display:flex;flex-direction:column;gap:6px;}
+.check-item{display:flex;align-items:flex-start;gap:10px;cursor:pointer;
+  padding:9px 10px;border-radius:8px;transition:background .12s;}
+.check-item:hover{background:var(--accent-bg);}
+.chk{width:18px;height:18px;border-radius:4px;border:2px solid var(--stone);
+  flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;
+  transition:all .15s;}
+.chk::after{content:'';width:9px;height:5px;
+  border-left:2px solid #fff;border-bottom:2px solid #fff;
+  transform:rotate(-45deg) translateY(-1px);opacity:0;transition:opacity .12s;}
+.check-item.ticked .chk::after{opacity:1;}
+
+.check-content{flex:1;}
+.check-text{font-size:13.5px;color:var(--text);line-height:1.55;display:block;}
+.check-item.ticked .check-text{color:var(--forest);font-weight:600;}
+.explore-cue{display:none;font-size:12px;color:var(--grey);font-style:italic;
+  margin-top:4px;line-height:1.55;padding-left:2px;}
+.check-item.ticked .explore-cue{display:block;}
+
+/* color theming per category */
+.cat-e .letter-badge{background:var(--e-col);}
+.cat-e .what-this-means{border-left-color:var(--e-col);}
+.cat-e .check-item.ticked .chk{background:var(--e-col);border-color:var(--e-col);}
+.cat-e .ecao-count.lit{color:var(--e-col);}
+
+.cat-c .letter-badge{background:var(--c-col);}
+.cat-c .what-this-means{border-left-color:var(--c-col);}
+.cat-c .check-item.ticked .chk{background:var(--c-col);border-color:var(--c-col);}
+.cat-c .ecao-count.lit{color:var(--c-col);}
+
+.cat-a .letter-badge{background:var(--a-col);}
+.cat-a .what-this-means{border-left-color:var(--a-col);}
+.cat-a .check-item.ticked .chk{background:var(--a-col);border-color:var(--a-col);}
+.cat-a .ecao-count.lit{color:var(--a-col);}
+
+.cat-o .letter-badge{background:var(--o-col);}
+.cat-o .what-this-means{border-left-color:var(--o-col);}
+.cat-o .check-item.ticked .chk{background:var(--o-col);border-color:var(--o-col);}
+.cat-o .ecao-count.lit{color:var(--o-col);}
+
+.safety-note{margin:0 20px 20px;padding:12px 14px;background:#f8f3f3;
+  border-radius:8px;border-left:3px solid var(--e-col);}
+.safety-note p{font-size:12.5px;color:#7a3f3f;line-height:1.65;}
+
+/* ── COMPARISON STEP ── */
+.key-callout{background:linear-gradient(135deg,#faf5ec,#f5f3ef);border-radius:12px;
+  padding:22px 26px;border:1px solid rgba(186,148,94,.28);margin-bottom:16px;}
+.key-callout .kd-title{font-family:'Libre Baskerville',serif;font-size:1em;
+  color:var(--forest);margin-bottom:12px;}
+.key-callout p{font-size:13.5px;line-height:1.85;color:var(--text);}
+.key-callout p + p{margin-top:10px;}
+.key-callout strong{color:var(--forest);}
+.burnout-em{color:var(--e-col);font-weight:700;}
+.key-callout em{font-family:'Libre Baskerville',serif;font-style:italic;color:var(--forest);}
+
+.table-wrap{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.07);overflow:hidden;}
+.cmp-table{width:100%;border-collapse:collapse;}
+.cmp-table th{padding:11px 16px;font-size:11.5px;font-weight:800;text-align:left;letter-spacing:.04em;}
+.cmp-table th.th-lbl{background:var(--accent-bg);color:var(--forest);width:110px;}
+.cmp-table th.th-burn{background:rgba(176,92,92,.09);color:var(--e-col);}
+.cmp-table th.th-dep{background:rgba(107,124,116,.09);color:var(--grey);}
+.cmp-table td{padding:11px 16px;font-size:13px;line-height:1.6;
+  border-top:1px solid var(--accent-bg);vertical-align:top;}
+.cmp-table td.td-lbl{font-weight:700;color:var(--forest);background:var(--accent-bg);font-size:12px;}
+.cmp-table tr:hover td{background:#f9f8f6;}
+.cmp-table tr:hover td.td-lbl{background:#edecea;}
+.burn-hi{color:var(--e-col);font-weight:700;}
+
+/* ── DURATION STEP ── */
+.duration-step{background:#fff;border-radius:12px;padding:28px;
+  box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.duration-step h3{font-family:'Libre Baskerville',serif;font-size:1.1em;
+  color:var(--forest);margin-bottom:18px;}
+.dur-opts{display:flex;flex-wrap:nowrap;gap:7px;margin-bottom:4px;}
+.dur-btn{flex:1;padding:10px 8px;border-radius:24px;border:2px solid var(--stone);
+  background:#fff;font-family:'Nunito Sans',sans-serif;font-size:12.5px;
+  color:var(--grey);cursor:pointer;transition:all .15s;white-space:nowrap;text-align:center;}
+.dur-btn:hover{border-color:var(--gold);color:var(--forest);}
+.dur-btn.sel{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:700;}
+.dur-note{font-size:13.5px;color:var(--text);line-height:1.8;margin-top:18px;
+  padding:14px 16px;background:var(--accent-bg);border-radius:8px;display:none;}
+.dur-note.show{display:block;}
+.dur-note .session-cue{margin-top:10px;font-size:12.5px;color:var(--green);
+  font-weight:700;font-style:italic;}
+
+/* ── SNAPSHOT STEP ── */
+.snapshot-intro{background:#fff;border-radius:12px;padding:22px 26px;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:16px;border-left:4px solid var(--gold);}
+.snapshot-intro p{font-size:14px;line-height:1.8;color:var(--text);}
+.snapshot-intro strong{color:var(--forest);}
+
+.snapshot-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media(max-width:500px){.snapshot-grid{grid-template-columns:1fr;}}
+.snap-card{background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.07);
+  padding:16px 18px;display:flex;align-items:center;gap:14px;}
+.snap-badge{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-family:'Libre Baskerville',serif;font-size:18px;
+  font-weight:700;color:#fff;flex-shrink:0;}
+.snap-meta{flex:1;}
+.snap-name{font-family:'Libre Baskerville',serif;font-size:13px;color:var(--forest);margin-bottom:2px;}
+.snap-count{font-size:24px;font-weight:800;font-family:'Nunito Sans',sans-serif;color:var(--stone);}
+.snap-count.has-items{color:inherit;}
+
+.snap-card.snap-e .snap-badge{background:var(--e-col);}
+.snap-card.snap-e .snap-count.has-items{color:var(--e-col);}
+.snap-card.snap-c .snap-badge{background:var(--c-col);}
+.snap-card.snap-c .snap-count.has-items{color:var(--c-col);}
+.snap-card.snap-a .snap-badge{background:var(--a-col);}
+.snap-card.snap-a .snap-count.has-items{color:var(--a-col);}
+.snap-card.snap-o .snap-badge{background:var(--o-col);}
+.snap-card.snap-o .snap-count.has-items{color:var(--o-col);}
+
+.snap-note{background:var(--accent-bg);border-radius:10px;padding:16px 20px;
+  font-size:13.5px;color:var(--text);line-height:1.8;}
+.snap-note em{font-family:'Libre Baskerville',serif;font-style:italic;color:var(--forest);}
+
+/* ── STEP NAVIGATION ── */
+.step-nav{display:flex;justify-content:space-between;align-items:center;
+  margin-top:20px;gap:12px;}
+.step-counter{font-size:12px;color:var(--cool-grey);font-weight:600;
+  letter-spacing:.04em;}
+.btn-back{padding:10px 22px;border-radius:24px;border:2px solid var(--stone);
+  background:#fff;font-family:'Nunito Sans',sans-serif;font-size:13.5px;
+  color:var(--grey);cursor:pointer;transition:all .15s;}
+.btn-back:hover{border-color:var(--gold);color:var(--forest);}
+.btn-back:disabled{opacity:.35;cursor:default;}
+.btn-next{padding:10px 26px;border-radius:24px;border:none;
+  background:var(--green);color:#fff;font-family:'Nunito Sans',sans-serif;
+  font-size:13.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
+.btn-next:hover{background:var(--forest);transform:translateY(-1px);}
+
+/* ── DISCLAIMER ── */
+.disclaimer{max-width:1100px;width:100%;text-align:center;font-size:11px;
+  color:var(--cool-grey);line-height:1.6;margin:20px auto 0;padding:0 12px;font-style:italic;}
+</style>
+</head>
+<body>
+
+<!-- BRAND BAR -->
+<div class="brand-bar">
+  <a href="https://www.secondarrow.net" target="_blank" rel="noopener">Second Arrow Counseling</a>
+</div>
+
+<!-- HEADER CARD -->
+<div class="header">
+  <h2>Is This Burnout?</h2>
+  <p>Autistic burnout is a predictable system preservation state. It is a biological shutdown triggered when a high-gain nervous system runs out of fuel to manage long-term environmental friction.</p>
+</div>
+
+<!-- CONTENT AREA -->
+<div class="content-area">
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="step-dot active" onclick="goToStep(0)" id="dot-0"><div class="dot"></div><div class="dot-label">Intro</div></div>
+    <div class="step-dot" onclick="goToStep(1)" id="dot-1"><div class="dot"></div><div class="dot-label">Exhaustion</div></div>
+    <div class="step-dot" onclick="goToStep(2)" id="dot-2"><div class="dot"></div><div class="dot-label">Cognitive Energy</div></div>
+    <div class="step-dot" onclick="goToStep(3)" id="dot-3"><div class="dot"></div><div class="dot-label">Sensor Realignment</div></div>
+    <div class="step-dot" onclick="goToStep(4)" id="dot-4"><div class="dot"></div><div class="dot-label">Withdrawal</div></div>
+    <div class="step-dot" onclick="goToStep(5)" id="dot-5"><div class="dot"></div><div class="dot-label">Compare</div></div>
+    <div class="step-dot" onclick="goToStep(6)" id="dot-6"><div class="dot"></div><div class="dot-label">Duration</div></div>
+    <div class="step-dot" onclick="goToStep(7)" id="dot-7"><div class="dot"></div><div class="dot-label">Snapshot</div></div>
+  </div>
+
+  <!-- STEP 0: INTRO -->
+  <div class="step-panel active" id="step-0">
+    <div class="intro-card">
+      <h3>What is autistic burnout?</h3>
+      <p>Autistic burnout is not ordinary exhaustion. It is not clinical depression, though it frequently overlaps with both and is often misidentified. It is a predictable biological response to cumulative, long-term friction. It reflects the high operational cost of running a sensitive nervous system in an environment configured for a completely different neurotype.</p>
+      <p>The experience is characterized by three core markers: deep processing depletion, a temporary shift in executive or verbal capacity, and a drastically lowered threshold for raw ambient data and social scripts. It is a long-term adjustment state, meaning it requires systematic restructuring rather than a simple weekend pause to resolve.</p>
+      <p>This tool maps out your internal climate across the ECAO soundboard framework, highlights key differences between strain and mood disorders, and looks at duration. There are no performance metrics here. Simply check what echoes your lived reality right now.</p>
+    </div>
+  </div>
+
+  <!-- STEP 1: EXHAUSTION -->
+  <div class="step-panel" id="step-1">
+    <div class="ecao-step cat-e">
+      <div class="ecao-header">
+        <div class="letter-badge">E</div>
+        <div class="ecao-meta">
+          <h3>Exhaustion</h3>
+          <p>Deep depletion that standard sleep or downtime does not restore</p>
+        </div>
+        <div class="ecao-count" id="cnt-e">0</div>
+      </div>
+      <div class="what-this-means"><strong>What this means:</strong> This is a deep operational drain. The mind and body have been running on overdrive for so long that typical rest cycles can't easily catch up. Clients describe this as an internal gridlock where you want to engage, but the system doesn't have the baseline energy currency to clear task setup friction.</div>
+      <ul class="check-list" id="lst-e">
+        <li class="check-item" onclick="tick(this,'e')"><div class="chk"></div><div class="check-content"><span class="check-text">You feel constantly depleted, both physically and mentally, and typical downtime does not recharge your battery</span><span class="explore-cue">Worth exploring: How long has typical rest felt unassigned or out of range? What did recovery used to feel like?</span></div></li>
+        <li class="check-item" onclick="tick(this,'e')"><div class="chk"></div><div class="check-content"><span class="check-text">You feel pulled toward absolute minimal output. This isn't laziness; your system has safely paused active scanning to protect remaining battery reserves.</span><span class="explore-cue">Worth exploring: What story have you told yourself about this pause? Has anyone mislabeled it as avoidance or laziness?</span></div></li>
+        <li class="check-item" onclick="tick(this,'e')"><div class="chk"></div><div class="check-content"><span class="check-text">The standard sensory tools or coping routines that used to recharge you are no longer making a scratch</span><span class="explore-cue">Worth exploring: Which regulatory routines have lost their clearing power? When did that level shift happen?</span></div></li>
+        <li class="check-item" onclick="tick(this,'e')"><div class="chk"></div><div class="check-content"><span class="check-text">Engaging with your core passions feels heavy or out of reach, even though the internal interest still burns bright</span><span class="explore-cue">Worth exploring: Can you still feel the love for your special interest behind the wall of fatigue? That distinction is huge.</span></div></li>
+        <li class="check-item" onclick="tick(this,'e')"><div class="chk"></div><div class="check-content"><span class="check-text">You carry a persistent pressure or frustration surrounding your daily task initiation and execution</span><span class="explore-cue">Worth exploring: Did this pressure mount alongside your physical depletion, or has it always been a high-friction area?</span></div></li>
+        <li class="check-item" onclick="tick(this,'e')"><div class="chk"></div><div class="check-content"><span class="check-text">Your body is broadcasting physical alerts: chronic fatigue adjustments, muscle tension, or sudden immune drops</span><span class="explore-cue">Worth exploring: Strain manifests somatically. What body-level signals have amplified beside the mental exhaustion?</span></div></li>
+        <li class="check-item" onclick="tick(this,'e')"><div class="chk"></div><div class="check-content"><span class="check-text">You find yourself pulling back from interactions, even with people you deeply care about and enjoy tracking with</span><span class="explore-cue">Worth exploring: Does disconnecting bring immediate relief, or does it trigger an alert loop? That difference is diagnostic.</span></div></li>
+        <li class="check-item" onclick="tick(this,'e')"><div class="chk"></div><div class="check-content"><span class="check-text">This deep baseline drain has been running for solid weeks or months, not just a bumpy couple of days</span><span class="explore-cue">Worth exploring: Duration clarifies system tracking. Can you pinpoint the shift from active strain to deep preservation?</span></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- STEP 2: COGNITIVE ENERGY RESERVES -->
+  <div class="step-panel" id="step-2">
+    <div class="ecao-step cat-c">
+      <div class="ecao-header">
+        <div class="letter-badge">C</div>
+        <div class="ecao-meta">
+          <h3>Cognitive Energy Reserves</h3>
+          <p>Processing tasks that used to stream automatically feel like heavy manual labor</p>
+        </div>
+        <div class="ecao-count" id="cnt-c">0</div>
+      </div>
+      <div class="what-this-means"><strong>What this means:</strong> When an executive network manages a massive cognitive load for too long (deciphering vague social scripts, compressing intense sensory feeds), it runs out of working capital. Things like working memory, rapid initiation, and verbal translation step down into manual mode to preserve power.</div>
+      <ul class="check-list" id="lst-c">
+        <li class="check-item" onclick="tick(this,'c')"><div class="chk"></div><div class="check-content"><span class="check-text">You experience persistent brain fog: tracking your own thoughts or holding onto plans feels blurry</span><span class="explore-cue">Worth exploring: Is this fog constant, or does it lift when ambient volume decreases?</span></div></li>
+        <li class="check-item" onclick="tick(this,'c')"><div class="chk"></div><div class="check-content"><span class="check-text">You encounter new execution friction with tasks that were once automatic: organizing, sequencing, or starting simple steps</span><span class="explore-cue">Worth exploring: Is this an accentuation of your usual ADHD baseline, or a new drop in processing power?</span></div></li>
+        <li class="check-item" onclick="tick(this,'c')"><div class="chk"></div><div class="check-content"><span class="check-text">Basic physical self-care routines (meals, hydration, grooming) feel like massive hurdles to arrange</span><span class="explore-cue">Worth exploring: This is where processing depletion shows up honestly. How does it feel to name this friction?</span></div></li>
+        <li class="check-item" onclick="tick(this,'c')"><div class="chk"></div><div class="check-content"><span class="check-text">Your system floods or resets more quickly: unexpected environmental plot twists trigger fast meltdowns or deep shutdowns</span><span class="explore-cue">Worth exploring: Regulation requires immense energy. When fuel is low, thresholds drop. This is not a structural flaw.</span></div></li>
+        <li class="check-item" onclick="tick(this,'c')"><div class="chk"></div><div class="check-content"><span class="check-text">Working memory feels compressed: forgetting the immediate goal mid-task or dropping conversational threads</span><span class="explore-cue">Worth exploring: Short-term memory buffer compression is a direct byproduct of a highly alert nervous system.</span></div></li>
+        <li class="check-item" onclick="tick(this,'c')"><div class="chk"></div><div class="check-content"><span class="check-text">Verbal tracking drops offline: struggling to locate precise words or shifting to a quiet, nonverbal posture in intense moments</span><span class="explore-cue">Worth exploring: Is word-retrieval friction expanding? Shifting away from verbal channels is an organic safety brake.</span></div></li>
+        <li class="check-item" onclick="tick(this,'c')"><div class="chk"></div><div class="check-content"><span class="check-text">You feel a heavy sense of under-accomplishment, even when your system is working at 100% capacity to just exist</span><span class="explore-cue">Worth exploring: Whose measurement tool are you using? Often this shame comes from evaluating autistic stamina with neurotypical assembly-line metrics.</span></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- STEP 3: MASKING COST & SENSOR REALIGNMENT -->
+  <div class="step-panel" id="step-3">
+    <div class="ecao-step cat-a">
+      <div class="ecao-header">
+        <div class="letter-badge">A</div>
+        <div class="ecao-meta">
+          <h3>Masking Cost &amp; Sensor Realignment</h3>
+          <p>The manual suppression script drops, revealing your raw processing feed</p>
+        </div>
+        <div class="ecao-count" id="cnt-a">0</div>
+      </div>
+      <div class="what-this-means"><strong>What this means:</strong> When your organic traits become prominent during burnout, it isn't a glitch. It is what happens when the massive energy required to hold a manual social mask in place is no longer available. Your system is dropping resource-heavy background applications to focus entirely on physical preservation.</div>
+      <ul class="check-list" id="lst-a">
+        <li class="check-item" onclick="tick(this,'a')"><div class="chk"></div><div class="check-content"><span class="check-text">Your master input gain is turned up to max: ambient lights, textures, low hums, and smells hit with unedited 4K intensity</span><span class="explore-cue">Worth exploring: Ambient data processing gain is a highly reliable measure of core capacity. Which sensory feeds are loudest?</span></div></li>
+        <li class="check-item" onclick="tick(this,'a')"><div class="chk"></div><div class="check-content"><span class="check-text">Organic self-regulation feels urgent: stimming intensifies, structural routine feels non-negotiable, special interests are the only safe harbor</span><span class="explore-cue">Worth exploring: These settings are protective. Your nervous system is reaching for what grounds it. What is it dialled into right now?</span></div></li>
+        <li class="check-item" onclick="tick(this,'a')"><div class="chk"></div><div class="check-content"><span class="check-text">Masking feels physically impossible; the cognitive capital to perform standard neurotypical scripts is completely absent</span><span class="explore-cue">Worth exploring: When did masking tip from heavy lifting to a complete system lock? That line indicates the threshold.</span></div></li>
+        <li class="check-item" onclick="tick(this,'a')"><div class="chk"></div><div class="check-content"><span class="check-text">Deciphering unwritten social rules or keeping up with casual interaction scripts feels confusing or out of range</span><span class="explore-cue">Worth exploring: This is distinct from standard anxiety. The performance script is missing because the memory banks are conserving power. Does that feel accurate?</span></div></li>
+        <li class="check-item" onclick="tick(this,'a')"><div class="chk"></div><div class="check-content"><span class="check-text">Minor scheduling adjustments feel disorienting, sweeping past standard routine preferences into a feeling of instability</span><span class="explore-cue">Worth exploring: Rigid consistency minimizes background calculation costs. Rigidity is a brain trying to save battery.</span></div></li>
+        <li class="check-item" onclick="tick(this,'a')"><div class="chk"></div><div class="check-content"><span class="check-text">The reserve power required to simulate a neurotypical baseline is completely tapped out</span><span class="explore-cue">Worth exploring: You've been paying a steep premium to maintain that script. What has it cost your physical well-being?</span></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- STEP 4: OVERWHELM & WITHDRAWAL -->
+  <div class="step-panel" id="step-4">
+    <div class="ecao-step cat-o">
+      <div class="ecao-header">
+        <div class="letter-badge">O</div>
+        <div class="ecao-meta">
+          <h3>Overwhelm and Withdrawal</h3>
+          <p>The master console enters safety isolation mode</p>
+        </div>
+        <div class="ecao-count" id="cnt-o">0</div>
+      </div>
+      <div class="what-this-means"><strong>What this means:</strong> Moving into a quiet chamber during burnout isn't avoidance or antisocial behavior—it's standard acoustic insulation. When a system is oversaturated, complete silence isn't a withdrawal from life; it's deep somatic recalibration. Your body is trying to bring you back into balance.</div>
+      <ul class="check-list" id="lst-o">
+        <li class="check-item" onclick="tick(this,'o')"><div class="chk"></div><div class="check-content"><span class="check-text">You experience frequent, deep shutdowns: freezing in place, going completely blank, or entering extended silent states</span><span class="explore-cue">Worth exploring: Shutdowns are dynamic system breaks. How frequently is your system pulling this emergency brake lately?</span></div></li>
+        <li class="check-item" onclick="tick(this,'o')"><div class="chk"></div><div class="check-content"><span class="check-text">You feel an acute, non-negotiable need for total isolation—even from close connections you trust</span><span class="explore-cue">Worth exploring: Does silence bring immediate somatic relief? If so, it's restorative. If it loops into isolation shame, that's where we pivot.</span></div></li>
+        <li class="check-item" onclick="tick(this,'o')"><div class="chk"></div><div class="check-content"><span class="check-text">Tiny environmental plot twists (a text, an open decision, a casual question) register as full system overload demands</span><span class="explore-cue">Worth exploring: Your demand-tolerance gauge reflects your internal capital. What feels like the heaviest channel right now?</span></div></li>
+        <li class="check-item" onclick="tick(this,'o')"><div class="chk"></div><div class="check-content"><span class="check-text">The external environment broadcasts as loud, unpredictable, or completely unsafe to step into</span><span class="explore-cue">Worth exploring: This is a highly sensitive radar working perfectly. It's not a cognitive error; it's a real metric of your capacity.</span></div></li>
+        <li class="check-item" onclick="tick(this,'o')"><div class="chk"></div><div class="check-content"><span class="check-text">Stepping down from roles or canceling plans isn't a conscious preference—your body is actively dropping the link for you</span><span class="explore-cue">Worth exploring: What internal narratives do you hold about dropping these links? Processing performance shame is central to recovery.</span></div></li>
+      </ul>
+      <div class="safety-note">
+        <p><strong>A note on safety:</strong> Severe overload can sometimes cause the system to dream of turning off completely. If thoughts of not wanting to be here are circling your mixer, please bring them out into our collaborative space. This is a safe room to lay that down, and you deserve gentle support right now. You can also text or dial 988 at any hour.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5: COMPARISON -->
+  <div class="step-panel" id="step-5">
+    <div class="comparison-step">
+      <div class="key-callout">
+  <div class="kd-title">The Master Channel Distinction</div>
+  <p><strong>In Autistic Burnout:</strong> Your core special interests and deep passions <span class="burnout-em">still feel vitalizing and magnetic.</span> They are currently behind a thick pane of glass because of energy depletion, but the pull towards them remains alive. You can clearly imagine the delight of tracking them if your mixer had the necessary power capital.</p>
+  <p><strong>In Mood Depression:</strong> The channel itself goes flat or silent. The focus interest loses its pull entirely, and motivation is altered at a chemical level, independent of your actual energetic battery charge.</p>
+  <p><em>If your deep interest feels like yours but is locked away behind a wall of pure physical exhaustion, that points to burnout as the configuration driving your system.</em></p>
+</div>
+      <div class="table-wrap">
+        <table class="cmp-table">
+          <thead>
+            <tr>
+              <th class="th-lbl"></th>
+              <th class="th-burn">Autistic Burnout</th>
+              <th class="th-dep">Depression</th>
+            </tr>
+          </thead>
+         <tbody>
+  <tr>
+    <td class="td-lbl">Passions</td>
+    <td><span class="burn-hi">Magnetic but inaccessible</span>. The signal pull is intact; the power grid is down.</td>
+    <td>Flat frequency. The interest itself loses its color and reward signature.</td>
+  </tr>
+  <tr>
+    <td class="td-lbl">Autistic traits</td>
+    <td>Highly visible. Suppression tools drop, input gain turns up, stimming becomes foundational.</td>
+    <td>Heavy mood deceleration. Hopelessness, tracking loops, or emotional numbness take the wheel.</td>
+  </tr>
+  <tr>
+    <td class="td-lbl">Withdrawal</td>
+    <td>Protective &amp; Restorative. Silence acts as acoustic shielding to rebuild the battery.</td>
+    <td>Loops into the condition. Isolation turns down active engagement, inadvertently deepening the drop.</td>
+  </tr>
+  <tr>
+    <td class="td-lbl">Root cause</td>
+    <td>Contextual. A prolonged operational mismatch between systemic demands and environmental architecture.</td>
+    <td>Variable. Relational, neurochemical, or historical configurations, not always tied to an active overload.</td>
+  </tr>
+  <tr>
+    <td class="td-lbl">Recovery Focus</td>
+    <td>Drop room demands. Reshape structural conditions and environments. Sleep is good, but spatial calibration is key.</td>
+    <td>Behavioral activation, therapeutic integration, or medicine. Shifting internal dials to navigate the current room.</td>
+  </tr>
+</tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 6: DURATION -->
+  <div class="step-panel" id="step-6">
+    <div class="duration-step">
+      <h3>How long have these settings been active?</h3>
+      <div class="dur-opts">
+        <button class="dur-btn" onclick="selDur(this,'days')">A few days</button>
+        <button class="dur-btn" onclick="selDur(this,'weeks')">A few weeks</button>
+        <button class="dur-btn" onclick="selDur(this,'months1')">1 to 2 months</button>
+        <button class="dur-btn" onclick="selDur(this,'months3')">3+ months</button>
+        <button class="dur-btn" onclick="selDur(this,'year')">A year or more</button>
+        <button class="dur-btn" onclick="selDur(this,'unsure')">Honestly unsure</button>
+      </div>
+      <div class="dur-note" id="dur-note"></div>
+    </div>
+  </div>
+
+  <!-- STEP 7: SNAPSHOT -->
+  <div class="step-panel" id="step-7">
+    <div class="snapshot-step">
+      <div class="snapshot-intro">
+        <p>Here is your internal map for today. These figures track the specific indicators you recognized across the active ECAO framework channels. <strong>There are no threshold requirements or performance diagnostics here.</strong> This functions as a clear structural anchor for our room session, not an evaluative diagnosis.</p>
+      </div>
+      <div class="snapshot-grid">
+        <div class="snap-card snap-e">
+          <div class="snap-badge">E</div>
+          <div class="snap-meta">
+            <div class="snap-name">Exhaustion Feed</div>
+            <div class="snap-count" id="snap-e">0</div>
+          </div>
+        </div>
+        <div class="snap-card snap-c">
+          <div class="snap-badge">C</div>
+          <div class="snap-meta">
+            <div class="snap-name">Reserve Capital Depletion</div>
+            <div class="snap-count" id="snap-c">0</div>
+          </div>
+        </div>
+        <div class="snap-card snap-a">
+          <div class="snap-badge">A</div>
+          <div class="snap-meta">
+            <div class="snap-name">Sensor Realignment / Unmasking</div>
+            <div class="snap-count" id="snap-a">0</div>
+          </div>
+        </div>
+        <div class="snap-card snap-o">
+          <div class="snap-badge">O</div>
+          <div class="snap-meta">
+            <div class="snap-name">Overwhelm Shielding</div>
+            <div class="snap-count" id="snap-o">0</div>
+          </div>
+        </div>
+      </div>
+      <div class="snap-note" id="snap-note">
+        <em>Move through the checklist steps to view your snapshot channels here.</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP NAVIGATION -->
+  <div class="step-nav">
+    <button class="btn-back" id="btn-back" onclick="prevStep()" disabled>&#8592; Back</button>
+    <span class="step-counter" id="step-counter">Step 1 of 8</span>
+    <button class="btn-next" id="btn-next" onclick="nextStep()">Next &#8594;</button>
+  </div>
+
+</div>
+
+<p class="disclaimer">This tool is intended for psychoeducational purposes only. It does not constitute medical advice, diagnosis, or treatment. The information presented is a simplified representation of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.<br>
+<strong>Second Arrow Counseling — Erin Taylor, LCSW</strong>
+</p>
+
+<script>
+const counts = {e:0, c:0, a:0, o:0};
+let currentStep = 0;
+const totalSteps = 8;
+
+function tick(item, cat){
+  item.classList.toggle('ticked');
+  counts[cat] += item.classList.contains('ticked') ? 1 : -1;
+  const el = document.getElementById('cnt-'+cat);
+  el.textContent = counts[cat];
+  el.classList.toggle('lit', counts[cat] > 0);
+  updateSnapshot();
+}
+
+function updateSnapshot(){
+  ['e','c','a','o'].forEach(cat => {
+    const el = document.getElementById('snap-'+cat);
+    el.textContent = counts[cat];
+    el.classList.toggle('has-items', counts[cat] > 0);
+  });
+  const total = Object.values(counts).reduce((a,b)=>a+b,0);
+  const active = Object.keys(counts).filter(k=>counts[k]>0).length;
+  const note = document.getElementById('snap-note');
+  if(total === 0){
+    note.innerHTML = '<em>Move through the checklist steps to view your snapshot channels here.</em>';
+  } else if(active === 1){
+    note.innerHTML = 'You\'ve pinpointed indicators within a single channel. Tuning into the remaining dimensions may help trace the complete layout. Let\'s bring this focus area directly into today\'s room.';
+  } else {
+    note.innerHTML = 'You have mapped indicators across <strong>'+active+' internal channels.</strong> This provides high-clarity insight. Let\'s use these mapped friction fields as the main anchors for our collaborative work today.';
+  }
+}
+
+const durNotes = {
+  days:{
+    body:'A brief run of these markers suggests the system is bumping up against its active constraints rather than entering a long-term lock. If this cycles regularly, treating it as a vital check engine alert can help protect your reserves.',
+    cue:'Anchor points: What did the period immediately before this drop look like? Which environmental demands spiked highest?'
+  },
+  weeks:{
+    body:'A few weeks of sustained channel drainage, especially following high performance masking, suggests the system is initiating an organic safety preservation state. Intervening early here dramatically optimizes system tracking back to comfort.',
+    cue:'Anchor points: What shifted in the mixer environment a few weeks back? Can you locate what tipped the load scales?'
+  },
+  months1:{
+    body:'One to two months of continuous drainage brings the system near the established temporal marker for persistent burnout. If resting in place hasn\'t cleared the static, it implies the primary room configuration demands are still actively loading the processor.',
+    cue:'Anchor points: Has the tracking altered during this block, or has it run static? Constant drainage confirms that the underlying load sources are still drawing major power.'
+  },
+ months3:{
+    body:'Three or more months signals that the system has settled into an extended preservation state. Returning to balance at this level involves more than basic sleep—it requires auditing and systematically restructuring your operational layout.',
+    cue:'Anchor points: Structural adjustments move through five targeted dials: Identify, Retreat, Restructure, Re-energize, and Reintegrate. Layer 4 of our framework charts this journey.'
+  },
+  year:{
+    body:'A year or more indicates deep, chronic system encapsulation. Re-indexing your settings is entirely achievable, though it takes a patient, highly strategic step-down approach. Real, collaborative space makes a profound difference in rebuilding safely.',
+    cue:'Anchor points: Have you tracked any temporary windows of clearance in this timeframe? Finding what momentarily turned down the gain provides the blueprint for your structural optimization.'
+  },
+  unsure:{
+    body:'Uncertainty regarding duration metrics is completely expected, particularly if your internal boundaries haven\'t been validated before. Many autistics track in persistent burnout for decades without an affirming framework to contextualize the friction.',
+    cue:'Anchor points: Try mapping to external structural shifts rather than calendar dates. When was the last season your mixer settings felt genuinely sustainable? What was unique about that environment?'
+  }
+};
+
+function selDur(btn, key){
+  document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  const d = durNotes[key];
+  const note = document.getElementById('dur-note');
+  note.innerHTML = d.body + '<div class="session-cue">' + d.cue + '</div>';
+  note.classList.add('show');
+}
+
+function goToStep(n){
+  document.getElementById('step-'+currentStep).classList.remove('active');
+  document.getElementById('dot-'+currentStep).classList.remove('active');
+  if(n > currentStep) document.getElementById('dot-'+currentStep).classList.add('done');
+  currentStep = n;
+  document.getElementById('step-'+currentStep).classList.add('active');
+  updateDots();
+  updateNav();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function nextStep(){
+  if(currentStep < totalSteps-1) goToStep(currentStep+1);
+}
+function prevStep(){
+  if(currentStep > 0) goToStep(currentStep-1);
+}
+
+function updateDots(){
+  for(let i=0;i<totalSteps;i++){
+    const dot = document.getElementById('dot-'+i);
+    dot.classList.remove('active','done');
+    if(i < currentStep) dot.classList.add('done');
+    else if(i === currentStep) dot.classList.add('active');
+  }
+}
+
+function updateNav(){
+  document.getElementById('btn-back').disabled = currentStep === 0;
+  const nextBtn = document.getElementById('btn-next');
+  if(currentStep === totalSteps-1){
+    nextBtn.textContent = 'Done';
+    nextBtn.onclick = null;
+  } else {
+    nextBtn.innerHTML = 'Next &#8594;';
+    nextBtn.onclick = nextStep;
+  }
+  document.getElementById('step-counter').textContent = 'Step '+(currentStep+1)+' of '+totalSteps;
+}
+</script>
+</body>
+</html>
