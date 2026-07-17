@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Understanding Your Nervous System - The Three Base Zones | Second Arrow Counseling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:opsz,wght@6..12,300;6..12,400;6..12,600;6..12,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:#45735d; --gold:#ba945e; --terra:#b68d76;
+  --forest:#35361c; --text:#222a26; --grey:#6d7873;
+  --bg:#faf8f5; --accent-bg:#F5F3EF;
+  --stone:#bdb7a2; --cool-grey:#a6aea6;
+
+  /* Zone colors */
+  --ventral-tint: #edf4ef;
+  --ventral-mid:  #45735d;
+  --ventral-soft: rgba(69,115,93,0.12);
+  --sympath-tint: #f5ede8;
+  --sympath-mid:  #b68d76;
+  --sympath-soft: rgba(182,141,118,0.12);
+  --dorsal-tint:  #f0eee9;
+  --dorsal-mid:   #7a7260;
+  --dorsal-soft:  rgba(122,114,96,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:14px 16px}
+
+/* ── BRAND BAR ── */
+.brand-bar{width:100%;max-width:1180px;display:flex;justify-content:flex-start;
+  align-items:center;padding:0 4px 10px}
+.brand-bar a{font-family:'Libre Baskerville',serif;font-size:20px;color:var(--forest);
+  text-decoration:none;opacity:.9}
+.brand-bar a:hover{opacity:1}
+
+/* ── HEADER ── */
+.header{background:var(--accent-bg);padding:14px 20px 12px;border-radius:10px;
+  box-shadow:0 3px 6px rgba(0,0,0,.07);width:100%;max-width:1180px;
+  margin-bottom:12px;text-align:center}
+.header-progress{display:flex;align-items:flex-start;justify-content:center;gap:0;margin-bottom:14px}
+.p-step{display:flex;flex-direction:column;align-items:center;gap:5px}
+.p-node{width:8px;height:8px;border-radius:50%;background:var(--stone);transition:all .3s}
+.p-step.done .p-node{background:var(--green);opacity:.55}
+.p-step.active .p-node{background:var(--green);width:10px;height:10px;box-shadow:0 0 0 3px rgba(69,115,93,.18)}
+.p-slabel{font-size:9px;color:var(--cool-grey);letter-spacing:.04em;white-space:nowrap;text-align:center}
+.p-step.done .p-slabel{color:var(--green);opacity:.7}
+.p-step.active .p-slabel{color:var(--green);font-weight:700}
+.p-line{width:30px;height:1px;background:var(--stone);margin-top:3px;flex-shrink:0}
+.p-line.done{background:var(--green);opacity:.4}
+.header h2{font-family:'Libre Baskerville',serif;font-size:1.3em;color:var(--forest);margin-bottom:4px}
+.header p{color:var(--grey);font-size:.87em;max-width:640px;margin:0 auto;line-height:1.55;font-style:italic}
+
+/* ── INTRO CALLOUT ── */
+.intro-callout{
+  width:100%;max-width:1180px;
+  background:white;border-radius:10px;
+  border:1.5px solid var(--stone);
+  padding:18px 24px;margin-bottom:16px;
+  box-shadow:0 3px 6px rgba(0,0,0,.06);
+  display:flex;gap:16px;align-items:flex-start
+}
+.intro-icon{
+  flex-shrink:0;width:36px;height:36px;border-radius:50%;
+  background:var(--accent-bg);border:1.5px solid var(--stone);
+  display:flex;align-items:center;justify-content:center;margin-top:2px
+}
+.intro-text h3{
+  font-family:'Libre Baskerville',serif;font-size:15px;
+  color:var(--forest);margin-bottom:6px
+}
+.intro-text p{font-size:13.5px;color:var(--grey);line-height:1.8}
+.intro-text strong{color:var(--text)}
+
+/* ── THREE ZONE CARDS ── */
+.zones-row{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+  width:100%;max-width:1180px;
+  align-items:start
+}
+
+.zone-card{
+  border-radius:14px;
+  border:1.5px solid transparent;
+  overflow:hidden;
+  cursor:pointer;
+  transition:box-shadow .3s, border-color .3s;
+  box-shadow:0 4px 12px rgba(0,0,0,.07);
+}
+.zone-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.12)}
+
+/* Header strip, always visible */
+.zone-header{
+  padding:20px 20px 16px;
+  display:flex;flex-direction:column;
+  align-items:center;gap:10px;
+  text-align:center;
+  transition:background .3s
+}
+
+.zone-icon{
+  width:48px;height:48px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;transition:transform .3s
+}
+.zone-card.open .zone-icon{transform:scale(1.1)}
+
+.zone-name{
+  font-family:'Libre Baskerville',serif;
+  font-size:17px;font-weight:700;
+  line-height:1.2
+}
+.zone-tagline{
+  font-size:11.5px;font-style:italic;
+  opacity:.75;line-height:1.4
+}
+
+/* Mini dial indicator */
+.dial-indicator{
+  display:flex;gap:8px;align-items:flex-end;
+  height:42px;margin-top:14px
+}
+.di-fader{
+  display:flex;flex-direction:column;
+  align-items:center;gap:3px
+}
+.di-track{
+  width:10px;height:34px;border-radius:3px;
+  position:relative;
+  overflow:hidden
+}
+.di-fill{
+  position:absolute;bottom:0;width:100%;
+  border-radius:3px;
+  transition:height .5s ease
+}
+.di-label{
+  font-size:7.5px;text-transform:uppercase;
+  letter-spacing:.06em;font-weight:700;opacity:.6
+}
+
+/* Expand chevron */
+.zone-chevron{
+  font-size:11px;opacity:.5;
+  transition:transform .35s, opacity .2s;
+  margin-top:2px
+}
+.zone-card.open .zone-chevron{transform:rotate(180deg);opacity:.8}
+
+/* Body, expands on open */
+.zone-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .45s cubic-bezier(0.4,0,0.2,1);
+}
+.zone-card.open .zone-body{max-height:600px}
+
+.zone-body-inner{
+  padding:16px 18px 20px;
+  display:flex;flex-direction:column;gap:12px
+}
+
+.zone-desc{
+  font-size:13.5px;line-height:1.8;
+}
+.zone-desc strong{font-weight:700}
+
+.zone-separator{
+  height:1px;
+  opacity:.25
+}
+
+.zone-example{
+  border-radius:8px;
+  padding:11px 14px;
+  font-size:12.5px;line-height:1.75
+}
+.zone-example .ex-label{
+  font-size:9px;text-transform:uppercase;letter-spacing:.1em;
+  font-weight:700;margin-bottom:4px;opacity:.7
+}
+
+.dial-positions{
+  font-size:11.5px;
+  display:flex;gap:10px;
+  flex-wrap:wrap;
+  margin-top:2px
+}
+.dp-chip{
+  padding:3px 9px;border-radius:20px;
+  font-size:10.5px;font-weight:700;letter-spacing:.03em
+}
+
+/* ── PER-ZONE THEMING ── */
+
+/* VENTRAL */
+.zone-ventral{border-color:rgba(69,115,93,.2)}
+.zone-ventral .zone-header{background:var(--ventral-tint)}
+.zone-ventral .zone-icon{background:rgba(69,115,93,.12);color:var(--ventral-mid)}
+.zone-ventral .zone-name{color:var(--ventral-mid)}
+.zone-ventral .zone-body-inner{background:white}
+.zone-ventral .zone-separator{background:var(--ventral-mid)}
+.zone-ventral .zone-example{background:rgba(69,115,93,.07)}
+.zone-ventral .ex-label{color:var(--ventral-mid)}
+.zone-ventral .dp-chip{background:rgba(69,115,93,.1);color:var(--ventral-mid)}
+.zone-ventral.open{border-color:var(--ventral-mid);
+  box-shadow:0 0 0 1.5px var(--ventral-mid),0 8px 24px rgba(69,115,93,.12)}
+
+/* SYMPATHETIC */
+.zone-sympath{border-color:rgba(182,141,118,.2)}
+.zone-sympath .zone-header{background:var(--sympath-tint)}
+.zone-sympath .zone-icon{background:rgba(182,141,118,.15);color:var(--sympath-mid)}
+.zone-sympath .zone-name{color:var(--sympath-mid)}
+.zone-sympath .zone-body-inner{background:white}
+.zone-sympath .zone-separator{background:var(--sympath-mid)}
+.zone-sympath .zone-example{background:rgba(182,141,118,.07)}
+.zone-sympath .ex-label{color:var(--sympath-mid)}
+.zone-sympath .dp-chip{background:rgba(182,141,118,.12);color:var(--sympath-mid)}
+.zone-sympath.open{border-color:var(--sympath-mid);
+  box-shadow:0 0 0 1.5px var(--sympath-mid),0 8px 24px rgba(182,141,118,.12)}
+
+/* DORSAL */
+.zone-dorsal{border-color:rgba(122,114,96,.2)}
+.zone-dorsal .zone-header{background:var(--dorsal-tint)}
+.zone-dorsal .zone-icon{background:rgba(122,114,96,.12);color:var(--dorsal-mid)}
+.zone-dorsal .zone-name{color:var(--dorsal-mid)}
+.zone-dorsal .zone-body-inner{background:white}
+.zone-dorsal .zone-separator{background:var(--dorsal-mid)}
+.zone-dorsal .zone-example{background:rgba(122,114,96,.06)}
+.zone-dorsal .ex-label{color:var(--dorsal-mid)}
+.zone-dorsal .dp-chip{background:rgba(122,114,96,.1);color:var(--dorsal-mid)}
+.zone-dorsal.open{border-color:var(--dorsal-mid);
+  box-shadow:0 0 0 1.5px var(--dorsal-mid),0 8px 24px rgba(122,114,96,.10)}
+
+/* ── NAV ── */
+.nav-row{display:flex;justify-content:space-between;align-items:center;
+  width:100%;max-width:1180px;margin-top:14px}
+.btn-back{padding:10px 18px;background:transparent;color:var(--grey);
+  border:1px solid var(--stone);border-radius:7px;
+  font-family:'Nunito Sans',sans-serif;font-size:12.5px;font-weight:600;
+  cursor:pointer;transition:all .2s}
+.btn-back:hover{background:var(--accent-bg);color:var(--text)}
+.btn-next{padding:10px 22px;background:var(--green);color:white;border:none;
+  border-radius:7px;font-family:'Nunito Sans',sans-serif;
+  font-size:12.5px;font-weight:700;cursor:pointer;transition:background .2s}
+.btn-next:hover{background:var(--forest)}
+
+.disclaimer{width:100%;max-width:1180px;margin-top:6px;padding:0 4px;
+  font-size:10.5px;color:var(--cool-grey);text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+
+<div class="brand-bar">
+  <a href="https://secondarrow.net">Second Arrow Counseling</a>
+</div>
+
+<div class="header">
+  <div class="header-progress">
+  <div class="p-step done"><div class="p-node"></div><div class="p-slabel">The Scanner</div></div>
+  <div class="p-line done"></div>
+  <div class="p-step done"><div class="p-node"></div><div class="p-slabel">The Controls</div></div>
+  <div class="p-line done"></div>
+  <div class="p-step active"><div class="p-node"></div><div class="p-slabel">Base Zones</div></div>
+  <div class="p-line"></div>
+  <div class="p-step"><div class="p-node"></div><div class="p-slabel">Blended States</div></div>
+  <div class="p-line"></div>
+  <div class="p-step"><div class="p-node"></div><div class="p-slabel">Your Map</div></div>
+  </div>
+  <h2>Layer 3: The Three Base Zones</h2>
+  <p>Every state your nervous system enters is a survival tool, not a character flaw.</p>
+</div>
+
+<!-- Intro -->
+<div class="intro-callout">
+  <div class="intro-icon">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <circle cx="9" cy="9" r="8" stroke="#6d7873" stroke-width="1.5"/>
+      <path d="M9 8v5M9 5.5v1" stroke="#6d7873" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="intro-text">
+    <h3>Protection, Not Pathology</h3>
+    <p>Your nervous system doesn't deal in "good" or "bad", it only deals in <strong>safe</strong> or <strong>unsafe</strong>. When the dials move, your body is simply selecting the best biological tool to match what your Scanner just picked up. None of these states are character flaws or signs of a broken system. They are <strong>brilliant, automated reflexes designed to protect you</strong>.</p>
+  </div>
+</div>
+
+<!-- Three Zone Cards -->
+<div class="zones-row">
+
+  <!-- VENTRAL -->
+  <div class="zone-card zone-ventral" id="card-ventral">
+    <div class="zone-header">
+      <div class="zone-icon">🌿</div>
+      <div class="zone-name">The Anchor</div>
+      <div class="zone-tagline">Ventral Vagal</div>
+      <!-- Mini dial -->
+      <div class="dial-indicator">
+        <div class="di-fader">
+          <div class="di-track" style="background:rgba(69,115,93,.15)">
+            <div class="di-fill" style="height:45%;background:var(--ventral-mid)"></div>
+          </div>
+          <div class="di-label" style="color:var(--ventral-mid)">Engine</div>
+        </div>
+        <div class="di-fader">
+          <div class="di-track" style="background:rgba(69,115,93,.15)">
+            <div class="di-fill" style="height:55%;background:var(--ventral-mid)"></div>
+          </div>
+          <div class="di-label" style="color:var(--ventral-mid)">Brakes</div>
+        </div>
+      </div>
+      <div class="zone-chevron">▼</div>
+    </div>
+    <div class="zone-body">
+      <div class="zone-body-inner">
+        <div class="dial-positions">
+          <span class="dp-chip">Engine: Idling</span>
+          <span class="dp-chip">Brakes: Soft (Ventral)</span>
+        </div>
+        <hr class="zone-separator">
+        <p class="zone-desc">The body feels safe enough to connect, digest, and rest. The soft brake is engaged gently, slowing the heart rate and opening the system to genuine social engagement, digestion, and recovery.</p>
+        <p class="zone-desc">This is not a passive absence of stress. It is an <strong>active state of biological safety</strong>, the system is working hard to maintain the conditions for connection and growth.</p>
+        <div class="zone-example">
+          <div class="ex-label">What this can look like</div>
+          Quiet reading, parallel play, or infodumping about a special interest with a safe person. For neurodivergent systems, this state may look unconventional from the outside, but the internal experience is one of <strong>safety, flow, and ease</strong>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYMPATHETIC -->
+  <div class="zone-card zone-sympath" id="card-sympath">
+    <div class="zone-header">
+      <div class="zone-icon">⚡</div>
+      <div class="zone-name">The Drive</div>
+      <div class="zone-tagline">Sympathetic Activation</div>
+      <div class="dial-indicator">
+        <div class="di-fader">
+          <div class="di-track" style="background:rgba(182,141,118,.18)">
+            <div class="di-fill" style="height:85%;background:var(--sympath-mid)"></div>
+          </div>
+          <div class="di-label" style="color:var(--sympath-mid)">Engine</div>
+        </div>
+        <div class="di-fader">
+          <div class="di-track" style="background:rgba(182,141,118,.18)">
+            <div class="di-fill" style="height:10%;background:var(--sympath-mid)"></div>
+          </div>
+          <div class="di-label" style="color:var(--sympath-mid)">Brakes</div>
+        </div>
+      </div>
+      <div class="zone-chevron">▼</div>
+    </div>
+    <div class="zone-body">
+      <div class="zone-body-inner">
+        <div class="dial-positions">
+          <span class="dp-chip">Engine: High</span>
+          <span class="dp-chip">Brakes: Off (Coast)</span>
+        </div>
+        <hr class="zone-separator">
+        <p class="zone-desc">The body is fully mobilized to protect itself. All available energy is redirected toward action, muscles tighten, heart rate rises, attention narrows to the perceived threat or challenge.</p>
+        <p class="zone-desc">This is the source of "fight or flight," but it is also the source of <strong>passion, urgency, and the energy needed to tackle something hard</strong>. It becomes a problem only when it cannot resolve, when the body stays in drive with nowhere to go.</p>
+        <div class="zone-example">
+          <div class="ex-label">What this can look like</div>
+          Racing heart, intense urgency, hypervigilance, reactive behavior, or a deep physical need to move. Also: the burst of energy that powers a hyperfocus sprint, a passionate debate, or the final push before a deadline.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DORSAL -->
+  <div class="zone-card zone-dorsal" id="card-dorsal">
+    <div class="zone-header">
+      <div class="zone-icon">🌑</div>
+      <div class="zone-name">The Cave</div>
+      <div class="zone-tagline">Dorsal Vagal</div>
+      <div class="dial-indicator">
+        <div class="di-fader">
+          <div class="di-track" style="background:rgba(122,114,96,.15)">
+            <div class="di-fill" style="height:10%;background:var(--dorsal-mid)"></div>
+          </div>
+          <div class="di-label" style="color:var(--dorsal-mid)">Engine</div>
+        </div>
+        <div class="di-fader">
+          <div class="di-track" style="background:rgba(122,114,96,.15)">
+            <div class="di-fill" style="height:90%;background:var(--dorsal-mid)"></div>
+          </div>
+          <div class="di-label" style="color:var(--dorsal-mid)">Brakes</div>
+        </div>
+      </div>
+      <div class="zone-chevron">▼</div>
+    </div>
+    <div class="zone-body">
+      <div class="zone-body-inner">
+        <div class="dial-positions">
+          <span class="dp-chip">Engine: Off</span>
+          <span class="dp-chip">Brakes: Emergency (Dorsal)</span>
+        </div>
+        <hr class="zone-separator">
+        <p class="zone-desc">The body senses that fighting or running won't work, so it conserves energy by shutting down. The emergency brake overrides the engine entirely, immobilizing the body to preserve its last reserves of fuel.</p>
+        <p class="zone-desc">This causes physical heaviness, brain fog, emotional flatness, and withdrawal. It is a <strong>protective hibernation reflex</strong>, the nervous system's most ancient and powerful survival tool. Not laziness. Not defiance. Not a broken system.</p>
+        <div class="zone-example">
+          <div class="ex-label">What this can look like</div>
+          Inability to get out of bed, emotional numbness, dissociation, or the feeling of watching yourself from a distance. Commonly experienced during sensory overload, autistic burnout, and states of prolonged or inescapable stress.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /zones-row -->
+
+<div class="nav-row">
+  <button class="btn-back" onclick="location.href='nervous-system2.html'">&larr; The Controls</button>
+  <button class="btn-next" onclick="location.href='nervous-system4.html'">Next: Blended States &rarr;</button>
+</div>
+
+<p class="disclaimer">This tool is intended for psychoeducational purposes within a therapeutic context and does not constitute medical advice, diagnosis, or treatment. Content reflects simplified representations of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.</p>
+
+<script>
+// Single-select accordion: only one card open at a time
+document.querySelectorAll('.zone-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const isOpen = card.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.zone-card').forEach(c => c.classList.remove('open'));
+    // Open this one if it wasn't already open
+    if (!isOpen) card.classList.add('open');
+  });
+});
+</script>
+</body>
+</html>

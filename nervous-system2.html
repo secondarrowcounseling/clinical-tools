@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Understanding Your Nervous System - The Mixing Board | Second Arrow Counseling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:opsz,wght@6..12,300;6..12,400;6..12,600;6..12,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:#45735d; --gold:#ba945e; --terra:#b68d76;
+  --forest:#35361c; --text:#222a26; --grey:#6d7873;
+  --bg:#faf8f5; --accent-bg:#F5F3EF;
+  --stone:#bdb7a2; --cool-grey:#a6aea6;
+  --board-bg:#252616;
+  --engine-hi:#7fc5a0; --brakes-hi:#d4a86e;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:14px 16px}
+
+/* ── BRAND BAR ── */
+.brand-bar{width:100%;max-width:1180px;display:flex;justify-content:flex-start;
+  align-items:center;padding:0 4px 10px}
+.brand-bar a{font-family:'Libre Baskerville',serif;font-size:20px;color:var(--forest);
+  text-decoration:none;opacity:.9;transition:opacity .2s}
+.brand-bar a:hover{opacity:1}
+
+/* ── HEADER PANEL ── */
+.header{background:var(--accent-bg);padding:14px 20px 12px;border-radius:10px;
+  box-shadow:0 3px 6px rgba(0,0,0,.07);width:100%;max-width:1180px;
+  margin-bottom:12px;text-align:center}
+.header-progress{display:flex;align-items:flex-start;justify-content:center;gap:0;margin-bottom:14px}
+.p-step{display:flex;flex-direction:column;align-items:center;gap:5px}
+.p-node{width:8px;height:8px;border-radius:50%;background:var(--stone);transition:all .3s}
+.p-step.done .p-node{background:var(--green);opacity:.55}
+.p-step.active .p-node{background:var(--green);width:10px;height:10px;box-shadow:0 0 0 3px rgba(69,115,93,.18)}
+.p-slabel{font-size:9px;color:var(--cool-grey);letter-spacing:.04em;white-space:nowrap;text-align:center}
+.p-step.done .p-slabel{color:var(--green);opacity:.7}
+.p-step.active .p-slabel{color:var(--green);font-weight:700}
+.p-line{width:30px;height:1px;background:var(--stone);margin-top:3px;flex-shrink:0}
+.p-line.done{background:var(--green);opacity:.4}
+.header h2{font-family:'Libre Baskerville',serif;font-size:1.3em;color:var(--forest);margin-bottom:4px}
+.header p{color:var(--grey);font-size:.87em;max-width:640px;margin:0 auto;line-height:1.55;font-style:italic}
+
+/* ── THREE-COLUMN GRID ── */
+.three-col{display:grid;grid-template-columns:220px 1fr 270px;
+  gap:11px;width:100%;max-width:1180px}
+
+/* shared panel */
+.panel{background:var(--accent-bg);border-radius:10px;
+  box-shadow:0 4px 6px rgba(0,0,0,.07);padding:14px;
+  display:flex;flex-direction:column;gap:10px}
+
+.sect-lbl{font-family:'Libre Baskerville',serif;font-size:.75em;font-weight:700;
+  color:var(--forest);text-transform:uppercase;letter-spacing:.07em;
+  border-bottom:1px solid var(--stone);padding-bottom:6px}
+
+.panel-divider{height:1px;background:var(--stone);margin:2px 0}
+
+/* ── LEFT PANEL ── */
+.left-panel{gap:8px}
+
+/* Topic selection buttons */
+.topic-btn{
+  width:100%;padding:9px 10px;border-radius:8px;
+  border:1.5px solid var(--stone);background:white;
+  color:var(--text);font-family:'Nunito Sans',sans-serif;
+  font-size:12px;font-weight:600;cursor:pointer;
+  transition:all .2s;text-align:left;display:flex;
+  align-items:center;gap:8px;line-height:1.3
+}
+.topic-btn:hover{border-color:var(--grey);transform:translateX(2px)}
+.topic-btn.active{background:var(--green);color:white;border-color:var(--green)}
+.topic-btn.active .t-num{color:rgba(255,255,255,.7)}
+.t-num{font-size:9px;font-weight:700;letter-spacing:.08em;
+  color:var(--cool-grey);flex-shrink:0;text-transform:uppercase}
+.t-label{line-height:1.3}
+
+/* Preset state buttons */
+.preset-btn{
+  width:100%;padding:8px 10px;border-radius:8px;
+  border:1.5px solid var(--stone);background:white;
+  color:var(--text);font-family:'Nunito Sans',sans-serif;
+  font-size:11.5px;font-weight:600;cursor:pointer;
+  transition:all .2s;text-align:left;display:flex;
+  align-items:center;gap:8px
+}
+.preset-btn:hover{border-color:var(--grey);transform:translateX(2px)}
+.preset-btn.active{border-width:1.5px}
+.p-pip{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ══════════════════════
+   CENTER: MIXING BOARD
+══════════════════════ */
+.board-panel{
+  background:var(--board-bg);border-radius:14px;
+  padding:20px 18px 22px;display:flex;flex-direction:column;
+  align-items:center;gap:16px;
+  box-shadow:0 16px 50px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.05);
+  position:relative;
+}
+/* Corner screws */
+.board-panel::before,.board-panel::after{
+  content:'';position:absolute;width:7px;height:7px;border-radius:50%;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09)
+}
+.board-panel::before{top:10px;left:10px}
+.board-panel::after{top:10px;right:10px}
+
+.board-header{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.3);font-weight:600}
+
+/* State display */
+.state-display{
+  width:100%;border:1px solid rgba(255,255,255,.08);border-radius:11px;
+  padding:14px 16px;text-align:center;min-height:88px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  transition:background .5s,border-color .5s;background:rgba(255,255,255,.04)
+}
+.state-pip{width:7px;height:7px;border-radius:50%;margin-bottom:3px;
+  transition:background .5s,box-shadow .5s}
+.state-label{font-family:'Libre Baskerville',serif;font-size:17px;color:white;
+  line-height:1.2;transition:opacity .18s}
+.state-sub{font-size:11px;color:rgba(255,255,255,.4);font-style:italic;
+  line-height:1.5;max-width:220px;transition:opacity .18s}
+
+/* Faders */
+.faders{display:flex;gap:28px;align-items:flex-start;justify-content:center;padding:0 4px}
+.fader-group{display:flex;flex-direction:column;align-items:center}
+.fader-body{display:flex;flex-direction:row;align-items:stretch;gap:8px}
+
+.fader-ticks{display:flex;flex-direction:column;justify-content:space-between;
+  height:200px;padding:3px 0}
+.fader-ticks span{font-size:8px;text-transform:uppercase;letter-spacing:.05em;
+  color:rgba(255,255,255,.28);text-align:right;line-height:1}
+.fader-ticks span.hi{color:rgba(255,255,255,.52)}
+
+.fader-track{width:44px;height:200px;background:rgba(255,255,255,.07);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;position:relative;
+  border:1px solid rgba(255,255,255,.06);overflow:visible}
+.fader-track::before{content:'';position:absolute;left:50%;top:7px;bottom:7px;
+  width:3px;margin-left:-1.5px;background:rgba(255,255,255,.07);border-radius:2px}
+
+.fader-input{-webkit-appearance:none;appearance:none;
+  writing-mode:vertical-lr;direction:rtl;
+  width:44px;height:192px;background:transparent;cursor:grab;outline:none;
+  position:relative;z-index:1}
+.fader-input:active{cursor:grabbing}
+.fader-input::-webkit-slider-runnable-track{width:3px;background:transparent}
+.fader-input::-webkit-slider-thumb{
+  -webkit-appearance:none;width:40px;height:20px;border-radius:5px;
+  margin-left:-18.5px;
+  box-shadow:0 3px 12px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(0,0,0,.25)
+}
+.engine-input::-webkit-slider-thumb{
+  background:linear-gradient(180deg,#91d4b2 0%,#45735d 100%);
+  border:1px solid rgba(145,212,178,.3)
+}
+.brakes-input::-webkit-slider-thumb{
+  background:linear-gradient(180deg,#e0b87c 0%,#ba945e 100%);
+  border:1px solid rgba(224,184,124,.3)
+}
+.fader-input::-moz-range-track{width:3px;background:transparent}
+.fader-input::-moz-range-thumb{width:40px;height:20px;border-radius:5px;border:none;
+  box-shadow:0 3px 12px rgba(0,0,0,.5)}
+.engine-input::-moz-range-thumb{background:#45735d}
+.brakes-input::-moz-range-thumb{background:#ba945e}
+
+.fader-name{margin-top:9px;display:flex;flex-direction:column;align-items:center;gap:1px}
+.fader-name-main{font-size:10.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+.engine-label{color:var(--engine-hi)}
+.brakes-label{color:var(--brakes-hi)}
+.fader-name-hint{font-size:9px;color:rgba(255,255,255,.3);font-style:italic}
+
+.board-divider{width:100%;height:1px;background:rgba(255,255,255,.06)}
+.board-hint{font-size:9.5px;color:rgba(255,255,255,.25);font-style:italic}
+
+/* ══════════════════════
+   RIGHT: DETAIL PANEL
+══════════════════════ */
+.right-panel{overflow-y:auto;max-height:520px;gap:0;padding:16px}
+
+.detail-eyebrow{font-size:9px;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--cool-grey);margin-bottom:3px}
+.detail-title{font-family:'Libre Baskerville',serif;font-size:15px;
+  color:var(--forest);margin-bottom:10px;line-height:1.35}
+.detail-body{font-size:13px;color:var(--grey);line-height:1.8}
+.detail-body strong{color:var(--text);font-weight:700}
+.detail-body + .detail-body{margin-top:10px}
+
+.dial-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.dial-item{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;
+  color:var(--grey);line-height:1.6}
+.dial-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.dial-dot.low {background:var(--cool-grey)}
+.dial-dot.mid {background:var(--green);box-shadow:0 0 5px rgba(69,115,93,.5)}
+.dial-dot.high{background:var(--terra);box-shadow:0 0 5px rgba(182,141,118,.5)}
+
+.nd-callout{margin-top:12px;border-left:3px solid var(--gold);padding:9px 12px;
+  background:rgba(186,148,94,.09);border-radius:0 7px 7px 0;
+  font-size:12.5px;color:var(--grey);line-height:1.7}
+.nd-callout strong{color:var(--text)}
+
+.wbt-callout{margin-top:12px;border:1.5px solid var(--gold);border-radius:9px;
+  padding:11px 14px;background:rgba(186,148,94,.07);
+  font-size:12.5px;color:var(--grey);line-height:1.7}
+.wbt-callout strong{color:var(--text)}
+
+/* Preset note */
+.preset-state-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.preset-state-pip{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.preset-sub-row{font-size:10.5px;color:var(--cool-grey);
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.preset-note{font-size:13px;color:var(--grey);line-height:1.8}
+.preset-note strong{color:var(--text)}
+
+/* Try-it button inside detail */
+.try-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  margin-top:13px;padding:8px 14px;
+  background:var(--green);color:white;border:none;border-radius:7px;
+  font-family:'Nunito Sans',sans-serif;font-size:12px;font-weight:700;
+  cursor:pointer;transition:background .2s
+}
+.try-btn:hover{background:var(--forest)}
+
+/* ── NAV ── */
+.nav-row{display:flex;justify-content:space-between;align-items:center;
+  width:100%;max-width:1180px;margin-top:12px}
+.btn-back{padding:10px 18px;background:transparent;color:var(--grey);
+  border:1px solid var(--stone);border-radius:7px;
+  font-family:'Nunito Sans',sans-serif;font-size:12.5px;font-weight:600;
+  cursor:pointer;transition:all .2s}
+.btn-back:hover{background:var(--accent-bg);color:var(--text)}
+.btn-next{padding:10px 22px;background:var(--green);color:white;border:none;
+  border-radius:7px;font-family:'Nunito Sans',sans-serif;
+  font-size:12.5px;font-weight:700;cursor:pointer;transition:background .2s}
+.btn-next:hover{background:var(--forest)}
+
+.disclaimer{width:100%;max-width:1180px;margin-top:6px;padding:0 4px;
+  font-size:10.5px;color:var(--cool-grey);text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+
+<div class="brand-bar">
+  <a href="https://secondarrow.net">Second Arrow Counseling</a>
+</div>
+
+<div class="header">
+  <div class="header-progress">
+  <div class="p-step done"><div class="p-node"></div><div class="p-slabel">The Scanner</div></div>
+  <div class="p-line done"></div>
+  <div class="p-step active"><div class="p-node"></div><div class="p-slabel">The Controls</div></div>
+  <div class="p-line"></div>
+  <div class="p-step"><div class="p-node"></div><div class="p-slabel">Base Zones</div></div>
+  <div class="p-line"></div>
+  <div class="p-step"><div class="p-node"></div><div class="p-slabel">Blended States</div></div>
+  <div class="p-line"></div>
+  <div class="p-step"><div class="p-node"></div><div class="p-slabel">Your Map</div></div>
+  </div>
+  <h2>Layer 2: The Mixing Board</h2>
+  <p>Your nervous system isn't a seesaw. It's a sound engineer's mixing board.</p>
+</div>
+
+<div class="three-col">
+
+  <!-- ══ LEFT: NAVIGATION ══ -->
+  <div class="panel left-panel">
+
+    <div class="sect-lbl">Topics</div>
+
+    <button class="topic-btn active" data-sec="1">
+      <span class="t-num">01</span>
+      <span class="t-label">It's Not an Elevator</span>
+    </button>
+    <button class="topic-btn" data-sec="2">
+      <span class="t-num">02</span>
+      <span class="t-label">The Engine</span>
+    </button>
+    <button class="topic-btn" data-sec="3">
+      <span class="t-num">03</span>
+      <span class="t-label">The Brakes</span>
+    </button>
+    <button class="topic-btn" data-sec="4">
+      <span class="t-num">04</span>
+      <span class="t-label">Gas &amp; Brakes Together</span>
+    </button>
+    <button class="topic-btn" data-sec="5">
+      <span class="t-num">05</span>
+      <span class="t-label">Why It Matters</span>
+    </button>
+
+    <div class="panel-divider"></div>
+    <div class="sect-lbl">Try a State</div>
+
+    <button class="preset-btn" data-preset="calm">
+      <span class="p-pip" style="background:#45735d;box-shadow:0 0 5px rgba(69,115,93,.6)"></span>
+      Calm Focus
+    </button>
+    <button class="preset-btn" data-preset="wbt">
+      <span class="p-pip" style="background:#ba945e;box-shadow:0 0 5px rgba(186,148,94,.6)"></span>
+      Wired But Tired
+    </button>
+    <button class="preset-btn" data-preset="shutdown">
+      <span class="p-pip" style="background:#b68d76;box-shadow:0 0 5px rgba(182,141,118,.6)"></span>
+      Shutdown / Freeze
+    </button>
+    <button class="preset-btn" data-preset="fof">
+      <span class="p-pip" style="background:#b68d76;box-shadow:0 0 5px rgba(182,141,118,.6)"></span>
+      Fight or Flight
+    </button>
+
+  </div><!-- /left -->
+
+
+  <!-- ══ CENTER: MIXING BOARD ══ -->
+  <div class="board-panel">
+
+    <div class="board-header">Nervous System State</div>
+
+    <div class="state-display" id="state-display">
+      <div class="state-pip" id="state-pip"></div>
+      <div class="state-label" id="state-label">Calm Focus</div>
+      <div class="state-sub" id="state-sub">Grounded, connected, present</div>
+    </div>
+
+    <div class="board-divider"></div>
+
+    <div class="faders">
+      <!-- ENGINE -->
+      <div class="fader-group">
+        <div class="fader-body">
+          <div class="fader-ticks">
+            <span class="hi">High</span>
+            <span>Mid</span>
+            <span>Low</span>
+            <span>Off</span>
+          </div>
+          <div class="fader-track">
+            <input type="range" id="engine-fader"
+                   class="fader-input engine-input"
+                   min="0" max="100" value="50"
+                   orient="vertical">
+          </div>
+        </div>
+        <div class="fader-name">
+          <span class="fader-name-main engine-label">Engine</span>
+          <span class="fader-name-hint">Sympathetic</span>
+        </div>
+      </div>
+
+      <!-- BRAKES -->
+      <div class="fader-group">
+        <div class="fader-body">
+          <div class="fader-ticks">
+            <span class="hi">Dorsal</span>
+            <span>Ventral</span>
+            <span>Coast</span>
+          </div>
+          <div class="fader-track">
+            <input type="range" id="brakes-fader"
+                   class="fader-input brakes-input"
+                   min="0" max="100" value="50"
+                   orient="vertical">
+          </div>
+        </div>
+        <div class="fader-name">
+          <span class="fader-name-main brakes-label">Brakes</span>
+          <span class="fader-name-hint">Parasympathetic</span>
+        </div>
+      </div>
+    </div><!-- /faders -->
+
+    <div class="board-divider"></div>
+    <div class="board-hint">Drag faders to explore states</div>
+
+  </div><!-- /board-panel -->
+
+
+  <!-- ══ RIGHT: DETAIL PANEL ══ -->
+  <div class="panel right-panel" id="right-panel">
+    <!-- populated by JS -->
+  </div>
+
+</div><!-- /three-col -->
+
+<div class="nav-row">
+  <button class="btn-back" onclick="location.href='nervous-system1.html'">&larr; The Scanner</button>
+  <button class="btn-next" onclick="location.href='nervous-system3.html'">Next: Base Zones &rarr;</button>
+</div>
+
+<p class="disclaimer">This tool is intended for psychoeducational purposes within a therapeutic context and does not constitute medical advice, diagnosis, or treatment. Content reflects simplified representations of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.</p>
+
+
+<script>
+/* ══════════════════════════════════════════
+   CONTENT DATA
+══════════════════════════════════════════ */
+const SECTIONS = {
+  '1': {
+    eyebrow: '01 · The Old Myth',
+    title: "It's Not an Elevator",
+    html: `<p class="detail-body">We used to think the nervous system worked like a seesaw or an elevator&#8212;if your stress system went up, your resting system had to go down. But human biology is much more complex. Your nervous system actually operates like a sound engineer's <strong>mixing board</strong>. You have independent dials that control your energy and your brakes, and they can be turned up or down at the exact same time.</p>`
+  },
+  '2': {
+    eyebrow: '02 · Dial 1',
+    title: 'The Engine (Sympathetic)',
+    html: `
+      <p class="detail-body">This is your biological gas pedal. The Engine is responsible for mobilization, action, and energy. When your scanner picks up a challenge or a threat, it turns this dial up.</p>
+      <div class="dial-list">
+        <div class="dial-item"><span class="dial-dot low"></span><div><strong>Turned down:</strong> Lethargic, unmotivated.</div></div>
+        <div class="dial-item"><span class="dial-dot mid"></span><div><strong>Mid:</strong> Healthy focus, play, and the energy to finish a task.</div></div>
+        <div class="dial-item"><span class="dial-dot high"></span><div><strong>Turned up high:</strong> Urgency, hyper-vigilance, and the "fight or flight" response.</div></div>
+      </div>`
+  },
+  '3': {
+    eyebrow: '03 · Dial 2',
+    title: 'The Brakes (Parasympathetic)',
+    html: `
+      <p class="detail-body">This is the system responsible for slowing you down. But you don't just have one brake&#8212;you actually have two completely different ways to stop:</p>
+      <div class="dial-list">
+        <div class="dial-item"><span class="dial-dot mid"></span><div><strong>The Soft Brake (Ventral):</strong> Your safe resting state. Slows the heart rate gently, allowing for digestion, comfortable social connection, and genuine relaxation.</div></div>
+        <div class="dial-item"><span class="dial-dot high"></span><div><strong>The Emergency Brake (Dorsal):</strong> Your survival shutdown. When the scanner detects overwhelming demands or inescapable stress, it forces the body to immobilize&#8212;leading to brain fog, physical heaviness, and dissociation.</div></div>
+      </div>`
+  },
+  '4': {
+    eyebrow: '04 · The Core Concept',
+    title: 'Pressing the Gas and the Brakes',
+    html: `
+      <p class="detail-body">The most important thing to understand about your nervous system is that the Engine and the Brakes can be active at the <strong>exact same time</strong>. You can have your foot pressed hard on the gas pedal while simultaneously pulling the emergency brake.</p>
+      <div class="nd-callout">Try it: use the button below, or drag both faders to their highest positions, and watch what state appears.</div>
+      <button class="try-btn" data-preset="wbt">Try: Wired But Tired &#8594;</button>`
+  },
+  '5': {
+    eyebrow: '05 · Why It Matters',
+    title: 'Validating the Invisible Struggle',
+    html: `
+      <p class="detail-body">When both dials are turned up at the same time, it creates intense internal friction. This is the biological mechanism behind feeling "wired but tired." On the outside, the emergency brake might make you look perfectly still, quiet, or calm&#8212;but on the inside, the engine is revving at 100 miles per hour, burning massive amounts of fuel.</p>
+      <div class="wbt-callout">This is not a character flaw or a failure of willpower. It is a <strong>mechanical reality</strong> of how the nervous system works.</div>`
+  }
+};
+
+/*
+  NERVOUS SYSTEM STATES - clinically verified combinations
+  
+  Framework: ND-affirming amendment to Polyvagal Theory
+  Engine = Sympathetic Nervous System (SNS)
+  Brakes dial ranges:
+    Coast   (0-27):  minimal parasympathetic engagement
+    Ventral (28-64): ventral vagal complex active - safe/social
+    Dorsal  (65-100):dorsal vagal - survival immobilization response
+  
+  State accuracy notes:
+  - Low+Ventral = ideal parasympathetic recovery (Rest & Digest)
+  - Mid+Ventral = Window of Tolerance - optimal for therapy/learning
+  - High+Ventral = "safe activation" - sustained performance with regulation
+                   (e.g. play, sport, excited engagement - system is not in crisis)
+  - Low+Dorsal  = classic dorsal shutdown/freeze - conservation reflex
+  - Mid+Dorsal  = partial shutdown with residual drive - common in ND presentations
+  - High+Dorsal = Wired But Tired - maximal SNS + dorsal brake simultaneously
+                  the signature of chronic ND/trauma dysregulation
+  - High+Coast  = unregulated sympathetic surge = fight/flight
+  - Low+Coast   = still/flat - neither activated nor regulated
+  - Mid+Coast   = moderate drive without parasympathetic anchoring
+*/
+const STATES = [
+  // Equal thirds: Coast 0-33 | Ventral 34-66 | Dorsal 67-100
+  {eMin:0, eMax:30, bMin:0,  bMax:33,  label:'Still & Quiet',        sub:'Low energy, minimal activation in either direction',              pip:'#a6aea6'},
+  {eMin:0, eMax:30, bMin:34, bMax:66,  label:'Rest & Digest',         sub:'Parasympathetic recovery - soft, settled, restorative',           pip:'#45735d'},
+  {eMin:0, eMax:30, bMin:67, bMax:100, label:'Shutdown / Freeze',     sub:'Dorsal vagal response - body conserves through immobilization',   pip:'#b68d76'},
+  {eMin:30,eMax:65, bMin:0,  bMax:33,  label:'Steady Drive',          sub:'Moderate energy without parasympathetic anchoring',                pip:'#8fa870'},
+  {eMin:30,eMax:65, bMin:34, bMax:66,  label:'Calm Focus',            sub:'Window of tolerance - optimal for learning, therapy, connection',  pip:'#45735d'},
+  {eMin:30,eMax:65, bMin:67, bMax:100, label:'Internal Friction',     sub:'Activation meeting dorsal resistance - effortful, draining',      pip:'#ba945e'},
+  {eMin:65,eMax:101,bMin:0,  bMax:33,  label:'Fight or Flight',       sub:'Full sympathetic surge - urgency, hyper-vigilance, mobilization', pip:'#b68d76'},
+  {eMin:65,eMax:101,bMin:34, bMax:66,  label:'Activated Engagement',  sub:'High energy held within ventral regulation - safe, excited, present', pip:'#45735d'},
+  {eMin:65,eMax:101,bMin:67, bMax:100, label:'Wired But Tired',       sub:'Engine maxed + emergency brake locked - massive internal friction', pip:'#ba945e'}
+];
+
+const PRESETS = {
+  calm:     { label:'The Anchored State', sub:'Engine: Mid | Brakes: Soft (Ventral)', engine:50, brakes:50, pip:'#45735d',
+    note:`<p class="preset-note">This is the nervous system's optimal zone for processing, learning, and genuine connection. There is enough energy to actively engage with the world, and enough soft braking to feel grounded and safe while doing it.</p>
+    <p class="preset-note" style="margin-top:10px">For neurodivergent systems, this state might not look traditionally "calm" - it might involve joyful stimming or intense focus on a special interest - but the internal experience is one of <strong>safety, flow, and regulation</strong>.</p>` },
+  wbt:      { label:'The Friction State',  sub:'Engine: High | Brakes: Emergency (Dorsal)', engine:85, brakes:85, pip:'#ba945e',
+    note:`<p class="preset-note">The gas pedal is pressed to the floor, but the emergency brake is fully engaged. This creates intense internal friction - burning massive amounts of fuel with very little outward movement.</p>
+    <p class="preset-note" style="margin-top:10px">This is the biological reality behind masking and the <strong>"wired but tired" AuDHD experience</strong>. On the outside, you may appear perfectly still, quiet, or compliant, but internally, your system is running an exhausting, high-speed threat response.</p>` },
+  shutdown: { label:'The Conservation State', sub:'Engine: Low | Brakes: Emergency (Dorsal)', engine:15, brakes:83, pip:'#b68d76',
+    note:`<p class="preset-note">The emergency brake is fully pulled, and the engine has completely powered down. The body has entered a profound conservation reflex, slowing everything down to preserve its last drops of energy in the face of sensory overload, burnout, or prolonged stress.</p>
+    <p class="preset-note" style="margin-top:10px">This feels like physical heaviness, brain fog, emotional numbness, or dissociation. <strong>This is not laziness, avoidance, or defiance</strong> - it is a brilliant, involuntary biological mechanism protecting a completely depleted system.</p>` },
+  fof:      { label:'The Mobilization State', sub:'Engine: High | Brakes: Off (Coast)', engine:83, brakes:12, pip:'#b68d76',
+    note:`<p class="preset-note">The engine is revving with absolutely no brakes applied. The body is fully mobilized, redirecting all available resources toward immediate action and protection. This feels like a racing heart, intense urgency, hyper-vigilance, racing thoughts, or a deep physical need to move.</p>
+    <p class="preset-note" style="margin-top:10px">Because Autistic and ADHD scanners are naturally tuned to pick up exponentially more environmental data, <strong>the threshold for triggering this state is lower</strong>. Your body is having a logical, protective response to a real signal.</p>` }
+};
+
+/* ══════════════════════════════════════════
+   MIXING BOARD STATE ENGINE
+══════════════════════════════════════════ */
+const engineFader = document.getElementById('engine-fader');
+const brakesFader = document.getElementById('brakes-fader');
+const stateDisplay = document.getElementById('state-display');
+const stateLabel   = document.getElementById('state-label');
+const stateSub     = document.getElementById('state-sub');
+const statePip     = document.getElementById('state-pip');
+stateLabel.style.transition = 'opacity .18s';
+stateSub.style.transition   = 'opacity .18s';
+
+let currentStateLabel = '';
+
+function getState(e, b) {
+  for (const s of STATES) {
+    if (e >= s.eMin && e < s.eMax && b >= s.bMin && b < s.bMax) return s;
+  }
+  return STATES[STATES.length - 1];
+}
+
+function updateStateDisplay() {
+  const e = parseInt(engineFader.value);
+  const b = parseInt(brakesFader.value);
+  const s = getState(e, b);
+  if (s.label === currentStateLabel) return;
+  currentStateLabel = s.label;
+
+  stateLabel.style.opacity = '0';
+  stateSub.style.opacity   = '0';
+  setTimeout(() => {
+    stateLabel.textContent = s.label;
+    stateSub.textContent   = s.sub;
+    statePip.style.background  = s.pip;
+    statePip.style.boxShadow   = `0 0 8px ${s.pip}`;
+
+    const tints = {
+      '#45735d': ['rgba(69,115,93,.13)',   'rgba(69,115,93,.25)'],
+      '#ba945e': ['rgba(186,148,94,.14)',  'rgba(186,148,94,.3)'],
+      '#b68d76': ['rgba(182,141,118,.14)','rgba(182,141,118,.3)'],
+      '#8fa870': ['rgba(143,168,112,.10)','rgba(143,168,112,.22)'],
+      '#a6aea6': ['rgba(255,255,255,.04)','rgba(255,255,255,.08)']
+    };
+    const t = tints[s.pip] || tints['#a6aea6'];
+    stateDisplay.style.background  = t[0];
+    stateDisplay.style.borderColor = t[1];
+
+    stateLabel.style.opacity = '1';
+    stateSub.style.opacity   = '1';
+  }, 180);
+}
+
+engineFader.addEventListener('input', updateStateDisplay);
+brakesFader.addEventListener('input', updateStateDisplay);
+
+/* Smooth fader animation for presets */
+function animateFaders(targetE, targetB, duration) {
+  duration = duration || 650;
+  const startE = parseInt(engineFader.value);
+  const startB = parseInt(brakesFader.value);
+  const t0 = performance.now();
+
+  function step(now) {
+    const p    = Math.min((now - t0) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3); // ease-out cubic
+    engineFader.value = Math.round(startE + (targetE - startE) * ease);
+    brakesFader.value = Math.round(startB + (targetB - startB) * ease);
+    updateStateDisplay();
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* ══════════════════════════════════════════
+   RIGHT PANEL RENDERING
+══════════════════════════════════════════ */
+const rightPanel = document.getElementById('right-panel');
+
+function showSection(key) {
+  const s = SECTIONS[key];
+  if (!s) return;
+  rightPanel.innerHTML = `
+    <div class="detail-eyebrow">${s.eyebrow}</div>
+    <div class="detail-title">${s.title}</div>
+    ${s.html}
+  `;
+  // Wire up any try-btn inside the detail
+  rightPanel.querySelectorAll('.try-btn[data-preset]').forEach(btn => {
+    btn.addEventListener('click', () => firePreset(btn.dataset.preset));
+  });
+}
+
+function showPreset(key) {
+  const p = PRESETS[key];
+  if (!p) return;
+  rightPanel.innerHTML = `
+    <div class="preset-state-header">
+      <span class="preset-state-pip" style="background:${p.pip};box-shadow:0 0 8px ${p.pip}"></span>
+      <div class="detail-title" style="margin-bottom:0">${p.label}</div>
+    </div>
+    <div class="preset-sub-row">${p.sub}</div>
+    ${p.note}
+  `;
+}
+
+function firePreset(key) {
+  const p = PRESETS[key];
+  if (!p) return;
+  animateFaders(p.engine, p.brakes);
+  showPreset(key);
+  // Mark preset button active
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`.preset-btn[data-preset="${key}"]`);
+  if (btn) {
+    btn.classList.add('active');
+    btn.style.borderColor = p.pip;
+    btn.style.background  = p.pip + '14';
+  }
+  // Clear topic button active state
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+}
+
+/* ══════════════════════════════════════════
+   EVENT LISTENERS
+══════════════════════════════════════════ */
+document.querySelectorAll('.topic-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.preset-btn').forEach(b => {
+      b.classList.remove('active');
+      b.style.borderColor = '';
+      b.style.background  = '';
+    });
+    btn.classList.add('active');
+    showSection(btn.dataset.sec);
+  });
+});
+
+document.querySelectorAll('.preset-btn').forEach(btn => {
+  btn.addEventListener('click', () => firePreset(btn.dataset.preset));
+});
+
+/* Initial render */
+showSection('1');
+updateStateDisplay();
+</script>
+</body>
+</html>
