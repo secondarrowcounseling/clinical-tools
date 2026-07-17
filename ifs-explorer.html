@@ -316,6 +316,7 @@ const DATA = {
 // ══════════════════════════════════════
 // 8 C's interaction
 // ══════════════════════════════════════
+let activeC = null;
 window.showC = function(name){
   const grid = document.getElementById('cs-grid');
   const box = document.getElementById('cs-expand-box');
@@ -372,7 +373,7 @@ function buildOrbs(){
   const cfgs=[
     {key:'managers',   radius:S.R.mgr,  speed:0.0016},
     {key:'firefighters',radius:S.R.fire,speed:-0.0011},
-    {key:'exiles',     radius:S.R.exile,speed:0.0008}
+    {key:'exiles',      radius:S.R.exile,speed:0.0008}
   ];
   cfgs.forEach(cfg=>{
     DATA[cfg.key].parts.forEach((part,i,arr)=>{
@@ -575,6 +576,7 @@ window.selectType=function(key){
   else renderType(key);
   updateBar(DATA[key].infoTitle||'',DATA[key].infoBody||'');
 };
+
 window.selectPartByIndex = function(typeKey, index) {
   const part = DATA[typeKey].parts[index];
   const orb = S.orbs.find(o => o.type === typeKey && o.part === part);
@@ -585,7 +587,9 @@ window.selectPartByIndex = function(typeKey, index) {
     renderPart(orb.part, typeKey); 
     updateBar(DATA[typeKey].infoTitle, DATA[typeKey].infoBody); 
   }
-};function selectPartOrb(orb){
+};
+
+function selectPartOrb(orb){
   S.selType=orb.type; S.selPart=orb.part;
   updateBtns(orb.type); renderPart(orb.part,orb.type);
   updateBar(DATA[orb.type].infoTitle,DATA[orb.type].infoBody);
