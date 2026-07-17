@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autistic Inertia & The "Sticky" Brain | Second Arrow Counseling</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green:     #45735d;
+            --gold:      #ba945e;
+            --terra:     #b68d76;
+            --forest:    #35361c;
+            --text:      #222a26;
+            --grey:      #6d7873;
+            --bg:        #faf8f5;
+            --accent-bg: #F5F3EF;
+            --stone:     #bdb7a2;
+            --cool-grey: #a6aea6;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background: var(--bg);
+            display: flex; flex-direction: column; align-items: center;
+            padding: 12px; margin: 0; color: var(--text);
+        }
+        .sac-topbar { width: 100%; max-width: 1100px; padding: 0 4px 8px; text-align: left; }
+        .sac-toplink {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.05em; font-weight: 700; color: var(--forest);
+            text-decoration: none; opacity: 0.85; transition: opacity 0.2s; letter-spacing: 0.01em;
+        }
+        .sac-toplink:hover { opacity: 1; }
+        .header {
+            background: var(--accent-bg); padding: 14px 20px 12px;
+            border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            width: 100%; max-width: 1100px; margin-bottom: 12px; text-align: center;
+        }
+        .header h2 { font-family: 'Libre Baskerville', serif; margin: 0 0 4px; font-size: 1.3em; }
+        .header p  { color: var(--grey); margin: 0 0 12px; font-size: 0.9em; }
+        .profile-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .profile-btn {
+            padding: 7px 18px; border-radius: 6px; border: 2px solid var(--stone);
+            background: white; color: var(--text);
+            font-family: 'Nunito Sans', sans-serif; font-weight: 700; font-size: 13px;
+            cursor: pointer; transition: all 0.25s;
+        }
+        .profile-btn:hover           { border-color: var(--grey); }
+        .profile-btn.active-nt       { background: var(--green);  color: white; border-color: var(--green); }
+        .profile-btn.active-autistic { background: var(--terra);  color: white; border-color: var(--terra); }
+        .profile-btn.active-inertia  { background: var(--forest); color: white; border-color: var(--forest); }
+        .main-area { display: flex; gap: 12px; width: 100%; max-width: 1100px; }
+        .control-panel {
+            background: var(--accent-bg); border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 16px 14px; width: 220px; flex-shrink: 0;
+            display: flex; flex-direction: column; gap: 13px;
+        }
+        .action-panel {
+            background: var(--accent-bg); border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 16px 14px; width: 220px; flex-shrink: 0;
+            display: flex; flex-direction: column; gap: 13px;
+        }
+        .panel-title {
+            font-family: 'Libre Baskerville', serif; font-size: 0.78em; color: var(--grey);
+            text-transform: uppercase; letter-spacing: 0.07em; margin: 0; text-align: center;
+        }
+        .slider-section { display: flex; flex-direction: column; gap: 7px; }
+        .slider-label-row { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+        .slider-label-text { font-weight: 700; font-size: 0.83em; }
+        .slider-val-badge {
+            font-size: 0.78em; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+            background: white; color: var(--green); transition: color 0.3s;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        input[type="range"] { width: 100%; cursor: pointer; accent-color: var(--green); }
+        .stickiness-desc {
+            font-size: 0.77em; color: var(--grey); font-style: italic;
+            text-align: center; min-height: 40px; line-height: 1.55; margin: 0;
+        }
+        .legend { display: flex; flex-direction: column; gap: 6px; }
+        .legend-item {
+            display: flex; align-items: center; gap: 9px;
+            padding: 6px 9px; background: white; border-radius: 7px;
+        }
+        .legend-dot  { width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0; }
+        .legend-name { font-weight: 700; font-size: 0.78em; color: var(--text); }
+        .legend-sub  { font-size: 0.71em; color: var(--grey); }
+        .switch-btn {
+            background: var(--green); font-family: 'Nunito Sans', sans-serif;
+            color: white; border: none; padding: 12px 16px; border-radius: 8px;
+            font-size: 14px; cursor: pointer; font-weight: 700;
+            transition: opacity 0.2s, transform 0.1s;
+            width: 100%; line-height: 1.4; text-align: center;
+        }
+        .switch-btn:hover    { opacity: 0.9; }
+        .switch-btn:active   { transform: scale(0.98); }
+        .switch-btn:disabled { background: var(--cool-grey); cursor: not-allowed; }
+        .energy-section { display: flex; flex-direction: column; gap: 6px; }
+        .energy-label-row { display: flex; justify-content: space-between; align-items: center; }
+        .energy-pct {
+            font-family: 'Libre Baskerville', serif; font-size: 1.1em;
+            font-weight: 700; color: var(--green); transition: color 0.4s;
+        }
+        .energy-track { width: 100%; height: 14px; background: rgba(0,0,0,0.08); border-radius: 7px; overflow: hidden; }
+        .energy-fill {
+            height: 100%; border-radius: 7px;
+            background: linear-gradient(to right, var(--green), #a3d4bc);
+            transition: width 0.6s ease, background 0.4s; width: 100%;
+        }
+        .energy-note { font-size: 0.71em; color: var(--grey); font-style: italic; text-align: center; margin: 0; }
+        .reset-btn {
+            width: 100%; padding: 6px; border-radius: 6px; border: none;
+            background: var(--stone); color: white;
+            font-family: 'Nunito Sans', sans-serif; font-weight: 700; font-size: 12px;
+            cursor: pointer; transition: opacity 0.2s;
+        }
+        .reset-btn:hover { opacity: 0.82; }
+        .action-status {
+            border-top: 1px solid var(--stone);
+            padding-top: 11px;
+            display: flex; flex-direction: column; gap: 6px;
+        }
+        #status-main {
+            font-weight: 700; font-size: 0.88em; margin: 0;
+            color: var(--green); line-height: 1.35;
+        }
+        #status-sub {
+            color: var(--grey); font-style: italic; font-size: 0.78em;
+            margin: 0; line-height: 1.6;
+        }
+        .sim-panel {
+            flex: 1; background: var(--accent-bg); border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 14px 10px 10px; min-width: 0;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .sim-svg { width: 100%; aspect-ratio: 840 / 540; display: block; }
+        .disclaimer {
+            width: 100%; max-width: 1100px; margin-top: 10px; padding: 10px 16px;
+            text-align: center; color: var(--grey); font-size: 0.74em; line-height: 1.6;
+        }
+        #orbit-indicator { transition: opacity 0.5s ease; pointer-events: none; }
+        @keyframes particle-ring-pulse {
+            0%   { r: 22; opacity: 0.22; }
+            50%  { r: 30; opacity: 0.10; }
+            100% { r: 22; opacity: 0.22; }
+        }
+        .particle-ring { animation: particle-ring-pulse 2s ease-in-out infinite; }
+        @keyframes link-throb {
+            0%   { opacity: 0.75; }
+            50%  { opacity: 1; }
+            100% { opacity: 0.75; }
+        }
+        .link-sticky { animation: link-throb 1.1s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+
+<div class="sac-topbar"><a href="https://www.secondarrow.net" target="_blank" rel="noopener" class="sac-toplink">Second Arrow Counseling</a></div>
+
+<div class="header">
+    <h2>Autistic Inertia & The "Sticky" Brain</h2>
+    <p>Explore how the autistic brain builds massive "mental momentum" when processing information and why shifting gears to a new task drains the battery so quickly.</p>
+    <div class="profile-buttons">
+        <button class="profile-btn active-nt"  id="btn-nt"       onclick="setPreset('nt', this)">🧠 Neurotypical</button>
+        <button class="profile-btn"            id="btn-autistic" onclick="setPreset('autistic', this)">🔄 Autistic</button>
+        <button class="profile-btn"            id="btn-inertia"  onclick="setPreset('inertia', this)">🧲 Autistic Inertia</button>
+    </div>
+</div>
+
+<div class="main-area">
+
+    <!-- LEFT COLUMN -->
+    <div class="control-panel">
+        <p class="panel-title">Simulation Controls</p>
+        <div class="slider-section">
+            <div class="slider-label-row">
+                <span class="slider-label-text">Magnetic Pull (Mental Momentum)</span>
+                <span class="slider-val-badge" id="sticky-badge">1 / 10</span>
+            </div>
+            <input type="range" id="stickiness" min="1" max="10" value="1">
+            <p class="stickiness-desc" id="sticky-desc">Low friction. The brain can shift to a new task with minimal effort.</p>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot" style="background: var(--gold);"></div>
+                <div><div class="legend-name">The "Doing" Brain (TPN)</div><div class="legend-sub">Focusing on outside chores, tasks, and demands</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: var(--green);"></div>
+                <div><div class="legend-name">The "Resting" Brain (DMN)</div><div class="legend-sub">Wandering thoughts and processing the day</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: var(--terra);"></div>
+                <div><div class="legend-name">The Deep Dive</div><div class="legend-sub">Special interests, pattern finding, or deep processing</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #f59e0b;"></div>
+                <div><div class="legend-name">Attention</div><div class="legend-sub">Where the brain's energy is flowing right now</div></div>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background:none; border:1.5px dashed var(--stone); width:13px; height:13px;"></div>
+                <div><div class="legend-name">The Comfort Zone</div><div class="legend-sub">Where attention naturally wants to stay</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CENTER COLUMN: simulation
+         All node y-coords shifted +20px vs original:
+           TPN: cy=105 -> 125   |  DMN/PL: cy=430 -> 450
+    -->
+    <div class="sim-panel">
+        <p class="panel-title" style="margin-bottom:6px;">Network Activity</p>
+
+        <svg id="sim-svg" class="sim-svg" viewBox="0 0 840 540" preserveAspectRatio="xMidYMid meet">
+            <defs>
+                <filter id="glow-amber" x="-60%" y="-60%" width="220%" height="220%">
+                    <feGaussianBlur stdDeviation="7" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+
+            <!-- Hidden paths for flow-dot animateMotion (y: 430->450) -->
+            <path id="path-dmn-pl"  d="M 182 450 L 658 450" stroke="none" fill="none"/>
+            <path id="path-pl-dmn"  d="M 658 450 L 182 450" stroke="none" fill="none"/>
+
+            <!-- DMN-PL coupling bar (y center: 450) -->
+            <rect id="dmn-link-rect" x="182" y="443" width="476" height="14" rx="6" fill="#bdb7a2"/>
+
+            <!-- Network connector paths (exit/entry points shifted +20) -->
+            <path id="path-dmn-tpn" d="M 167 410 C 167 290, 373 215, 373 175" stroke="#45735d" stroke-width="3" fill="none"/>
+            <path id="path-pl-tpn"  d="M 673 410 C 673 290, 467 215, 467 175" stroke="#45735d" stroke-width="3" fill="none"/>
+
+            <g id="flow-dots"></g>
+
+            <!-- Orbit indicator (cy: 430->450) -->
+            <ellipse id="orbit-indicator"
+                     cx="120" cy="450" rx="82" ry="72"
+                     fill="rgba(69,115,93,0.05)"
+                     stroke="#45735d"
+                     stroke-width="1.5"
+                     stroke-dasharray="6 5"
+                     opacity="0.5"/>
+
+            <!-- TPN node  cx=420, cy=125 (+20) -->
+            <g id="node-tpn">
+                <circle cx="420" cy="125" r="74" fill="#ba945e" opacity="0.10"/>
+                <circle cx="420" cy="125" r="62" fill="#ba945e"/>
+                <text x="420" y="118" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">TPN</text>
+                <text x="420" y="133" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">(Outside World)</text>
+                <text x="420" y="148" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Task Positive Network</text>
+            </g>
+
+            <!-- DMN node  cx=120, cy=450 (+20) -->
+            <g id="node-dmn">
+                <circle cx="120" cy="450" r="74" fill="#45735d" opacity="0.10"/>
+                <circle cx="120" cy="450" r="62" fill="#45735d"/>
+                <text x="120" y="443" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">DMN</text>
+                <text x="120" y="458" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Default Mode</text>
+                <text x="120" y="471" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Self-Referential</text>
+            </g>
+
+            <!-- PL node  cx=720, cy=450 (+20) -->
+            <g id="node-pl" style="opacity:0.3; transition: opacity 0.7s ease;">
+                <circle cx="720" cy="450" r="74" fill="#b68d76" opacity="0.10"/>
+                <circle cx="720" cy="450" r="62" fill="#b68d76"/>
+                <text x="720" y="443" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">Predictive</text>
+                <text x="720" y="458" text-anchor="middle" fill="white" font-size="12" font-family="Nunito Sans" font-weight="700">Loop</text>
+                <text x="720" y="473" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9.5" font-family="Nunito Sans">Pattern / Interest</text>
+            </g>
+
+            <!-- Attention particle — starts at right edge of NT orbit: 120+82=202, y=450 -->
+            <g id="svg-particle" style="transform: translate(202px, 450px);">
+                <circle class="particle-ring" cx="0" cy="0" r="22" fill="#f59e0b" opacity="0.22"/>
+                <circle cx="0" cy="0" r="14" fill="#f59e0b" filter="url(#glow-amber)"/>
+            </g>
+
+            <g id="ripple-group"></g>
+        </svg>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="action-panel">
+        <p class="panel-title">Task Switch</p>
+
+        <button class="switch-btn" id="switch-btn">
+            ⚡ Force a Task Switch
+            <div style="font-weight:400; font-size:0.84em; margin-top:2px;">(Shift Gears)</div>
+        </button>
+
+        <div class="energy-section">
+            <div class="energy-label-row">
+                <span class="panel-title" style="margin:0;">Brain Battery</span>
+                <span class="energy-pct" id="energy-pct">100%</span>
+            </div>
+            <div class="energy-track"><div class="energy-fill" id="energy-fill"></div></div>
+            <p class="energy-note" id="energy-note">Full capacity. No transitions yet.</p>
+            <button class="reset-btn" onclick="resetEnergy()">↺ Reset Energy</button>
+        </div>
+
+        <div class="action-status">
+            <p id="status-main">Neurotypical: Easy Shifting</p>
+            <p id="status-sub">Attention rests lightly. When a new task demands attention, the brain easily breaks away from its resting state. It takes very little battery power to stop doing one thing and start doing another.</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="disclaimer">
+    This tool is intended for psychoeducational purposes only. It does not constitute medical advice, diagnosis, or treatment. The information presented is a simplified representation of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.<br>
+<strong>Second Arrow Counseling — Erin Taylor, LCSW</strong>
+</div>
+
+<script>
+    /* ================================================================
+       FLOW DOT SYSTEM
+    ================================================================ */
+    const DOT_CONFIGS = {
+        nt: [
+            { pathId: 'path-dmn-pl',  color: '#bdb7a2', r: 3,   dur: 3.5, opacity: 0.35, count: 1 },
+            { pathId: 'path-dmn-tpn', color: '#45735d', r: 4,   dur: 1.8, opacity: 0.85, count: 1 },
+        ],
+        autistic: [
+            { pathId: 'path-dmn-pl',  color: '#b68d76', r: 4,   dur: 1.4, opacity: 0.85, count: 2, spacing: 0.5 },
+            { pathId: 'path-pl-dmn',  color: '#b68d76', r: 4,   dur: 1.4, opacity: 0.65, count: 1 },
+            { pathId: 'path-dmn-tpn', color: '#45735d', r: 3.5, dur: 3.2, opacity: 0.55, count: 1 },
+            { pathId: 'path-pl-tpn',  color: '#45735d', r: 3.5, dur: 3.2, opacity: 0.55, count: 1 },
+        ],
+        inertia: [
+            { pathId: 'path-dmn-pl',  color: '#35361c', r: 4.5, dur: 1.0, opacity: 0.95, count: 3, spacing: 0.37 },
+            { pathId: 'path-pl-dmn',  color: '#35361c', r: 4.5, dur: 1.0, opacity: 0.85, count: 2, spacing: 0.5 },
+            { pathId: 'path-dmn-tpn', color: '#bdb7a2', r: 3,   dur: 6.5, opacity: 0.32, count: 1 },
+            { pathId: 'path-pl-tpn',  color: '#bdb7a2', r: 3,   dur: 6.5, opacity: 0.32, count: 1 },
+        ],
+    };
+
+    function updateFlowDots(preset) {
+        const NS  = 'http://www.w3.org/2000/svg';
+        const XL  = 'http://www.w3.org/1999/xlink';
+        const grp = document.getElementById('flow-dots');
+        grp.innerHTML = '';
+        (DOT_CONFIGS[preset] || []).forEach(cfg => {
+            const count   = cfg.count   || 1;
+            const spacing = cfg.spacing || 0;
+            for (let i = 0; i < count; i++) {
+                const begin = (i * cfg.dur * spacing).toFixed(3) + 's';
+                const glow = document.createElementNS(NS, 'circle');
+                glow.setAttribute('r',       cfg.r + 3);
+                glow.setAttribute('fill',    cfg.color);
+                glow.setAttribute('opacity', (cfg.opacity * 0.28).toFixed(2));
+                const ga = document.createElementNS(NS, 'animateMotion');
+                ga.setAttribute('dur',         cfg.dur + 's');
+                ga.setAttribute('repeatCount', 'indefinite');
+                ga.setAttribute('begin',       begin);
+                const gm = document.createElementNS(NS, 'mpath');
+                gm.setAttribute('href',              '#' + cfg.pathId);
+                gm.setAttributeNS(XL, 'xlink:href', '#' + cfg.pathId);
+                ga.appendChild(gm); glow.appendChild(ga); grp.appendChild(glow);
+
+                const dot = document.createElementNS(NS, 'circle');
+                dot.setAttribute('r',       cfg.r);
+                dot.setAttribute('fill',    cfg.color);
+                dot.setAttribute('opacity', cfg.opacity);
+                const da = document.createElementNS(NS, 'animateMotion');
+                da.setAttribute('dur',         cfg.dur + 's');
+                da.setAttribute('repeatCount', 'indefinite');
+                da.setAttribute('begin',       begin);
+                const dm = document.createElementNS(NS, 'mpath');
+                dm.setAttribute('href',              '#' + cfg.pathId);
+                dm.setAttributeNS(XL, 'xlink:href', '#' + cfg.pathId);
+                da.appendChild(dm); dot.appendChild(da); grp.appendChild(dot);
+            }
+        });
+    }
+
+    /* ================================================================
+       ORBIT SYSTEM  (cy: 430 -> 450 everywhere)
+    ================================================================ */
+    const ORBIT_CONFIGS = {
+        nt:       { cx: 120, cy: 450, rx: 82,  ry: 72, speed: 0.013, strokeColor: '#45735d',  fillColor: 'rgba(69,115,93,0.05)' },
+        autistic: { cx: 530, cy: 450, rx: 225, ry: 72, speed: 0.024, strokeColor: '#9c8470',  fillColor: 'rgba(182,141,118,0.05)' },
+        inertia:  { cx: 720, cy: 450, rx: 82,  ry: 72, speed: 0.044, strokeColor: '#b68d76',  fillColor: 'rgba(182,141,118,0.08)' },
+    };
+
+    const PL_OPACITY = { nt: 0.3, autistic: 0.78, inertia: 1.0 };
+
+    const PROFILE_STATUS = {
+        nt: {
+            color: 'var(--green)',
+            main: 'Neurotypical: Easy Shifting',
+            sub:  "Attention rests lightly. When a new task demands attention, the brain easily breaks away from its resting state. It takes very little battery power to stop doing one thing and start doing another."
+        },
+        autistic: {
+            color: 'var(--terra)',
+            main: 'Autistic: Heavy Momentum',
+            sub:  "The brain processes information deeply and builds intense mental momentum. Attention gets 'pulled' toward special interests or deep processing. Shifting gears to an outside task takes much more battery power because you have to fight gravity to break away."
+        },
+        inertia: {
+            color: 'var(--forest)',
+            main: 'Autistic Inertia: The Magnetic Lock',
+            sub:  "This is often mistaken for stubbornness. The brain is entirely magnetically locked into a deep-processing state. Breaking this lock to change tasks requires a massive surge of battery power. If the battery is low, the person literally, physically cannot shift gears."
+        }
+    };
+
+    /* -- DOM refs -- */
+    const slider      = document.getElementById('stickiness');
+    const stickyBadge = document.getElementById('sticky-badge');
+    const stickyDesc  = document.getElementById('sticky-desc');
+    const switchBtn   = document.getElementById('switch-btn');
+    const dmnLinkRect = document.getElementById('dmn-link-rect');
+    const statusMain  = document.getElementById('status-main');
+    const statusSub   = document.getElementById('status-sub');
+    const energyFill  = document.getElementById('energy-fill');
+    const energyPct   = document.getElementById('energy-pct');
+    const energyNote  = document.getElementById('energy-note');
+    const svgParticle = document.getElementById('svg-particle');
+    const rippleGroup = document.getElementById('ripple-group');
+    const pathDmnTpn  = document.getElementById('path-dmn-tpn');
+    const pathPlTpn   = document.getElementById('path-pl-tpn');
+    const orbitEl     = document.getElementById('orbit-indicator');
+    const nodePL      = document.getElementById('node-pl');
+
+    /* TPN center (cy shifted +20) */
+    const posTPN = { x: 420, y: 125 };
+
+    let inTPN              = false;
+    let orbitAngle         = 0;
+    let orbitRaf           = null;
+    let currentOrbitConfig = { ...ORBIT_CONFIGS.nt };
+    let currentPreset      = 'nt';
+    let energy             = 100;
+
+    function updateOrbitIndicator(config) {
+        orbitEl.setAttribute('cx',     config.cx);
+        orbitEl.setAttribute('cy',     config.cy);
+        orbitEl.setAttribute('rx',     config.rx);
+        orbitEl.setAttribute('ry',     config.ry);
+        orbitEl.setAttribute('stroke', config.strokeColor);
+        orbitEl.setAttribute('fill',   config.fillColor);
+    }
+
+    function runOrbit() {
+        if (inTPN) return;
+        const cfg = currentOrbitConfig;
+        const x = cfg.cx + cfg.rx * Math.cos(orbitAngle);
+        const y = cfg.cy + cfg.ry * Math.sin(orbitAngle);
+        svgParticle.style.transition = 'none';
+        svgParticle.style.transform  = `translate(${x}px, ${y}px)`;
+        orbitAngle += cfg.speed;
+        orbitRaf = requestAnimationFrame(runOrbit);
+    }
+
+    updateOrbitIndicator(ORBIT_CONFIGS.nt);
+    runOrbit();
+    updateFlowDots('nt');
+
+    /* -- Slider -- */
+    slider.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        stickyBadge.innerText = `${val} / 10`;
+        if (val <= 3) {
+            stickyBadge.style.color = 'var(--green)';
+            stickyDesc.innerText = 'Low friction. The brain can shift to a new task with minimal effort.';
+            pathDmnTpn.setAttribute('stroke', '#45735d');
+            pathPlTpn.setAttribute('stroke', '#45735d');
+            pathDmnTpn.setAttribute('stroke-width', '3');
+            pathPlTpn.setAttribute('stroke-width',  '3');
+            dmnLinkRect.classList.remove('link-sticky');
+        } else if (val <= 6) {
+            stickyBadge.style.color = 'var(--terra)';
+            stickyDesc.innerText = 'Mental momentum is building. It takes conscious effort and a chunk of battery to pull yourself away from what you are doing.';
+            pathDmnTpn.setAttribute('stroke', '#6d7873');
+            pathPlTpn.setAttribute('stroke', '#6d7873');
+            pathDmnTpn.setAttribute('stroke-width', '2.5');
+            pathPlTpn.setAttribute('stroke-width',  '2.5');
+            dmnLinkRect.classList.remove('link-sticky');
+        } else if (val <= 9) {
+            stickyBadge.style.color = 'var(--forest)';
+            stickyDesc.innerText = 'Heavy magnetic pull. You are deeply locked in. Shifting to a new task feels physically uncomfortable and drains the battery rapidly.';
+            pathDmnTpn.setAttribute('stroke', '#bdb7a2');
+            pathPlTpn.setAttribute('stroke', '#bdb7a2');
+            pathDmnTpn.setAttribute('stroke-width', '1.5');
+            pathPlTpn.setAttribute('stroke-width',  '1.5');
+            dmnLinkRect.classList.add('link-sticky');
+        } else {
+            stickyBadge.style.color = 'var(--forest)';
+            stickyDesc.innerText = 'Total lock (Autistic Inertia). The brain is stuck on its current track. You cannot switch tasks unless you are given significant time to wind down first.';
+            pathDmnTpn.setAttribute('stroke', '#bdb7a2');
+            pathPlTpn.setAttribute('stroke', '#bdb7a2');
+            pathDmnTpn.setAttribute('stroke-width', '1.5');
+            pathPlTpn.setAttribute('stroke-width',  '1.5');
+            dmnLinkRect.classList.add('link-sticky');
+        }
+        const thickness = 10 + (val * 4);
+        dmnLinkRect.setAttribute('y',      450 - thickness / 2);
+        dmnLinkRect.setAttribute('height', thickness);
+        dmnLinkRect.setAttribute('fill',   val > 6 ? '#35361c' : '#bdb7a2');
+        dmnLinkRect.setAttribute('rx',     val > 6 ? '3' : '6');
+    });
+
+    /* -- Ripple -- */
+    function fireRipple(x, y, color) {
+        for (let i = 0; i < 3; i++) {
+            setTimeout(() => {
+                const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', '10');
+                c.setAttribute('fill', 'none'); c.setAttribute('stroke', color);
+                c.setAttribute('stroke-width', '3'); c.setAttribute('opacity', '1');
+                rippleGroup.appendChild(c);
+                let r = 10, op = 1;
+                const anim = setInterval(() => {
+                    r += 4; op -= 0.055;
+                    c.setAttribute('r', r);
+                    c.setAttribute('opacity', Math.max(0, op).toFixed(2));
+                    if (op <= 0) { clearInterval(anim); c.remove(); }
+                }, 30);
+            }, i * 210);
+        }
+    }
+
+    /* -- Energy -- */
+    function drainEnergy(cost) {
+        energy = Math.max(0, energy - cost);
+        const pct = Math.round(energy);
+        energyFill.style.width = `${pct}%`;
+        const grad = energy > 60
+            ? 'linear-gradient(to right, var(--green), #a3d4bc)'
+            : energy > 30
+                ? 'linear-gradient(to right, var(--gold), #d4c0a0)'
+                : 'linear-gradient(to right, var(--terra), #d4a090)';
+        energyFill.style.background = grad;
+        energyPct.innerText   = `${pct}%`;
+        energyPct.style.color = energy > 60 ? 'var(--green)' : energy > 30 ? 'var(--gold)' : 'var(--terra)';
+    }
+
+    function resetEnergy() {
+        energy = 100;
+        energyFill.style.width      = '100%';
+        energyFill.style.background = 'linear-gradient(to right, var(--green), #a3d4bc)';
+        energyPct.innerText   = '100%';
+        energyPct.style.color = 'var(--green)';
+        energyNote.innerText  = 'Reset. Full capacity restored.';
+    }
+
+    /* -- Switch button -- */
+    switchBtn.addEventListener('click', () => {
+        if (inTPN) {
+            inTPN = false;
+            switchBtn.innerHTML = '⚡ Switch to Task<div style="font-weight:400; font-size:0.84em; margin-top:2px;">(Activate TPN)</div>';
+            const st = PROFILE_STATUS[currentPreset];
+            statusMain.style.color = 'var(--green)';
+            statusMain.innerText   = '🔄 Attention released. Returning to rest-state orbit.';
+            statusSub.innerText    = 'Notice how returning to the resting orbit requires no effort — the brain slides back immediately. The asymmetry between the cost to leave and the cost to return is the whole story of inertia.';
+            orbitEl.style.opacity  = '0.5';
+            updateFlowDots(currentPreset);
+            runOrbit();
+            return;
+        }
+
+        cancelAnimationFrame(orbitRaf);
+        orbitRaf = null;
+        switchBtn.disabled = true;
+        orbitEl.style.opacity = '0.15';
+
+        const stickiness = parseInt(slider.value);
+        const cfg = { ...currentOrbitConfig };
+
+        if (stickiness <= 3) {
+            const cost = 5 + Math.round(stickiness * 1.5);
+            drainEnergy(cost);
+            energyNote.innerText   = `Transition cost: ~${cost}%. ${Math.round(energy)}% remaining.`;
+            statusMain.style.color = 'var(--green)';
+            statusMain.innerText   = '✅ Smooth transition. TPN activated.';
+            statusSub.innerText    = `Low loop strength allows efficient switching. This transition cost ~${cost}% cognitive energy — a routine, manageable effort that doesn't require crisis to initiate.`;
+            svgParticle.style.transition = 'transform 0.55s ease-out';
+            svgParticle.style.transform  = `translate(${posTPN.x}px, ${posTPN.y}px)`;
+            fireRipple(posTPN.x, posTPN.y, '#45735d');
+            document.getElementById('flow-dots').innerHTML = '';
+            finishSwitch();
+
+        } else {
+            const cost = Math.round(stickiness * 7);
+            statusMain.style.color = 'var(--terra)';
+            statusMain.innerText   = '⚠️ High metabolic friction! Fighting to disengage...';
+            statusSub.innerText    = "The attention particle is being snapped back by the Predictive Loop's gravity. This is autistic inertia in action — not a lack of effort or willpower, but a neurological tax on switching. The brain must override its own orbital momentum.";
+
+            let currentStruggle    = 0;
+            const struggleCount    = stickiness;
+            const struggleMidX     = (cfg.cx + posTPN.x) / 2;
+            const struggleMidY     = (cfg.cy + posTPN.y) / 2;
+            svgParticle.style.transition = 'transform 0.22s ease-in-out';
+
+            const struggleInterval = setInterval(() => {
+                if (currentStruggle % 2 === 0) {
+                    svgParticle.style.transform = `translate(${struggleMidX}px, ${struggleMidY}px)`;
+                } else {
+                    svgParticle.style.transform = `translate(${cfg.cx}px, ${cfg.cy}px)`;
+                }
+                currentStruggle++;
+
+                if (currentStruggle >= struggleCount) {
+                    clearInterval(struggleInterval);
+                    drainEnergy(cost);
+                    energyNote.innerText   = `Transition cost: ~${cost}%. ${Math.round(energy)}% remaining.`;
+                    statusMain.style.color = 'var(--forest)';
+                    statusMain.innerText   = '🔴 Finally broke free. Massive energy expenditure.';
+                    statusSub.innerText    = `This switch cost ~${cost}% cognitive energy — vs ~7% for a neurotypical brain on the same task. This is why "just start" fails as advice. It ignores the real neurological price of breaking a locked orbit. This is not procrastination. It is physics.`;
+                    svgParticle.style.transition = 'transform 0.9s ease-out';
+                    svgParticle.style.transform  = `translate(${posTPN.x}px, ${posTPN.y}px)`;
+                    fireRipple(posTPN.x, posTPN.y, '#ba945e');
+                    document.getElementById('flow-dots').innerHTML = '';
+                    finishSwitch();
+                }
+            }, 320);
+        }
+    });
+
+    function finishSwitch() {
+        setTimeout(() => {
+            inTPN = true;
+            switchBtn.disabled = false;
+            switchBtn.innerHTML = '↩ Release Attention<div style="font-weight:400; font-size:0.84em; margin-top:2px;">(Return to DMN)</div>';
+        }, 900);
+    }
+
+    /* -- Profile presets -- */
+    function setPreset(preset, btnEl) {
+        currentPreset = preset;
+        document.querySelectorAll('.profile-btn').forEach(b => b.className = 'profile-btn');
+        btnEl.className = `profile-btn active-${preset}`;
+
+        const newCfg = ORBIT_CONFIGS[preset];
+
+        const curX = currentOrbitConfig.cx + currentOrbitConfig.rx * Math.cos(orbitAngle);
+        const curY = currentOrbitConfig.cy + currentOrbitConfig.ry * Math.sin(orbitAngle);
+        orbitAngle = Math.atan2(
+            (curY - newCfg.cy) / newCfg.ry,
+            (curX - newCfg.cx) / newCfg.rx
+        );
+
+        currentOrbitConfig = { ...newCfg };
+        updateOrbitIndicator(newCfg);
+
+        nodePL.style.opacity = PL_OPACITY[preset] || 1;
+
+        const st = PROFILE_STATUS[preset];
+        statusMain.style.color = st.color;
+        statusMain.innerText   = st.main;
+        statusSub.innerText    = st.sub;
+
+        const targets = { nt: 1, autistic: 6, inertia: 10 };
+        animateSlider(targets[preset]);
+        updateFlowDots(preset);
+
+        if (!inTPN) {
+            cancelAnimationFrame(orbitRaf);
+            orbitRaf = null;
+            orbitEl.style.opacity = '0.5';
+            runOrbit();
+        }
+    }
+
+    function animateSlider(target) {
+        const start = parseInt(slider.value);
+        const t0    = performance.now();
+        const dur   = 600;
+        function step(now) {
+            const t     = Math.min(1, (now - t0) / dur);
+            const eased = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+            slider.value = Math.round(start + (target - start) * eased);
+            slider.dispatchEvent(new Event('input'));
+            if (t < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+    }
+</script>
+
+</body>
+</html>

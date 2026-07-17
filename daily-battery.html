@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Daily Battery | Second Arrow Counseling</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green:     #45735d;
+            --gold:      #ba945e;
+            --terra:     #b68d76;
+            --forest:    #35361c;
+            --text:      #222a26;
+            --grey:      #6d7873;
+            --bg:        #faf8f5;
+            --accent-bg: #F5F3EF;
+            --stone:     #bdb7a2;
+            --cool-grey: #a6aea6;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px;
+            margin: 0;
+            color: var(--text);
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background: var(--accent-bg);
+            padding: 14px 20px 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 1140px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .header h2 {
+            font-family: 'Libre Baskerville', serif;
+            margin: 0 0 4px;
+            font-size: 1.2em;
+        }
+        .header p { color: var(--grey); margin: 0 0 12px; font-size: 0.87em; }
+
+        .profile-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+        .profile-btn {
+            padding: 7px 18px;
+            border-radius: 6px;
+            border: 2px solid var(--stone);
+            background: white;
+            color: var(--text);
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+        .profile-btn:hover { border-color: var(--grey); }
+        .profile-btn.active-nt     { background: var(--green);  color: white; border-color: var(--green); }
+        .profile-btn.active-adhd   { background: var(--terra);  color: white; border-color: var(--terra); }
+        .profile-btn.active-autism { background: var(--gold);   color: white; border-color: var(--gold); }
+        .profile-btn.active-audhd  { background: var(--forest); color: white; border-color: var(--forest); }
+
+        /* ── MAIN LAYOUT ── */
+        .main-area {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            max-width: 1140px;
+        }
+
+        /* ── LEFT: TASKS ── */
+        .task-panel {
+            background: var(--accent-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 14px 12px;
+            width: 250px;
+            flex-shrink: 0;
+        }
+
+        .panel-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.78em;
+            color: var(--grey);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin: 0 0 10px;
+            text-align: center;
+        }
+
+        .task-card {
+            background: white;
+            border: 2px solid var(--stone);
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.18s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+        }
+        .task-card:hover  { border-color: var(--green); transform: translateX(3px); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .task-card:active { transform: translateX(1px); }
+
+        .task-icon { font-size: 1.35em; flex-shrink: 0; }
+        .task-info { flex: 1; min-width: 0; }
+        .task-name { font-weight: 700; font-size: 0.8em; color: var(--text); }
+        .task-type { font-size: 0.7em; color: var(--grey); }
+
+        .task-cost-badge {
+            background: var(--accent-bg);
+            border-radius: 4px;
+            padding: 2px 5px;
+            font-size: 0.74em;
+            font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* ── CENTER: BRAIN SVG ── */
+        .brain-panel {
+            flex: 1;
+            background: var(--accent-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 14px 10px 10px;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .brain-svg { width: 100%; height: 430px; }
+
+        /* ── RIGHT: BATTERY ── */
+        .battery-panel {
+            background: var(--accent-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 14px 12px;
+            width: 250px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .battery-pct {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2em;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .battery-track {
+            width: 100%;
+            height: 20px;
+            background: rgba(0,0,0,0.08);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .battery-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s cubic-bezier(0.4,0,0.2,1), background 0.4s;
+        }
+
+        .drain-breakdown {
+            width: 100%;
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .drain-breakdown.visible { display: flex; }
+
+        .drain-row { display: flex; align-items: center; gap: 6px; }
+        .drain-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .drain-text { font-size: 0.72em; color: var(--grey); }
+
+        .history-log {
+            width: 100%;
+            max-height: 130px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .history-item {
+            font-size: 0.72em;
+            color: var(--grey);
+            padding: 3px 7px;
+            background: white;
+            border-radius: 4px;
+            border-left: 3px solid var(--stone);
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 7px;
+            border-radius: 6px;
+            border: none;
+            background: var(--stone);
+            color: white;
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-top: auto;
+        }
+        .reset-btn:hover { opacity: 0.82; }
+
+        /* ── STATUS ── */
+        .status-panel {
+            background: var(--accent-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            padding: 12px 20px;
+            width: 100%;
+            max-width: 1140px;
+            margin-top: 12px;
+            text-align: center;
+        }
+        #status-main { font-weight: 700; font-size: 0.92em; margin: 0 0 4px; }
+        #status-sub  { color: var(--grey); font-style: italic; font-size: 0.83em; margin: 0; line-height: 1.55; }
+
+        /* ── SVG ANIMATIONS ── */
+        @keyframes sensory-flicker {
+            0%   { opacity: 0.2; }
+            45%  { opacity: 0.85; }
+            55%  { opacity: 0.85; }
+            100% { opacity: 0.2; }
+        }
+        .sensory-flicker { animation: sensory-flicker 1.6s ease-in-out infinite; }
+
+        @keyframes dash-march {
+            to { stroke-dashoffset: -24; }
+        }
+        .marching-dashes { animation: dash-march 0.7s linear infinite; }
+
+        @keyframes battery-pulse {
+            0%   { transform: scale(1); }
+            50%  { transform: scale(1.06); }
+            100% { transform: scale(1); }
+        }
+        .pulse { animation: battery-pulse 0.4s ease-out; }
+
+        /* ── BRAND BAR ── */
+        .sac-topbar {
+            width: 100%; max-width: 1140px;
+            padding: 0 4px 8px;
+            text-align: left;
+        }
+        .sac-toplink {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.05em; font-weight: 700;
+            color: var(--forest);
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+            letter-spacing: 0.01em;
+        }
+        .sac-toplink:hover { opacity: 1; }
+
+        /* ── DISCLAIMER ── */
+        .disclaimer {
+            width: 100%; max-width: 1140px;
+            margin-top: 10px; padding: 10px 16px;
+            text-align: center; color: var(--grey);
+            font-size: 0.74em; line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<!-- BRAND BAR -->
+<div class="sac-topbar"><a href="https://www.secondarrow.net" target="_blank" rel="noopener" class="sac-toplink">Second Arrow Counseling</a></div>
+
+<!-- HEADER -->
+<div class="header">
+    <h2>The Daily Battery: Tracking Your Energy Drain</h2>
+    <p>Select a neurological focus style, then tap a task to see how running different "background apps" affects your daily energy reserves.</p>
+    <div class="profile-buttons">
+        <button class="profile-btn active-nt"  onclick="setProfile('nt',    this)">🧠 Neurotypical</button>
+        <button class="profile-btn"            onclick="setProfile('adhd',  this)">⚡ ADHD</button>
+        <button class="profile-btn"            onclick="setProfile('autism',this)">🔬 Autism</button>
+        <button class="profile-btn"            onclick="setProfile('audhd', this)">🌀 AuDHD</button>
+    </div>
+</div>
+
+<!-- MAIN AREA -->
+<div class="main-area">
+
+    <!-- LEFT: TASK LIST -->
+    <div class="task-panel">
+        <p class="panel-title">Today's Tasks</p>
+        <div id="task-list"></div>
+    </div>
+
+    <!-- CENTER: BRAIN DASHBOARD -->
+    <div class="brain-panel">
+        <p class="panel-title" style="margin-bottom:6px;">Internal Settings &amp; Processing</p>
+
+        <svg id="brain-svg" class="brain-svg" viewBox="0 0 360 300">
+            <defs>
+                <filter id="glow-gold" x="-40%" y="-40%" width="180%" height="180%">
+                    <feGaussianBlur stdDeviation="4" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <filter id="glow-red" x="-40%" y="-40%" width="180%" height="180%">
+                    <feGaussianBlur stdDeviation="3" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+
+            <!-- ── CONNECTIONS ── -->
+            <path id="path-bg-pfc"
+                  d="M 127 153 C 122 128, 153 118, 153 110"
+                  stroke="#45735d" stroke-width="3" fill="none"/>
+
+            <path id="path-sensory-pfc"
+                  d="M 233 153 C 238 128, 207 118, 207 110"
+                  stroke="#45735d" stroke-width="3" fill="none"/>
+
+            <path id="path-pfc-action"
+                  d="M 180 118 L 180 264"
+                  stroke="#45735d" stroke-width="3" fill="none"/>
+
+            <path id="path-bg-action"
+                  d="M 124 239 C 126 258, 138 262, 145 264"
+                  stroke="#45735d" stroke-width="3" fill="none"/>
+
+            <!-- Sensory noise bleed lines -->
+            <line id="noise-1" x1="260" y1="195" x2="35"  y2="78"  stroke="#ba945e" stroke-width="1.5" stroke-dasharray="5,4" opacity="0"/>
+            <line id="noise-2" x1="260" y1="195" x2="348" y2="72"  stroke="#ba945e" stroke-width="1.5" stroke-dasharray="5,4" opacity="0"/>
+            <line id="noise-3" x1="260" y1="195" x2="344" y2="292" stroke="#ba945e" stroke-width="1.5" stroke-dasharray="5,4" opacity="0"/>
+            <line id="noise-4" x1="260" y1="195" x2="35"  y2="290" stroke="#ba945e" stroke-width="1.5" stroke-dasharray="5,4" opacity="0"/>
+            <g id="flow-dots"></g>
+
+            <!-- ── NODES ── -->
+            <g id="node-pfc">
+                <circle cx="180" cy="68" r="59" fill="#ba945e" opacity="0.10"/>
+                <circle cx="180" cy="68" r="50" fill="#ba945e"/>
+                <text x="180" y="62"  text-anchor="middle" fill="white" font-size="11" font-family="Nunito Sans" font-weight="700">Conscious</text>
+                <text x="180" y="76"  text-anchor="middle" fill="white" font-size="11" font-family="Nunito Sans" font-weight="700">Focus</text>
+                <text x="180" y="91"  text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9" font-family="Nunito Sans">Active Organizing</text>
+            </g>
+
+            <g id="node-bg">
+                <circle cx="100" cy="195" r="59" fill="#45735d" opacity="0.10"/>
+                <circle cx="100" cy="195" r="50" fill="#45735d"/>
+                <text x="100" y="189" text-anchor="middle" fill="white" font-size="11" font-family="Nunito Sans" font-weight="700">Habit</text>
+                <text x="100" y="203" text-anchor="middle" fill="white" font-size="11" font-family="Nunito Sans" font-weight="700">Autopilot</text>
+                <text x="100" y="218" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9" font-family="Nunito Sans">Routine Chains</text>
+            </g>
+
+            <g id="node-sensory">
+                <circle cx="260" cy="195" r="59" fill="#6d7873" opacity="0.10"/>
+                <circle cx="260" cy="195" r="50" fill="#6d7873"/>
+                <text x="260" y="189" text-anchor="middle" fill="white" font-size="11" font-family="Nunito Sans" font-weight="700">Sensory</text>
+                <text x="260" y="203" text-anchor="middle" fill="white" font-size="11" font-family="Nunito Sans" font-weight="700">Gateway</text>
+                <text x="260" y="218" text-anchor="middle" fill="rgba(255,255,255,0.72)" font-size="9" font-family="Nunito Sans">Environment Filter</text>
+            </g>
+
+            <g id="node-action">
+                <rect x="130" y="264" width="100" height="28" rx="14" fill="#35361c"/>
+                <text x="180" y="282" text-anchor="middle" fill="white" font-size="11" font-family="Nunito Sans" font-weight="700">⚡ MOVE</text>
+            </g>
+
+            <g id="ripple-group"></g>
+
+            <text x="180" y="13" text-anchor="middle" fill="#a6aea6" font-size="9" font-family="Nunito Sans" font-style="italic">
+                Tap a task to simulate energy draw
+            </text>
+        </svg>
+    </div>
+
+    <!-- RIGHT: BATTERY PANEL -->
+    <div class="battery-panel">
+        <p class="panel-title">Available Reserves</p>
+
+        <div style="text-align:center; width:100%;">
+            <span class="battery-pct" id="battery-pct" style="color:var(--green);">100%</span>
+        </div>
+
+        <div class="battery-track" style="width:100%;">
+            <div class="battery-fill" id="battery-fill"
+                 style="width:100%; background: linear-gradient(to right, var(--green), #a3d4bc);"></div>
+        </div>
+
+        <div class="drain-breakdown" id="drain-breakdown">
+            <div class="drain-row">
+                <div class="drain-dot" style="background:var(--terra);"></div>
+                <span class="drain-text">Task Setup Cost: <strong id="drain-init">0</strong>%</span>
+            </div>
+            <div class="drain-row">
+                <div class="drain-dot" style="background:var(--gold);"></div>
+                <span class="drain-text">Sensory Processing: <strong id="drain-sensory">0.0</strong>%</span>
+            </div>
+        </div>
+
+        <p class="panel-title" style="margin:4px 0 4px;">Energy Log</p>
+        <div class="history-log" id="history-log">
+            <div class="history-item" style="color:var(--cool-grey); font-style:italic; border-color:transparent;">
+                Reserves full.
+            </div>
+        </div>
+
+        <button class="reset-btn" onclick="resetBattery()">↺ Recharge Battery</button>
+    </div>
+
+</div>
+
+<!-- STATUS PANEL -->
+<div class="status-panel">
+    <p id="status-main" style="color:var(--green);">
+        🧠 Standard channel active. Energy conservation patterns running smoothly.
+    </p>
+    <p id="status-sub">
+        Routine baseline chains run efficiently in the background without needing deliberate mental focus. Sensory environments are naturally softened before reaching awareness, keeping your focus clear.
+    </p>
+</div>
+
+<script>
+/* ================================================================
+    DATA TABLES
+================================================================ */
+const PROFILES = {
+    nt:      { automationEff: 1.00, sensoryLoad: 0.08, bleedRate: 0,    color: '#45735d', label: 'Standard Channel' },
+    adhd:    { automationEff: 0.22, sensoryLoad: 0.12, bleedRate: 0,    color: '#b68d76', label: 'Interest-Driven'  },
+    autism:  { automationEff: 0.90, sensoryLoad: 0.85, bleedRate: 0,    color: '#ba945e', label: 'High-Gain'         },
+    audhd:   { automationEff: 0.22, sensoryLoad: 0.85, bleedRate: 0.45, color: '#35361c', label: 'Panoramic Paradox' }
+};
+
+const TASKS = [
+    {
+        id: 'brush', icon: '🪥', name: 'Brush Teeth', type: 'Routine Task',
+        baseCost: 4, requiresAutomation: true, requiresSocial: false,
+        desc: {
+            nt:      'A quiet routine chain fires efficiently in the background. Near-zero attention cost—the internal autopilot handles it seamlessly.',
+            adhd:    'Manual processing mode engaged. Because the automatic habit chain isn\'t natively holding the loop, you must consciously direct each micro-step: find brush, apply paste, scrub, rinse.',
+            autism:  'Predictable structure acts as a protective, low-cost baseline. Sensory details may stand out, but the deliberate sequence offers reliable comfort.',
+            audhd:   'Manual task sequencing meets ultra-vivid sensory processing. Foam texture, bristle feel, and sound are all magnified, creating a double drain on a basic task.'
+        }
+    },
+    {
+        id: 'meeting', icon: '🤝', name: 'Attend Meeting', type: 'Social Sync',
+        baseCost: 9, requiresAutomation: false, requiresSocial: true,
+        desc: {
+            nt:      'Social processing and cues run smoothly in the background. Sustained energy draws at a steady, manageable rate.',
+            adhd:    'The dynamic mix of a conversation provides helpful engagement sparks briefly. Sustained focus over time takes work, but reading the context feels immediate.',
+            autism:  'Active social translation is fully active. Manually parsing vocal tones, body language, facial patterns, and tracking conversational timing cues makes this a high-energy drain.',
+            audhd:   'Active translation runs alongside intense focus monitoring. You are simultaneously tracking social rhythms, managing your own posture, and absorbing every background noise.'
+        }
+    },
+    {
+        id: 'laundry', icon: '🧺', name: 'Do Laundry', type: 'Routine Task',
+        baseCost: 5, requiresAutomation: true, requiresSocial: false,
+        desc: {
+            nt:      'Multi-step routine runs on autopilot. Sort, load, set, fold. Transitions between steps take very little friction.',
+            adhd:    'Every micro-transition must be actively held in working memory and initiated. Stepping away and losing the thread isn\'t carelessness—it\'s the absence of an automatic backup system.',
+            autism:  'Clear, predictable workflow makes this task stable. However, small shifts in the system (like an altered detergent texture or a machine in use) can cause an immediate jump in complexity.',
+            audhd:   'Initiation block combines with sensory flood from machine noise, smells, and task grouping. Multiple internal processing channels are pulled at the exact same time.'
+        }
+    },
+    {
+        id: 'research', icon: '💻', name: 'Deep Research', type: 'Complex Focus',
+        baseCost: 12, requiresAutomation: false, requiresSocial: false,
+        desc: {
+            nt:      'Requires dedicated, active mental organization. A balanced energy draw that remains sustainable in standard spaces.',
+            adhd:    'Deep resonance potential: if the topic sparks your natural interest, a powerful momentum loop sustains hours of highly clear exploration at a surprisingly low energy cost.',
+            autism:  'Deep flow and systemizing are native strengths. Pattern-matching and immersive deep-dives flow comfortably, making this one of your most energy-efficient spaces.',
+            audhd:   'Flow states are deeply fulfilling but highly fragile. The sensory mix must be precisely calibrated; a sudden unexpected background sound can break focus and require recovery energy.'
+        }
+    },
+    {
+        id: 'boundary', icon: '💬', name: 'Set a Boundary', type: 'Emotional Load',
+        baseCost: 10, requiresAutomation: false, requiresSocial: true,
+        desc: {
+            nt:      'Relational phrasing and pacing feel naturally accessible. Takes real emotional intent, but energy returns to baseline efficiently.',
+            adhd:    'Sensory alarm bells around rejection can trigger. Managing emotional regulation and focus checks competes for the exact same active energy needed to express yourself clearly.',
+            autism:  'Relational rules feel unpredictable under stress. Decoding subtext, facial nuance, and matching tone in the midst of tension takes immense, manual processing. Very high drain.',
+            audhd:   'Heightened relational sensitivity, active social translation, and task-initiation cost collide. Communicating needs in real-time draws maximum available power.'
+        }
+    },
+    {
+        id: 'cook', icon: '🍳', name: 'Cook Dinner', type: 'Routine Task',
+        baseCost: 6, requiresAutomation: true, requiresSocial: false,
+        desc: {
+            nt:      'Familiar steps combine seamlessly as a background habit loop. Multitasking runs smoothly and efficiently.',
+            adhd:    'Tracking kitchen timers, managing burners, and sequencing ingredients are all handled actively. Shifts in focus can cause you to drop the thread mid-task.',
+            autism:  'Highly efficient if following a precise, reliable recipe. Sensory inputs like rising steam, intense smells, and food textures require a controlled space to stay comfortable.',
+            audhd:   'Active sequencing demands meet intense sensory inputs from heat, kitchen noise, and strong aromas. An everyday task that frequently calls for full-throttle processing power.'
+        }
+    }
+];
+
+const PROFILE_STATUS = {
+    nt:     ['🧠 Standard channel active. Energy conservation patterns running smoothly.',
+             'Routine baseline chains run efficiently in the background without needing deliberate mental focus. Sensory environments are naturally softened before reaching awareness, keeping your focus clear.'],
+    adhd:   ['⚡ Interest-driven focus style active. Task autopilot requires active direction.',
+             'Your focus system operates on specific sparks like novelty, urgency, or alignment. Everyday routine steps do not chain together automatically, meaning basic tasks call for the exact same conscious energy usually reserved for complex problem-solving.'],
+    autism: ['🔬 High-gain focus style active. Sensory filters are open in high-definition.',
+             'Your nervous system processes surroundings with immense, unedited detail. Every ambient sound or visual input arrives in full focus. Navigating social translation or unexpected environmental changes requires running complex systems manually.'],
+    audhd:  ['🌀 Panoramic paradox active. Dual processing demands: Initiation blocks met with rich sensory input.',
+             'Your focus needs a strong interest spark while your sensory gates process the room in brilliant, unedited high-definition. Your battery registers a continuous background draw just staying open in a noisy room. This isn\'t fatigue—it\'s the profound metabolic reality of running two highly detailed internal systems simultaneously.']
+};
+
+/* ================================================================
+    STATE
+================================================================ */
+let currentProfile = 'nt';
+let battery = 100;
+let totalInitDrain = 0;
+let totalSensoryDrain = 0;
+let sensoryBleedInterval = null;
+
+/* ================================================================
+    COST CALCULATION
+================================================================ */
+function computeCost(task) {
+    const p = PROFILES[currentProfile];
+    let cost = task.baseCost;
+
+    if (task.requiresAutomation) {
+        cost = cost * (1 / p.automationEff);
+    }
+
+    if (task.requiresSocial) {
+        cost = cost + (task.baseCost * p.sensoryLoad * 2.4);
+    }
+
+    if (!task.requiresAutomation && !task.requiresSocial &&
+        (currentProfile === 'adhd' || currentProfile === 'audhd')) {
+        cost = task.baseCost * 0.48;
+    }
+
+    return Math.min(95, Math.round(cost));
+}
+
+/* ================================================================
+    RENDER TASKS
+================================================================ */
+function renderTasks() {
+    const list = document.getElementById('task-list');
+    list.innerHTML = '';
+
+    TASKS.forEach(task => {
+        const cost = computeCost(task);
+        const costColor = cost <= 8 ? 'var(--green)' : cost <= 20 ? 'var(--gold)' : 'var(--terra)';
+
+        const card = document.createElement('div');
+        card.className = 'task-card';
+        card.innerHTML = `
+            <span class="task-icon">${task.icon}</span>
+            <div class="task-info">
+                <div class="task-name">${task.name}</div>
+                <div class="task-type">${task.type}</div>
+            </div>
+            <span class="task-cost-badge" style="color:${costColor};">${cost}%</span>
+        `;
+        card.addEventListener('click', () => attemptTask(task));
+        list.appendChild(card);
+    });
+}
+
+/* ================================================================
+    ATTEMPT TASK
+================================================================ */
+function attemptTask(task) {
+    const cost = computeCost(task);
+    battery = Math.max(0, battery - cost);
+    totalInitDrain += cost;
+    updateBattery(true);
+    logTask(task, cost);
+    animateBrain(task, cost);
+    updateTaskStatus(task, cost);
+}
+
+/* ================================================================
+    BATTERY DISPLAY
+================================================================ */
+function updateBattery(pulse = false) {
+    const fill    = document.getElementById('battery-fill');
+    const pctEl   = document.getElementById('battery-pct');
+    const initEl  = document.getElementById('drain-init');
+    const sensEl  = document.getElementById('drain-sensory');
+
+    const grad = battery > 60
+        ? 'linear-gradient(to right, var(--green), #a3d4bc)'
+        : battery > 30
+            ? 'linear-gradient(to right, var(--gold), #d4c0a0)'
+            : 'linear-gradient(to right, var(--terra), #d4a090)';
+
+    const textColor = battery > 60 ? 'var(--green)' : battery > 30 ? 'var(--gold)' : 'var(--terra)';
+
+    fill.style.width      = `${battery}%`;
+    fill.style.background = grad;
+    pctEl.innerText       = `${Math.round(battery)}%`;
+    pctEl.style.color     = textColor;
+
+    initEl.innerText  = totalInitDrain;
+    sensEl.innerText  = totalSensoryDrain.toFixed(1);
+
+    if (pulse) {
+        pctEl.classList.remove('pulse');
+        void pctEl.offsetWidth;
+        pctEl.classList.add('pulse');
+    }
+}
+
+function resetBattery() {
+    battery = 100;
+    totalInitDrain = 0;
+    totalSensoryDrain = 0;
+    updateBattery();
+
+    const log = document.getElementById('history-log');
+    log.innerHTML = '<div class="history-item" style="color:var(--cool-grey); font-style:italic; border-color:transparent;">Reserves full.</div>';
+
+    const main = document.getElementById('status-main');
+    const sub  = document.getElementById('status-sub');
+    main.style.color = PROFILES[currentProfile].color;
+    main.innerText   = PROFILE_STATUS[currentProfile][0];
+    sub.innerText    = PROFILE_STATUS[currentProfile][1];
+}
+
+/* ================================================================
+    LOG
+================================================================ */
+function logTask(task, cost) {
+    const log = document.getElementById('history-log');
+    const placeholder = log.querySelector('div[style*="font-style:italic"]');
+    if (placeholder) placeholder.remove();
+
+    const color = cost <= 8 ? 'var(--green)' : cost <= 20 ? 'var(--gold)' : 'var(--terra)';
+    const item  = document.createElement('div');
+    item.className = 'history-item';
+    item.style.borderLeftColor = color;
+    item.innerHTML = `${task.icon} ${task.name}: <strong style="color:${color}">-${cost}%</strong>`;
+    log.insertBefore(item, log.firstChild);
+}
+
+/* ================================================================
+    BRAIN SVG ANIMATION
+================================================================ */
+function animateBrain(task, cost) {
+    const group = document.getElementById('ripple-group');
+    group.innerHTML = '';
+
+    let cx, cy;
+    if (task.requiresAutomation)  { cx = 100; cy = 195; }
+    else if (task.requiresSocial) { cx = 260; cy = 195; }
+    else                          { cx = 180; cy = 68;  }
+
+    const rippleColor = cost <= 8 ? '#45735d' : cost <= 20 ? '#ba945e' : '#b68d76';
+
+    for (let i = 0; i < 3; i++) {
+        const delay = i * 220;
+        setTimeout(() => {
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', cx);
+            circle.setAttribute('cy', cy);
+            circle.setAttribute('r', '5');
+            circle.setAttribute('fill', 'none');
+            circle.setAttribute('stroke', rippleColor);
+            circle.setAttribute('stroke-width', '2.5');
+            circle.setAttribute('opacity', '1');
+            group.appendChild(circle);
+
+            let r = 5, op = 1;
+            const anim = setInterval(() => {
+                r  += 3.5;
+                op -= 0.06;
+                circle.setAttribute('r', r);
+                circle.setAttribute('opacity', Math.max(0, op).toFixed(2));
+                if (op <= 0) { clearInterval(anim); circle.remove(); }
+            }, 28);
+        }, delay);
+    }
+}
+
+/* ================================================================
+    BRAIN SVG STYLING PER PROFILE
+================================================================ */
+function updateBrainSVG(profile) {
+    const paths = {
+        bgPfc:      document.getElementById('path-bg-pfc'),
+        sensoryPfc: document.getElementById('path-sensory-pfc'),
+        pfcAction:  document.getElementById('path-pfc-action'),
+        bgAction:   document.getElementById('path-bg-action')
+    };
+    const noises = [1,2,3,4].map(i => document.getElementById(`noise-${i}`));
+
+    noises.forEach(n => {
+        n.setAttribute('opacity', '0');
+        n.classList.remove('sensory-flicker');
+    });
+
+    Object.values(paths).forEach(p => {
+        p.removeAttribute('filter');
+        p.setAttribute('stroke-width', '3');
+        p.setAttribute('stroke-dasharray', 'none');
+        p.classList.remove('marching-dashes');
+    });
+
+    if (profile === 'nt') {
+        Object.values(paths).forEach(p => {
+            p.setAttribute('stroke', '#45735d');
+        });
+    }
+
+    else if (profile === 'adhd') {
+        [paths.bgPfc, paths.bgAction].forEach(p => {
+            p.setAttribute('stroke', '#b68d76');
+            p.setAttribute('stroke-width', '2.5');
+            p.setAttribute('stroke-dasharray', '9,7');
+            p.classList.add('marching-dashes');
+        });
+        [paths.sensoryPfc, paths.pfcAction].forEach(p => {
+            p.setAttribute('stroke', '#45735d');
+        });
+    }
+
+    else if (profile === 'autism') {
+        paths.sensoryPfc.setAttribute('stroke', '#ba945e');
+        paths.sensoryPfc.setAttribute('stroke-width', '5.5');
+        paths.sensoryPfc.setAttribute('filter', 'url(#glow-gold)');
+        [paths.bgPfc, paths.bgAction, paths.pfcAction].forEach(p => {
+            p.setAttribute('stroke', '#45735d');
+        });
+        noises.forEach(n => {
+            n.setAttribute('opacity', '0.55');
+            n.classList.add('sensory-flicker');
+        });
+    }
+
+    else if (profile === 'audhd') {
+        [paths.bgPfc, paths.bgAction].forEach(p => {
+            p.setAttribute('stroke', '#b68d76');
+            p.setAttribute('stroke-width', '2.5');
+            p.setAttribute('stroke-dasharray', '9,7');
+            p.classList.add('marching-dashes');
+        });
+        paths.sensoryPfc.setAttribute('stroke', '#ba945e');
+        paths.sensoryPfc.setAttribute('stroke-width', '5.5');
+        paths.sensoryPfc.setAttribute('filter', 'url(#glow-gold)');
+        paths.pfcAction.setAttribute('stroke', '#45735d');
+        noises.forEach(n => {
+            n.setAttribute('opacity', '0.75');
+            n.classList.add('sensory-flicker');
+        });
+    }
+}
+
+/* ================================================================
+    STATUS TEXT
+================================================================ */
+function updateTaskStatus(task, cost) {
+    const main = document.getElementById('status-main');
+    const sub  = document.getElementById('status-sub');
+    const p    = PROFILES[currentProfile];
+
+    const emoji = cost <= 8 ? '✅' : cost <= 20 ? '⚠️' : '🔴';
+    main.style.color = cost <= 8 ? 'var(--green)' : cost <= 20 ? 'var(--gold)' : 'var(--terra)';
+    main.innerText = `${emoji} ${task.icon} ${task.name}: -${cost}% energy drain (${p.label} focus)${battery <= 20 ? ' — ⚠️ Reserves critically low.' : ''}`;
+    sub.innerText = task.desc[currentProfile];
+}
+
+/* ================================================================
+    FLOW DOT CONFIGS + ANIMATOR
+================================================================ */
+const DOT_CONFIGS = {
+    nt: [
+        { pathId: 'path-bg-pfc',      color: '#45735d', r: 4,   dur: 2.0, opacity: 0.85, count: 1 },
+        { pathId: 'path-sensory-pfc', color: '#45735d', r: 4,   dur: 2.2, opacity: 0.85, count: 1 },
+        { pathId: 'path-pfc-action',  color: '#45735d', r: 4,   dur: 1.8, opacity: 0.85, count: 1 },
+        { pathId: 'path-bg-action',   color: '#45735d', r: 4,   dur: 2.4, opacity: 0.85, count: 1 },
+    ],
+    adhd: [
+        { pathId: 'path-bg-pfc',      color: '#b68d76', r: 3.5, dur: 4.5, opacity: 0.55, count: 1 },
+        { pathId: 'path-sensory-pfc', color: '#45735d', r: 4,   dur: 2.2, opacity: 0.85, count: 1 },
+        { pathId: 'path-pfc-action',  color: '#45735d', r: 4,   dur: 1.8, opacity: 0.85, count: 1 },
+        { pathId: 'path-bg-action',   color: '#b68d76', r: 3.5, dur: 5.2, opacity: 0.55, count: 1 },
+    ],
+    autism: [
+        { pathId: 'path-bg-pfc',      color: '#45735d', r: 4,   dur: 2.0, opacity: 0.85, count: 1 },
+        { pathId: 'path-sensory-pfc', color: '#ba945e', r: 4,   dur: 1.1, opacity: 0.90, count: 3, spacing: 0.37 },
+        { pathId: 'path-pfc-action',  color: '#45735d', r: 4,   dur: 1.8, opacity: 0.85, count: 1 },
+        { pathId: 'path-bg-action',   color: '#45735d', r: 4,   dur: 2.4, opacity: 0.85, count: 1 },
+    ],
+    audhd: [
+        { pathId: 'path-bg-pfc',      color: '#b68d76', r: 3.5, dur: 4.5, opacity: 0.55, count: 1 },
+        { pathId: 'path-sensory-pfc', color: '#ba945e', r: 4,   dur: 1.1, opacity: 0.90, count: 3, spacing: 0.37 },
+        { pathId: 'path-pfc-action',  color: '#45735d', r: 4,   dur: 1.8, opacity: 0.85, count: 1 },
+        { pathId: 'path-bg-action',   color: '#b68d76', r: 3.5, dur: 5.2, opacity: 0.55, count: 1 },
+    ],
+};
+
+function updateFlowDots(profile) {
+    const NS  = 'http://www.w3.org/2000/svg';
+    const XL  = 'http://www.w3.org/1999/xlink';
+    const grp = document.getElementById('flow-dots');
+    grp.innerHTML = '';
+
+    (DOT_CONFIGS[profile] || []).forEach(cfg => {
+        const count   = cfg.count   || 1;
+        const spacing = cfg.spacing || 0;
+
+        for (let i = 0; i < count; i++) {
+            const begin = (i * cfg.dur * spacing).toFixed(3) + 's';
+
+            // Glow halo
+            const glow = document.createElementNS(NS, 'circle');
+            glow.setAttribute('r',       cfg.r + 3);
+            glow.setAttribute('fill',    cfg.color);
+            glow.setAttribute('opacity', (cfg.opacity * 0.28).toFixed(2));
+            const ga = document.createElementNS(NS, 'animateMotion');
+            ga.setAttribute('dur',          cfg.dur + 's');
+            ga.setAttribute('repeatCount', 'indefinite');
+            ga.setAttribute('begin',       begin);
+            const gm = document.createElementNS(NS, 'mpath');
+            gm.setAttribute('href',              '#' + cfg.pathId);
+            gm.setAttributeNS(XL, 'xlink:href', '#' + cfg.pathId);
+            ga.appendChild(gm);
+            glow.appendChild(ga);
+            grp.appendChild(glow);
+
+            // Core dot
+            const dot = document.createElementNS(NS, 'circle');
+            dot.setAttribute('r',       cfg.r);
+            dot.setAttribute('fill',    cfg.color);
+            dot.setAttribute('opacity', cfg.opacity);
+            const da = document.createElementNS(NS, 'animateMotion');
+            da.setAttribute('dur',          cfg.dur + 's');
+            da.setAttribute('repeatCount', 'indefinite');
+            da.setAttribute('begin',       begin);
+            const dm = document.createElementNS(NS, 'mpath');
+            dm.setAttribute('href',              '#' + cfg.pathId);
+            dm.setAttributeNS(XL, 'xlink:href', '#' + cfg.pathId);
+            da.appendChild(dm);
+            dot.appendChild(da);
+            grp.appendChild(dot);
+        }
+    });
+}
+
+/* ================================================================
+    PROFILE SWITCHER
+================================================================ */
+function setProfile(profile, btnEl) {
+    currentProfile = profile;
+
+    document.querySelectorAll('.profile-btn').forEach(b => b.className = 'profile-btn');
+    btnEl.className = `profile-btn active-${profile}`;
+
+    clearInterval(sensoryBleedInterval);
+    sensoryBleedInterval = null;
+
+    if (profile === 'audhd') {
+        document.getElementById('drain-breakdown').classList.add('visible');
+        sensoryBleedInterval = setInterval(() => {
+            const bleed = 0.25;
+            battery = Math.max(0, battery - bleed);
+            totalSensoryDrain += bleed;
+            updateBattery(false);
+        }, 1000);
+    } else {
+        document.getElementById('drain-breakdown').classList.remove('visible');
+    }
+
+    updateBrainSVG(profile);
+    updateFlowDots(profile);
+    renderTasks();
+
+    const main = document.getElementById('status-main');
+    const sub  = document.getElementById('status-sub');
+    main.style.color = PROFILES[profile].color;
+    main.innerText   = PROFILE_STATUS[profile][0];
+    sub.innerText    = PROFILE_STATUS[profile][1];
+}
+
+/* ================================================================
+    INIT
+================================================================ */
+renderTasks();
+updateBrainSVG('nt');
+updateFlowDots('nt');
+</script>
+<div class="disclaimer">
+    This tool is intended for psychoeducational purposes only. It does not constitute medical advice, diagnosis, or treatment. The information presented is a simplified representation of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.<br>
+<strong>Second Arrow Counseling — Erin Taylor, LCSW</strong>
+</div>
+</body>
+</html>

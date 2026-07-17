@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Default Mode and Task Positive Network Simulator | Second Arrow Counseling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:#45735d; --gold:#ba945e; --terra:#b68d76;
+  --forest:#35361c; --text:#222a26; --grey:#6d7873;
+  --bg:#faf8f5; --accent-bg:#F5F3EF;
+  --stone:#bdb7a2; --cool-grey:#a6aea6; --blue:#7a9eb5;
+  --dmn-color:#7a9eb5;
+  --tpn-color:#45735d;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito Sans',sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:12px}
+
+.brand-bar{width:100%;max-width:1180px;display:flex;justify-content:flex-start;
+  align-items:center;padding:0 4px 10px}
+.brand-bar a{font-family:'Libre Baskerville',serif;font-size:20px;color:var(--forest);
+  text-decoration:none;letter-spacing:.01em;opacity:.9;transition:opacity .2s}
+.brand-bar a:hover{opacity:1}
+
+.header{background:var(--accent-bg);padding:13px 20px;border-radius:10px;
+  box-shadow:0 3px 6px rgba(0,0,0,.07);width:100%;max-width:1180px;
+  margin-bottom:12px;text-align:center}
+.header h2{font-family:'Libre Baskerville',serif;margin:0 0 4px;
+  font-size:1.28em;color:var(--forest)}
+.header p{color:var(--grey);margin:0 auto;font-size:.86em;
+  max-width:700px;line-height:1.5}
+
+.three-col{display:grid;grid-template-columns:240px 1fr 272px;
+  gap:12px;width:100%;max-width:1180px}
+
+.panel{background:var(--accent-bg);border-radius:10px;
+  box-shadow:0 4px 6px rgba(0,0,0,.07);padding:14px;
+  display:flex;flex-direction:column;gap:11px}
+
+.sect-lbl{font-family:'Libre Baskerville',serif;font-size:.78em;font-weight:700;
+  color:var(--forest);text-transform:uppercase;letter-spacing:.06em;
+  border-bottom:1px solid var(--stone);padding-bottom:6px}
+
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pbtn{padding:8px 5px;border-radius:7px;border:1.5px solid var(--stone);
+  background:#fff;color:var(--text);font-family:'Nunito Sans',sans-serif;
+  font-weight:700;font-size:11.5px;cursor:pointer;transition:all .2s;
+  text-align:center;line-height:1.35}
+.pbtn:hover{border-color:var(--grey);transform:translateY(-1px)}
+.pbtn .sub{font-weight:400;font-size:10px;display:block;margin-top:1px}
+.pbtn.act-nt    {background:var(--green);color:#fff;border-color:var(--green)}
+.pbtn.act-adhd  {background:var(--gold); color:#fff;border-color:var(--gold)}
+.pbtn.act-autism{background:var(--blue); color:#fff;border-color:var(--blue)}
+.pbtn.act-audhd {background:var(--terra);color:#fff;border-color:var(--terra)}
+
+.slider-block{display:flex;flex-direction:column;gap:5px}
+.sl-hdr{display:flex;justify-content:space-between;align-items:center}
+.sl-lbl{font-weight:700;font-size:.8em;color:var(--forest)}
+.sl-val{font-weight:700;font-size:.8em;color:var(--gold)}
+.sl-sub{font-size:.7em;color:var(--grey)}
+
+input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:3px;
+  background:linear-gradient(to right,var(--green) var(--pct,0%),var(--stone) var(--pct,0%));
+  cursor:pointer;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;
+  width:16px;height:16px;border-radius:50%;background:var(--green);
+  border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.28);
+  cursor:pointer;transition:transform .15s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
+
+.profile-card{background:#fff;border:1px solid var(--stone);border-radius:8px;
+  padding:10px 12px;flex:1}
+.pc-name{font-family:'Libre Baskerville',serif;font-size:.82em;font-weight:700;
+  color:var(--forest);margin-bottom:5px}
+.pc-desc{font-size:.75em;color:var(--grey);line-height:1.65}
+
+.center-panel{background:var(--accent-bg);border-radius:10px;
+  box-shadow:0 4px 6px rgba(0,0,0,.07);padding:14px;
+  display:flex;flex-direction:column;align-items:center;gap:14px}
+
+.gauges-row{display:flex;justify-content:center;gap:44px;flex:1}
+
+.gauge-container{display:flex;flex-direction:column;align-items:center}
+
+.bar-bg{height:220px;width:64px;background:#fff;border-radius:10px;
+  position:relative;overflow:hidden;margin-bottom:10px;
+  border:1px solid var(--stone)}
+.bar-fill{position:absolute;bottom:0;left:0;width:100%;
+  border-radius:8px 8px 0 0;
+  transition:height .5s cubic-bezier(.4,0,.2,1)}
+#dmn-fill{background:linear-gradient(to top,#5c85a0,var(--dmn-color));height:90%}
+#tpn-fill{background:linear-gradient(to top,#2e5c47,var(--tpn-color));height:10%}
+
+.gauge-label{font-family:'Libre Baskerville',serif;font-weight:700;font-size:1em;margin-bottom:2px}
+.gauge-label.dmn{color:var(--dmn-color)}
+.gauge-label.tpn{color:var(--tpn-color)}
+.gauge-subtext{font-size:.7em;color:var(--grey);text-align:center;
+  margin-bottom:5px;line-height:1.4}
+.gauge-value{font-size:1.1em;font-weight:700}
+
+.coact-section{width:100%;background:#fff;border:1px solid var(--stone);
+  border-radius:8px;padding:10px 14px}
+.coact-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.coact-title{font-size:.72em;font-weight:700;color:var(--grey);
+  text-transform:uppercase;letter-spacing:.5px}
+.coact-badge{font-size:.85em;font-weight:700;transition:color .4s}
+.coact-track{height:8px;background:var(--stone);border-radius:4px;overflow:hidden;position:relative}
+.coact-fill{height:100%;border-radius:4px;
+  transition:width .5s cubic-bezier(.4,0,.2,1),background .5s}
+.coact-dividers{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.coact-dividers span{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,255,255,.6)}
+.coact-ticks{display:flex;justify-content:space-between;margin-top:3px}
+.coact-ticks span{font-size:.6em;color:var(--stone)}
+
+.right-panel{background:var(--accent-bg);border-radius:10px;
+  box-shadow:0 4px 6px rgba(0,0,0,.07);padding:14px;
+  display:flex;flex-direction:column;gap:8px}
+
+.state-bar{height:3px;width:100%;border-radius:2px;
+  transition:background .4s;background:var(--cool-grey);margin-bottom:2px}
+.state-bar.good{background:var(--green)}
+.state-bar.moderate{background:var(--gold)}
+.state-bar.high{background:var(--terra)}
+
+.fb-block{background:#fff;border:1px solid var(--stone);border-radius:8px;
+  padding:10px 12px}
+.fb-title{font-weight:700;font-size:.7em;color:var(--forest);
+  text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.fb-text{font-size:.78em;color:var(--grey);line-height:1.65}
+
+.disclaimer{max-width:1180px;width:100%;text-align:center;font-size:.70em;
+  color:var(--cool-grey);line-height:1.55;margin:12px auto 6px;padding:0 12px}
+
+@media(max-width:820px){
+  .three-col{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="brand-bar">
+  <a href="https://www.secondarrow.net" target="_blank" rel="noopener">Second Arrow Counseling</a>
+</div>
+
+<div class="header">
+  <h2>Default Mode and Task Positive Network Simulator</h2>
+  <p>See what happens when your brain tries to rest and work at the same time, and why everyday tasks can leave you exhausted. Explore how different brains handle focus and energy.</p>
+</div>
+
+<div class="three-col">
+
+  <div class="panel">
+    <p class="sect-lbl">Neurological Profile</p>
+    <div class="profile-grid">
+      <button class="pbtn act-nt" data-p="neurotypical">Neurotypical<span class="sub">The Seesaw</span></button>
+      <button class="pbtn" data-p="adhd">ADHD<span class="sub">Tug-of-War</span></button>
+      <button class="pbtn" data-p="autism">Autism<span class="sub">Deep Processor</span></button>
+      <button class="pbtn" data-p="audhd">AuDHD<span class="sub">Overloaded Circuit</span></button>
+    </div>
+
+    <div class="slider-block">
+      <div class="sl-hdr">
+        <span class="sl-lbl">External Task Demand</span>
+        <span class="sl-val" id="demand-pct">0%</span>
+      </div>
+      <span class="sl-sub" id="demand-label">Resting / Idle</span>
+      <input type="range" id="demand-slider" min="0" max="100" value="0">
+    </div>
+
+    <div class="profile-card">
+      <div class="pc-name" id="profile-name-display">Neurotypical</div>
+      <div class="pc-desc" id="profile-desc">A clean back-and-forth between DMN and TPN. As external demand increases, the DMN steps back cleanly, allowing the TPN to take over - one goes up, the other comes down.</div>
+    </div>
+  </div>
+
+  <div class="center-panel">
+    <p class="sect-lbl" style="align-self:flex-start;width:100%">Network Activity</p>
+    <div class="gauges-row">
+      <div class="gauge-container">
+        <div class="bar-bg"><div id="dmn-fill" class="bar-fill"></div></div>
+        <div class="gauge-label dmn">DMN</div>
+        <div class="gauge-subtext">Default Mode Network<br>Resting, processing, wandering</div>
+        <div id="dmn-value" class="gauge-value" style="color:var(--dmn-color)">90%</div>
+      </div>
+      <div class="gauge-container">
+        <div class="bar-bg"><div id="tpn-fill" class="bar-fill"></div></div>
+        <div class="gauge-label tpn">TPN</div>
+        <div class="gauge-subtext">Task Positive Network<br>Focusing and getting things done</div>
+        <div id="tpn-value" class="gauge-value" style="color:var(--tpn-color)">10%</div>
+      </div>
+    </div>
+
+    <div class="coact-section">
+      <div class="coact-header">
+        <span class="coact-title">Brain Tension (Friction)</span>
+        <span class="coact-badge" id="coact-label">Minimal</span>
+      </div>
+      <div class="coact-track">
+        <div class="coact-fill" id="coact-fill" style="width:10%;background:var(--green)"></div>
+        <div class="coact-dividers">
+          <span style="left:25%"></span>
+          <span style="left:50%"></span>
+          <span style="left:75%"></span>
+        </div>
+      </div>
+      <div class="coact-ticks">
+        <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <p class="sect-lbl">Current State</p>
+    <div class="state-bar good" id="state-bar"></div>
+
+    <div class="fb-block">
+      <div class="fb-title">Internal Experience</div>
+      <div class="fb-text" id="experience-text">Resting state. The DMN is active for daydreaming, inner thought, and reflection. The system is at baseline.</div>
+    </div>
+
+    <div class="fb-block">
+      <div class="fb-title">Energy Drain</div>
+      <div class="fb-text" id="cost-text">Low - Baseline maintenance only.</div>
+    </div>
+
+    <div class="fb-block" id="clinical-note-item" style="display:none">
+      <div class="fb-title">Why This Happens</div>
+      <div class="fb-text" id="clinical-note-text"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="disclaimer">
+  This tool is intended for psychoeducational purposes only. It does not constitute medical advice, diagnosis, or treatment. The information presented is a simplified representation of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.<br>
+<strong>Second Arrow Counseling — Erin Taylor, LCSW</strong>
+</div>
+
+<script>
+const demandSlider    = document.getElementById('demand-slider');
+const demandPct       = document.getElementById('demand-pct');
+const demandLbl       = document.getElementById('demand-label');
+const dmnFill         = document.getElementById('dmn-fill');
+const tpnFill         = document.getElementById('tpn-fill');
+const dmnValue        = document.getElementById('dmn-value');
+const tpnValue        = document.getElementById('tpn-value');
+const coactFill       = document.getElementById('coact-fill');
+const coactLabel      = document.getElementById('coact-label');
+const stateBar        = document.getElementById('state-bar');
+const experienceText  = document.getElementById('experience-text');
+const costText        = document.getElementById('cost-text');
+const clinicalItem    = document.getElementById('clinical-note-item');
+const clinicalText    = document.getElementById('clinical-note-text');
+const profileName     = document.getElementById('profile-name-display');
+const profileDesc     = document.getElementById('profile-desc');
+const pbtns           = document.querySelectorAll('.pbtn');
+
+let currentProfile = 'neurotypical';
+
+const PROFILES = {
+  neurotypical: {
+    name:'Neurotypical',
+    desc:'Like a perfectly balanced seesaw. When it’s time to focus, the resting part of the brain quietly turns off. When it’s time to rest, the focusing part shuts down. They easily take turns.',
+    dmn:d=>90-d*0.80, tpn:d=>10+d*0.80,
+  },
+  adhd: {
+    name:'ADHD - The Tug-of-War',
+    desc:'Your resting brain doesn’t easily turn off when it’s time to work. You are trying to focus, but your internal thoughts are still running loudly. It takes a lot of extra energy to push through this. It’s a difference in how your brain is wired, not a lack of willpower.',
+    dmn:d=>90-d*0.25, tpn:d=>10+d*0.72,
+  },
+  autism: {
+    name:'Autism - The Deep Processor',
+    desc:'Your resting brain is constantly working hard to process sounds, lights, patterns, and body signals. Because your brain is so busy in the background, shifting gears to a new task takes more effort and drains your battery faster.',
+    dmn:d=>92-d*0.46, tpn:d=>8+d*0.73,
+  },
+  audhd: {
+    name:'AuDHD - The Overloaded Circuit',
+    desc:'Combines both patterns: your brain is actively processing the world around you, AND its internal thoughts won’t easily quiet down to focus. Your brain is running hot even before you start a task. This is the physical root of feeling "wired but tired."',
+    dmn:d=>94-d*0.18, tpn:d=>10+d*0.66,
+  },
+};
+
+const FEEDBACK = {
+  neurotypical:[
+    {maxD:28, state:'good',
+    exp:'Resting normally. Your mind is free to wander, daydream, and relax. Energy use is low.', 
+    cost:'Low - Just keeping the lights on.', 
+    note:null},
+    {maxD:68, state:'moderate', 
+    exp:'Shifting gears. Your wandering mind naturally quiets down as you start to focus on the task. It takes a normal amount of effort.', 
+    cost:'Moderate - A clean and easy transition.', 
+    note:null},
+    {maxD:100,state:'good',
+    exp:'In the zone. The resting part of your brain has completely stepped back so you can fully focus. Your energy is being used efficiently.', 
+    cost:'Moderate - Energy is matching the task perfectly.', 
+    note:null},
+  ],
+  adhd:[
+    {maxD:28, state:'good',
+    exp:'Resting, but often feeling restless. Your mind might be jumping between thoughts, overthinking, or looking for something more interesting to do.', 
+    cost:'Low to Moderate - Your resting state burns a little extra fuel.', 
+    note:null},
+    {maxD:68, state:'moderate', 
+    exp:'Feeling friction. You are trying to work, but your inner thoughts won\'t turn off. It feels like fighting against yourself, making it easy to get distracted.', 
+    cost:'Moderate to High - You are burning energy fighting internal resistance.', 
+    note:"Your resting brain simply doesn't turn off automatically when tasks get harder. This isn't something you can fix by 'trying harder'—it's a real, physical difference in how your brain shifts gears."},
+    {maxD:100,state:'high',
+    exp:'The tug-of-war. You are getting things done, but your brain is playing loud background noise at the same time. You are doing the work, but it takes double the effort.', 
+    cost:'High - Doing two things at once drains your battery quickly.', 
+    note:"When a task is highly interesting or urgent, it can trigger 'hyperfocus,' which temporarily turns off the background noise. This is why having a deep interest in a task makes it so much easier for you to do—it changes your brain's chemistry in the moment."},
+  ],
+  autism:[
+    {maxD:28, state:'moderate', 
+    exp:"Resting is still hard work. Your brain is constantly sorting out what you see, hear, and feel in your body. Even when 'doing nothing,' your brain is very busy.", 
+    cost:'Moderate - High baseline energy is used just to process the environment.', 
+    note:"For many Autistic people, 'resting' isn't fully relaxing. Your brain is always scanning, organizing, and making sense of the world around you. This is why you might feel exhausted even after a quiet afternoon."},
+    {maxD:68, state:'moderate', 
+    exp:'Shifting gears. You are moving your attention to a new task, but it takes a lot of fuel to pull away from what you were just processing.', 
+    cost:'Moderate to High - Changing tasks costs more energy than average.', 
+    note:"This is often called 'autistic inertia.' Changing directions or starting a new task costs a lot of physical brain energy. It is a neurological reality, not you being 'stubborn' or 'rigid.'"},
+    {maxD:100,state:'high',
+    exp:"Fully focused on the outside, but still processing on the inside. You might look like you're doing the task perfectly, but it's draining your battery much faster than it looks.", 
+    cost:'High - A huge gap between how easy it looks and how hard it feels.', 
+    note:"This is what happens under the surface during 'masking' or pushing through. You look fine on the outside, but you are burning huge amounts of energy on the inside. Doing this for too long is exactly what leads to Autistic burnout."},
+  ],
+  audhd:[
+    {maxD:28, state:'moderate', 
+    exp:"Resting doesn't actually feel restful. Your mind is restless (ADHD) AND working hard to process the sensory world around you (Autistic). Your brain is fully 'on' before you even start your day.", 
+    cost:'Moderate - Your system never gets to truly power down.', 
+    note:"If you feel like you're never truly rested, your body is telling the truth. Because your 'idle' speed is so high, you are naturally starting with less battery than others. You are not exaggerating."},
+    {maxD:68, state:'high',
+    exp:"Heavy friction. Your busy thoughts won't quiet down AND you are carrying a heavy sensory load. Trying to focus feels like driving a car with the emergency brake on.", 
+    cost:'High - Both patterns are active at the same time, causing quick fatigue.', 
+    note:"This is the classic 'wired but tired' feeling. You are trying to focus while your brain is still running heavy background apps. The exhaustion is real, and it happens before the task even gets hard."},
+    {maxD:100,state:'high',
+    exp:'Both systems are running at max speed. You are pushing hard to get things done, but the background noise and sensory processing refuse to turn down. You are burning energy incredibly fast.', 
+    cost:'Very High - Unsustainable. Your brain is competing with itself for limited energy.', 
+    note:"This is the physical cause of AuDHD burnout. It is not laziness or avoidance—it is your battery completely emptying because your brain had to run two intense systems at once. True recovery requires lowering demands and finding real ways to rest."},
+  ],
+};
+
+function getFeedback(profile,demand){
+  for(const t of FEEDBACK[profile]) if(demand<=t.maxD) return t;
+  return FEEDBACK[profile].at(-1);
+}
+
+function update(){
+  const demand = parseInt(demandSlider.value,10);
+  demandSlider.style.setProperty('--pct',demand+'%');
+  demandPct.textContent = demand+'%';
+  demandLbl.textContent = demand<20?'Resting / Idle':demand<50?'Light Task':demand<80?'Moderate Task':'High Demand';
+
+  const p = PROFILES[currentProfile];
+  const dmnLevel = Math.max(5,Math.min(100,p.dmn(demand)));
+  const tpnLevel = Math.max(5,Math.min(100,p.tpn(demand)));
+
+  dmnFill.style.height = dmnLevel+'%';
+  tpnFill.style.height = tpnLevel+'%';
+  dmnValue.textContent = Math.round(dmnLevel)+'%';
+  tpnValue.textContent = Math.round(tpnLevel)+'%';
+
+  profileName.textContent = p.name;
+  profileDesc.textContent = p.desc;
+
+  const coact = Math.round(Math.min(dmnLevel,tpnLevel));
+  coactFill.style.width = coact+'%';
+  let cc, ct;
+  if(coact<25){cc='var(--green)'; ct='Minimal';}
+  else if(coact<50){cc='var(--gold)'; ct='Moderate';}
+  else if(coact<75){cc='var(--terra)'; ct='High';}
+  else{cc='#8b4a3a'; ct='Severe';}
+  coactFill.style.background = cc;
+  coactLabel.textContent = ct;
+  coactLabel.style.color = cc;
+
+  const fb = getFeedback(currentProfile,demand);
+  stateBar.className = 'state-bar '+fb.state;
+  experienceText.textContent = fb.exp;
+  costText.textContent = fb.cost;
+  if(fb.note){
+    clinicalItem.style.display='block';
+    clinicalText.textContent=fb.note;
+  } else {
+    clinicalItem.style.display='none';
+  }
+}
+
+pbtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    pbtns.forEach(b=>b.className='pbtn');
+    const p = btn.dataset.p;
+    const classMap={neurotypical:'act-nt',adhd:'act-adhd',autism:'act-autism',audhd:'act-audhd'};
+    btn.classList.add(classMap[p]);
+    currentProfile = p;
+    update();
+  });
+});
+
+demandSlider.addEventListener('input',update);
+update();
+</script>
+</body>
+</html>
