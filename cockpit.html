@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Second Arrow Cockpit</title>
+    <!-- Tailwind CSS for clean layout utilities -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React 18 & Babel for a native, unminified, highly editable browser experience -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            background-color: #faf8f5; /* warmWhite */
+            margin: 0;
+            line-height: inherit;
+        }
+        /* Custom scrollbars matching the color palette */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F5F3EF; /* cream */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #bdb7a2; /* stone */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6d7873; /* warmGrey */
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const m = {
+            forest: "#45735d",
+            gold: "#ba945e",
+            terracotta: "#b68d76",
+            darkForest: "#35361c",
+            warmWhite: "#faf8f5",
+            cream: "#F5F3EF",
+            stone: "#bdb7a2",
+            warmGrey: "#6d7873",
+            coolGrey: "#a6aea6",
+            iceBlue: "#8cbdb5",
+            calmTeal: "#5a9e8a"
+        };
+
+        const initialClients = [
+            { id: "client_a", name: "Client A (Tier 1)", weight: 1.0 },
+            { id: "client_b", name: "Client B (Tier 2)", weight: 2.0 },
+            { id: "client_c", name: "Client C (Tier 3)", weight: 3.0 }
+        ];
+
+        const cyclePhases = [
+            { id: "follicular", label: "Follicular", modifier: 0.5, desc: "Resilient" },
+            { id: "ovulatory", label: "Ovulatory", modifier: 0.5, desc: "Peak" },
+            { id: "luteal", label: "Luteal", modifier: 1.5, desc: "Protect" },
+            { id: "menstrual", label: "Menstrual", modifier: 1.2, desc: "Reset" }
+        ];
+
+        const energyStealersConfig = [
+            { id: "tight_9am", label: "9:00 AM Session Start" },
+            { id: "solo_parenting", label: "Solo Parenting (Morning)" },
+            { id: "medical_appt", label: "Personal Medical Appt" },
+            { id: "high_endocrine", label: "High Endocrine Load" }
+        ];
+
+        const morningChecklistTasks = [
+            "Create Meet links for clients",
+            "Update host settings",
+            "Review clinical notes",
+            "Respond/note any emails/texts/calls"
+        ];
+
+        const shutdownChecklistTasks = [
+            "Complete progress notes",
+            "Update Headway calendar",
+            "Run IVY Pay if needed",
+            "Respond to emails/texts/calls"
+        ];
+
+        const defaultState = {
+            mode: "workday",
+            page: 1,
+            cyclePhase: "luteal",
+            endocrineLoad: 2,
+            energyStealers: ["tight_9am"],
+            morningDropoff: "smooth",
+            eveningPlan: "cook",
+            coreFocus: "",
+            morningChecklist: [false, false, false, false],
+            avs: 5,
+            utilization: 3,
+            sessions: [
+                { time: "09:00 AM", clientId: "", ghost: false, noteWritten: false, intensity: "standard" },
+                { time: "10:15 AM", clientId: "", ghost: false, noteWritten: false, intensity: "standard" },
+                { time: "11:30 AM", clientId: "", ghost: false, noteWritten: false, intensity: "standard" },
+                { time: "01:00 PM", clientId: "", ghost: false, noteWritten: false, intensity: "standard" },
+                { time: "02:15 PM", clientId: "", ghost: false, noteWritten: false, intensity: "standard" }
+            ],
+            shutdownChecklist: [false, false, false, false],
+            capsule: {
+                media: "",
+                hyperfocus: "",
+                dayAnchor: "",
+                currentBook: "",
+                activeCourse: "",
+                mediaEnabled: true,
+                hyperfocusEnabled: true,
+                dayAnchorEnabled: true,
+                readEnabled: true,
+                courseEnabled: true,
+                photoAnchor: ""
+            },
+            clients: initialClients,
+            scratchpadNotes: "",
+            weekendDebtCarryover: false
+        };
+
+        const Icons = {
+            Activity: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg>
+            ),
+            Calendar: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+            ),
+            Check: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            ),
+            ChevronLeft: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            ),
+            ChevronRight: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            ),
+            CircleCheck: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+            ),
+            Circle: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/></svg>
+            ),
+            Copy: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            ),
+            FileText: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+            ),
+            Ghost: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 10h.01"/><path d="M15 10h.01"/><path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5 2.5-2.5 2.5 2.5 2.5-2.5 3 3V10a8 8 0 0 0-8-8z"/></svg>
+            ),
+            Moon: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+            ),
+            RotateCcw: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            ),
+            Sun: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+            ),
+            Thermometer: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/></svg>
+            ),
+            TriangleAlert: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            ),
+            Plus: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            ),
+            Trash2: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+            ),
+            Zap: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            ),
+            Heart: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            ),
+            BookOpen: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            ),
+            Camera: ({ size = 16, color = "currentColor" }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/></svg>
+            )
+        };
+
+        function getAVSFeedback(avs) {
+            if (avs <= 2) {
+                return { color: m.iceBlue, label: "Vagal Collapse / Freeze State", sub: "Complete energetic depletion, hypo-arousal, or executive shutdown. Cease administrative output. Passive sensory restoration required." };
+            } else if (avs <= 4) {
+                return { color: m.calmTeal, label: "Parasympathetic Restoration", sub: "Autonomic safety, physiological recovery, and active decompression." };
+            } else if (avs <= 6) {
+                return { color: m.forest, label: "Ventral Vagal Flow State", sub: "The optimal baseline sweet spot. High empathy retention, fluid communication, and balanced focus." };
+            } else if (avs <= 8) {
+                return { color: m.gold, label: "Sympathetic Mobilization", sub: "Rising cognitive friction, sensory hyper-awareness, or low-level anxiety. Enforce transition recovery timers." };
+            } else {
+                return { color: m.terracotta, label: "Sympathetic Overdrive / Autonomic Conflict", sub: "Fight/flight activation, high sensory fatigue, or acute neurodivergent burnout. Trigger automatic professional lockout, mandating strict sensory isolation." };
+            }
+        }
+
+        function getUtilFeedback(level) {
+            const labels = ["Underloaded", "Buffer", "Sweet Spot", "Max Capacity", "Overload"];
+            const colors = [m.stone, m.forest, m.gold, m.terracotta, m.darkForest];
+            return {
+                label: labels[level - 1] || "Unknown",
+                color: colors[level - 1] || m.stone
+            };
+        }
+
+        class ErrorBoundary extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = { hasError: false, errorMsg: "" };
+            }
+            static getDerivedStateFromError(error) {
+                return { hasError: true, errorMsg: String(error) };
+            }
+            render() {
+                if (this.state.hasError) {
+                    return (
+                        <div style={{ padding: 40, color: m.terracotta, fontFamily: "system-ui, sans-serif" }}>
+                            <h2 style={{ color: m.darkForest }}>Cockpit Render Error</h2>
+                            <pre style={{ background: m.cream, padding: 16, borderRadius: 8, overflow: "auto" }}>{this.state.errorMsg}</pre>
+                            <p style={{ marginTop: 12, color: m.warmGrey }}>Try resetting local state or clear localStorage.</p>
+                        </div>
+                    );
+                }
+                return this.props.children;
+            }
+        }
+
+        function App() {
+            const [state, setState] = React.useState(() => {
+                try {
+                    const saved = localStorage.getItem("cockpit-v2");
+                    if (saved) {
+                        return { ...defaultState, ...JSON.parse(saved) };
+                    }
+                } catch (e) {
+                    console.error("Local load failed", e);
+                }
+                return defaultState;
+            });
+
+            React.useEffect(() => {
+                try {
+                    localStorage.setItem("cockpit-v2", JSON.stringify(state));
+                } catch (e) {
+                    console.error("Local save failed", e);
+                }
+            }, [state]);
+
+            const updateState = (update) => setState(prev => ({ ...prev, ...update }));
+
+            const updateSession = (idx, update) => setState(prev => {
+                const sessions = prev.sessions.map((s, sIdx) => sIdx === idx ? { ...s, ...update } : s);
+                return { ...prev, sessions };
+            });
+
+            const updateCapsule = (update) => setState(prev => ({
+                ...prev,
+                capsule: { ...prev.capsule, ...update }
+            }));
+
+            // Endocrine Calculations
+            const endocrinePhaseMod = (cyclePhases.find(p => p.id === state.cyclePhase) || cyclePhases[0]).modifier;
+            const dragCoefficient = endocrinePhaseMod * (state.endocrineLoad || 1);
+
+            // Dynamic CCF Target calculation (Somatic Safeguard Override)
+            let standardCeiling = 10.0;
+            let dynamicCeiling = standardCeiling;
+            if (state.energyStealers.includes("solo_parenting")) {
+                dynamicCeiling -= 1.5;
+            }
+            if (dragCoefficient >= 3.0) {
+                dynamicCeiling = Math.min(dynamicCeiling, 8.0);
+            }
+            dynamicCeiling = Math.max(6.0, dynamicCeiling);
+
+            // Live CCF Cumulative Sum
+            const ccfLoad = state.sessions.reduce((sum, s) => {
+                if (s.ghost || !s.clientId) return sum;
+                const client = state.clients.find(c => c.id === s.clientId);
+                if (!client) return sum;
+                const multiplier = s.intensity === "elevated" ? 1.3 : s.intensity === "crisis" ? 1.6 : 1.0;
+                return sum + (client.weight * multiplier);
+            }, 0);
+
+            const ccfPercentage = Math.min(100, dynamicCeiling > 0 ? (ccfLoad / dynamicCeiling) * 100 : 0);
+            const ccfColor = ccfLoad > dynamicCeiling ? m.terracotta : ccfLoad > (dynamicCeiling * 0.85) ? m.gold : m.forest;
+
+            // Back-to-Back High Intensity Clinical Safeguard warning
+            const consecutiveHighRisk = React.useMemo(() => {
+                let lastIntensity = false;
+                for (let s of state.sessions) {
+                    if (s.ghost || !s.clientId) {
+                        lastIntensity = false;
+                        continue;
+                    }
+                    const client = state.clients.find(c => c.id === s.clientId);
+                    if (client) {
+                        const weight = client.weight * (s.intensity === "elevated" ? 1.3 : s.intensity === "crisis" ? 1.6 : 1.0);
+                        if (weight >= 2.5) {
+                            if (lastIntensity) return true;
+                            lastIntensity = true;
+                        } else {
+                            lastIntensity = false;
+                        }
+                    }
+                }
+                return false;
+            }, [state.sessions, state.clients]);
+
+            const avsFeedback = getAVSFeedback(state.avs || 5);
+            const utilFeedback = getUtilFeedback(state.utilization || 3);
+            const unwrittenNotesCount = state.sessions.filter(s => s.clientId && !s.ghost && !s.noteWritten).length;
+
+            const [newClientName, setNewClientName] = React.useState("");
+            const [newClientWeight, setNewClientWeight] = React.useState(2);
+            const [rosterExpanded, setRosterExpanded] = React.useState(false);
+
+            const addClient = () => {
+                if (!newClientName.trim()) return;
+                const newId = `client_${Date.now()}`;
+                const added = { id: newId, name: `${newClientName.trim()} (Tier ${newClientWeight})`, weight: Number(newClientWeight) };
+                updateState({ clients: [...state.clients, added] });
+                setNewClientName("");
+            };
+
+            const removeClient = (clientId) => {
+                const filtered = state.clients.filter(c => c.id !== clientId);
+                const cleanedSessions = state.sessions.map(s => s.clientId === clientId ? { ...s, clientId: "" } : s);
+                updateState({ clients: filtered, sessions: cleanedSessions });
+            };
+
+            // Compiled RAG-Optimized YAML markdown output with fallback support
+            const compiledMarkdown = React.useMemo(() => {
+                const today = new Date().toISOString().split("T")[0];
+                const escapeQuotes = str => (str || "").replace(/"/g, '\\"');
+                
+                // Intentional Fallback assignments
+                const nowSpinningVal = state.capsule.mediaEnabled ? escapeQuotes(state.capsule.media || "") : "intentional_silence";
+                const currentHyperfocusVal = state.capsule.hyperfocusEnabled ? escapeQuotes(state.capsule.hyperfocus || "") : "cognitive_rest";
+                const currentBookVal = state.capsule.readEnabled ? escapeQuotes(state.capsule.currentBook || "") : "cognitive_rest";
+                const activeCourseVal = state.capsule.courseEnabled ? escapeQuotes(state.capsule.activeCourse || "") : "cognitive_rest";
+                const dailyEventVal = state.capsule.dayAnchorEnabled ? escapeQuotes(state.capsule.dayAnchor || "") : "standard_routine_day";
+
+                return [
+                    "---",
+                    `date: ${today}`,
+                    `weekend_mode: ${state.mode === "weekend"}`,
+                    `cycle_phase: ${state.cyclePhase}`,
+                    `endocrine_load: ${state.endocrineLoad}`,
+                    `somatic_drag_coefficient: ${dragCoefficient.toFixed(1)}`,
+                    `autonomic_variance_score: ${state.avs}`,
+                    `morning_focus: "${escapeQuotes(state.coreFocus || "")}"`,
+                    "energy_stealers:",
+                    ...(state.energyStealers || []).map(s => `  - ${s}`),
+                    "family_household:",
+                    `  morning_dropoff: "${state.morningDropoff}"`,
+                    `  evening_energy_plan: "${state.eveningPlan}"`,
+                    `sessions_scheduled: ${state.sessions.filter(s => s.clientId && !s.ghost).length}`,
+                    `sessions_completed: ${state.sessions.filter(s => s.clientId && !s.ghost).length}`,
+                    `ghost_sessions: ${state.sessions.filter(s => s.ghost).length}`,
+                    `caseload_complexity_factor: ${ccfLoad.toFixed(1)}`,
+                    `max_daily_ccf_threshold: ${dynamicCeiling.toFixed(1)}`,
+                    `notes_written_today: ${state.sessions.filter(s => s.noteWritten).length}`,
+                    `notes_remaining_debt: ${unwrittenNotesCount}`,
+                    `workday_completed: ${state.shutdownChecklist.every(Boolean)}`,
+                    `now_spinning: "${nowSpinningVal}"`,
+                    `current_hyperfocus: "${currentHyperfocusVal}"`,
+                    `current_book: "${currentBookVal}"`,
+                    `active_course: "${activeCourseVal}"`,
+                    `daily_event: "${dailyEventVal}"`,
+                    "---",
+                    "",
+                    `**[#${today}-Somatic-Log]**`,
+                    `*   **Somatic Status:** Endocrine drag calculated at **${dragCoefficient.toFixed(1)}** with an Autonomic Variance Score of **${state.avs}/10**. ${dragCoefficient >= 3.0 ? "Luteal sensory override safeguard active." : "Operating inside normal somatic load margins."}`,
+                    `*   **Intellectual & Temporal Artifacts:** Anchored today's timeline via **"${state.capsule.dayAnchorEnabled && state.capsule.dayAnchor ? escapeQuotes(state.capsule.dayAnchor) : "standard_routine_day"}"**. Active hyperfocus captured under **"${currentHyperfocusVal}"**.`
+                ].join("\n");
+            }, [state, dragCoefficient, ccfLoad, dynamicCeiling, unwrittenNotesCount]);
+
+            const [copied, setCopied] = React.useState(false);
+            const handleCopy = () => {
+                try {
+                    const el = document.createElement('textarea');
+                    el.value = compiledMarkdown;
+                    document.body.appendChild(el);
+                    el.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(el);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                } catch (e) {
+                    console.error("Copy block failed", e);
+                }
+            };
+
+            const toggleEnergyStealer = (id) => {
+                const stealers = new Set(state.energyStealers || []);
+                if (stealers.has(id)) stealers.delete(id);
+                else stealers.add(id);
+                updateState({ energyStealers: Array.from(stealers) });
+            };
+
+            const toggleMorningTask = (idx) => {
+                const morningChecklist = [...state.morningChecklist];
+                morningChecklist[idx] = !morningChecklist[idx];
+                updateState({ morningChecklist });
+            };
+
+            const toggleShutdownTask = (idx) => {
+                const shutdownChecklist = [...state.shutdownChecklist];
+                shutdownChecklist[idx] = !shutdownChecklist[idx];
+                updateState({ shutdownChecklist });
+            };
+
+            const resetCockpit = () => {
+                if (confirm("Wipe Sandbox? This resets today's custom telemetry back to baseline.")) {
+                    updateState(defaultState);
+                }
+            };
+
+            const btnBaseStyle = {
+                cursor: "pointer",
+                border: "none",
+                borderRadius: 8,
+                padding: "8px 16px",
+                fontSize: 14,
+                transition: "all 0.2s ease"
+            };
+
+            const cardStyle = {
+                backgroundColor: m.cream,
+                border: `1px solid ${m.stone}`,
+                borderRadius: 12,
+                padding: 20
+            };
+
+            const textHeaderStyle = {
+                fontFamily: 'Georgia, "Times New Roman", serif',
+                color: m.darkForest,
+                fontWeight: 600
+            };
+
+            const pageSelectorStyle = (isActive) => ({
+                ...btnBaseStyle,
+                backgroundColor: isActive ? m.darkForest : "transparent",
+                color: isActive ? m.warmWhite : m.warmGrey,
+                border: `1px solid ${isActive ? m.darkForest : m.stone}`
+            });
+
+            return (
+                <div style={{ minHeight: "100vh", backgroundColor: m.warmWhite, color: m.warmGrey, fontFamily: "system-ui, -apple-system, sans-serif" }}>
+                    
+                    {/* GLOBAL MASTER HEADER */}
+                    <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: `1px solid ${m.stone}` }}>
+                        <div>
+                            <h1 style={{ ...textHeaderStyle, fontSize: 22, margin: 0 }}>Second Arrow Cockpit</h1>
+                            <p style={{ fontSize: 12, color: m.coolGrey, margin: "4px 0 0" }}>
+                                {new Date().toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" })}
+                            </p>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                            <button onClick={resetCockpit} style={{ ...btnBaseStyle, backgroundColor: "transparent", color: m.warmGrey, border: `1px solid ${m.stone}` }} title="Reset Day">
+                                <Icons.RotateCcw size={16} />
+                            </button>
+                            <button 
+                                onClick={() => updateState({ mode: state.mode === "workday" ? "weekend" : "workday" })} 
+                                style={{ ...btnBaseStyle, backgroundColor: state.mode === "workday" ? m.forest : m.gold, color: m.warmWhite }}
+                            >
+                                {state.mode === "workday" ? (
+                                    <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                        <Icons.Sun size={16} /> Workday
+                                    </span>
+                                ) : (
+                                    <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                        <Icons.Moon size={16} /> Weekend
+                                    </span>
+                                )}
+                            </button>
+                        </div>
+                    </header>
+
+                    {/* DYNAMIC CONTEXTUAL BANNER ALERTS */}
+                    <div style={{ maxWidth: 720, margin: "16px auto 0", padding: "0 16px" }}>
+                        {consecutiveHighRisk && state.mode === "workday" && (
+                            <div style={{ padding: "12px 16px", borderRadius: 8, backgroundColor: "rgba(182, 141, 118, 0.15)", color: m.terracotta, border: `1px solid ${m.terracotta}`, display: "flex", alignItems: "center", gap: 10, fontSize: 13, marginBottom: 12 }}>
+                                <Icons.TriangleAlert size={18} color={m.terracotta} />
+                                <div>
+                                    <strong style={{ fontStyle: "normal", fontWeight: 600 }}>Somatic Boundary Alert:</strong> Back-to-Back high complexity clinical sessions detected (Tier 3 or crisis modifiers). Mandating a 15-minute sensory isolation recovery window.
+                                </div>
+                            </div>
+                        )}
+
+                        {unwrittenNotesCount > 0 && state.mode === "workday" && state.shutdownChecklist.every(Boolean) && !state.weekendDebtCarryover && (
+                            <div style={{ padding: "12px 16px", borderRadius: 8, backgroundColor: "rgba(186, 148, 94, 0.15)", color: m.gold, border: `1px solid ${m.gold}`, display: "flex", flexDirection: "column", gap: 8, fontSize: 13, marginBottom: 12 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                    <Icons.TriangleAlert size={18} color={m.gold} />
+                                    <div>
+                                        <strong style={{ fontStyle: "normal", fontWeight: 600 }}>Friday Safeguard Prompt:</strong> You have {unwrittenNotesCount} pending notes. To safely seal your afternoon airlock with unresolved documentation debt, you must validate weekend carryover.
+                                    </div>
+                                </div>
+                                <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", marginTop: 4, padding: "4px 8px", backgroundColor: "rgba(255,255,255,0.4)", borderRadius: 4 }}>
+                                    <input 
+                                        type="checkbox" 
+                                        checked={state.weekendDebtCarryover}
+                                        onChange={(e) => updateState({ weekendDebtCarryover: e.target.checked })}
+                                        style={{ accentColor: m.gold }}
+                                    />
+                                    <span>I acknowledge carrying {unwrittenNotesCount} unwritten clinical progress notes into my recovery weekend.</span>
+                                </label>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* LAUNCHPAD (PAGE 1) */}
+                    {state.page === 1 && (
+                        <main style={{ maxWidth: 720, margin: "0 auto", padding: "24px 16px 100px" }}>
+                            
+                            {/* ENDOCRINE WEATHER STATION */}
+                            <section style={{ ...cardStyle, marginBottom: 20 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                                    <Icons.Thermometer size={20} color={m.terracotta} />
+                                    <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: 0 }}>Endocrine Weather Station</h2>
+                                </div>
+                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                                    <div>
+                                        <label style={{ fontSize: 12, color: m.coolGrey, display: "block", marginBottom: 4 }}>Cycle Phase</label>
+                                        <select 
+                                            value={state.cyclePhase} 
+                                            onChange={e => updateState({ cyclePhase: e.target.value })}
+                                            style={{ width: "100%", padding: 10, borderRadius: 8, border: `1px solid ${m.stone}`, backgroundColor: m.warmWhite, color: m.darkForest, fontSize: 14 }}
+                                        >
+                                            {cyclePhases.map(p => (
+                                                <option key={p.id} value={p.id}>{p.label} &mdash; {p.desc}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style={{ fontSize: 12, color: m.coolGrey, display: "block", marginBottom: 4 }}>Endocrine Load (1-3 Scale)</label>
+                                        <div style={{ display: "flex", gap: 8 }}>
+                                            {[1, 2, 3].map(level => (
+                                                <button
+                                                    key={level}
+                                                    onClick={() => updateState({ endocrineLoad: level })}
+                                                    style={{ flex: 1, padding: 10, borderRadius: 8, border: `1px solid ${m.stone}`, backgroundColor: state.endocrineLoad === level ? m.forest : m.warmWhite, color: state.endocrineLoad === level ? m.warmWhite : m.darkForest, cursor: "pointer" }}
+                                                >
+                                                    {level}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={{ marginTop: 16, padding: 12, borderRadius: 8, backgroundColor: dragCoefficient >= 3 ? "rgba(182,141,118,0.15)" : "rgba(69,115,93,0.1)", display: "flex", alignItems: "center", gap: 10 }}>
+                                    {dragCoefficient >= 3 ? <Icons.TriangleAlert size={18} color={m.terracotta} /> : <Icons.CircleCheck size={18} color={m.forest} />}
+                                    <div>
+                                        <p style={{ margin: 0, fontSize: 14, color: m.darkForest, fontWeight: 600 }}>Somatic Drag (β): {dragCoefficient.toFixed(1)}</p>
+                                        <p style={{ margin: "2px 0 0", fontSize: 12, color: m.warmGrey }}>
+                                            {dragCoefficient >= 3 ? "Luteal sensory safeguard active: daily CCF ceiling limited." : "Somatic load remains within manageable margins."}
+                                        </p>
+                                    </div>
+                                </div>
+                                {dynamicCeiling < standardCeiling && (
+                                    <div style={{ marginTop: 8, fontSize: 12, color: m.terracotta }}>
+                                        Max caseload limit adjusted: {standardCeiling} &rarr; {dynamicCeiling.toFixed(1)} 
+                                        {state.energyStealers.includes("solo_parenting") && " (solo parenting modifier)"}
+                                        {dragCoefficient >= 3 && " (endocrine drag compensation)"}
+                                    </div>
+                                )}
+                            </section>
+
+                            {/* ENERGY STEALERS AUDIT */}
+                            <section style={{ ...cardStyle, marginBottom: 20 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                                    <Icons.Zap size={20} color={m.gold} />
+                                    <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: 0 }}>Energy Stealers Audit</h2>
+                                </div>
+                                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                                    {energyStealersConfig.map(s => {
+                                        const isSelected = state.energyStealers.includes(s.id);
+                                        return (
+                                            <button
+                                                key={s.id}
+                                                onClick={() => toggleEnergyStealer(s.id)}
+                                                style={{ padding: "8px 14px", borderRadius: 20, fontSize: 13, cursor: "pointer", border: `1px solid ${isSelected ? m.gold : m.stone}`, backgroundColor: isSelected ? "rgba(186,148,94,0.15)" : m.warmWhite, color: isSelected ? m.darkForest : m.warmGrey }}
+                                            >
+                                                {isSelected && <Icons.Check size={14} style={{ marginRight: 6, display: "inline", verticalAlign: "middle" }} />}
+                                                {isSelected ? s.label.replace("(Morning)", "(Morning Active)") : s.label}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </section>
+
+                            {/* FAMILY & HOUSEHOLD TRANSITIONS */}
+                            <section style={{ ...cardStyle, marginBottom: 20 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                                    <Icons.Heart size={20} color={m.terracotta} />
+                                    <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: 0 }}>Family & House Transitions</h2>
+                                </div>
+                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                                    <div>
+                                        <label style={{ fontSize: 12, color: m.coolGrey, display: "block", marginBottom: 4 }}>Morning Drop-Off</label>
+                                        <div style={{ display: "flex", gap: 8 }}>
+                                            <button 
+                                                onClick={() => updateState({ morningDropoff: "smooth" })}
+                                                style={{ flex: 1, padding: 10, borderRadius: 8, border: `1px solid ${state.morningDropoff === "smooth" ? m.forest : m.stone}`, backgroundColor: state.morningDropoff === "smooth" ? "rgba(69,115,93,0.1)" : m.warmWhite, color: m.darkForest, cursor: "pointer" }}
+                                            >
+                                                Smooth
+                                            </button>
+                                            <button 
+                                                onClick={() => updateState({ morningDropoff: "friction" })}
+                                                style={{ flex: 1, padding: 10, borderRadius: 8, border: `1px solid ${state.morningDropoff === "friction" ? m.terracotta : m.stone}`, backgroundColor: state.morningDropoff === "friction" ? "rgba(182,141,118,0.15)" : m.warmWhite, color: m.darkForest, cursor: "pointer" }}
+                                            >
+                                                Friction
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style={{ fontSize: 12, color: m.coolGrey, display: "block", marginBottom: 4 }}>Evening Energy Plan</label>
+                                        <select 
+                                            value={state.eveningPlan} 
+                                            onChange={e => updateState({ eveningPlan: e.target.value })}
+                                            style={{ width: "100%", padding: 10, borderRadius: 8, border: `1px solid ${m.stone}`, backgroundColor: m.warmWhite, color: m.darkForest, fontSize: 14 }}
+                                        >
+                                            <option value="cook">Cook Dinner</option>
+                                            <option value="takeout">Takeout Plan</option>
+                                            <option value="overwhelmed">Sensory Overwhelm / Low Effort</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </section>
+
+                            {/* CORE FOCUS ANCHOR */}
+                            <section style={{ ...cardStyle, marginBottom: 20, borderLeft: `4px solid ${m.forest}` }}>
+                                <label style={{ fontSize: 12, color: m.coolGrey, display: "block", marginBottom: 6 }}>One Core Focus</label>
+                                <input 
+                                    type="text" 
+                                    value={state.coreFocus} 
+                                    onChange={e => updateState({ coreFocus: e.target.value })}
+                                    placeholder="If nothing else gets done today, what is the one anchor task?"
+                                    style={{ width: "100%", padding: 12, borderRadius: 8, border: `1px solid ${m.stone}`, backgroundColor: m.warmWhite, color: m.darkForest, fontSize: 16, outline: "none" }}
+                                />
+                            </section>
+
+                            {/* MORNING SETUP CHECKLIST */}
+                            <section style={{ ...cardStyle, marginBottom: 20 }}>
+                                <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: "0 0 12px" }}>Morning Setup Tasks</h2>
+                                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                                    {morningChecklistTasks.map((task, idx) => (
+                                        <label key={idx} style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", padding: 8, borderRadius: 6, backgroundColor: state.morningChecklist[idx] ? "rgba(69,115,93,0.08)" : "transparent", transition: "background 0.2s" }}>
+                                            <button onClick={() => toggleMorningTask(idx)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+                                                {state.morningChecklist[idx] ? <Icons.CircleCheck size={20} color={m.forest} /> : <Icons.Circle size={20} color={m.stone} />}
+                                            </button>
+                                            <span style={{ fontSize: 14, color: state.morningChecklist[idx] ? m.forest : m.darkForest, textDecoration: state.morningChecklist[idx] ? "line-through" : "none", opacity: state.morningChecklist[idx] ? 0.7 : 1 }}>
+                                                {task}
+                                            </span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </section>
+
+                            {/* CENTRAL CLIENT DIRECTORY (MANAGE ROSTER) */}
+                            <section style={{ ...cardStyle, marginBottom: 20 }}>
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                                    <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: 0 }}>Central Client Directory</h2>
+                                    <button 
+                                        onClick={() => setRosterExpanded(!rosterExpanded)}
+                                        style={{ ...btnBaseStyle, padding: "4px 10px", fontSize: 12, border: `1px solid ${m.stone}`, backgroundColor: rosterExpanded ? m.stone : "transparent" }}
+                                    >
+                                        {rosterExpanded ? "Collapse Manager" : "Manage Directory"}
+                                    </button>
+                                </div>
+
+                                {rosterExpanded && (
+                                    <div style={{ marginBottom: 16, padding: "12px", border: `1px solid ${m.stone}`, borderRadius: 8, backgroundColor: m.warmWhite }}>
+                                        <p style={{ fontSize: 12, color: m.coolGrey, marginBottom: 8 }}>Add New Client Baseline</p>
+                                        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
+                                            <input 
+                                                type="text" 
+                                                placeholder="Client Initials (e.g. Client X)" 
+                                                value={newClientName} 
+                                                onChange={e => setNewClientName(e.target.value)}
+                                                style={{ flex: 2, padding: "8px 12px", borderRadius: 6, border: `1px solid ${m.stone}`, fontSize: 13, outline: "none" }}
+                                            />
+                                            <select 
+                                                value={newClientWeight} 
+                                                onChange={e => setNewClientWeight(Number(e.target.value))}
+                                                style={{ flex: 1, padding: "8px", borderRadius: 6, border: `1px solid ${m.stone}`, fontSize: 13, outline: "none" }}
+                                            >
+                                                <option value={1}>Tier 1 (Low)</option>
+                                                <option value={2}>Tier 2 (Mid)</option>
+                                                <option value={3}>Tier 3 (High)</option>
+                                            </select>
+                                            <button 
+                                                onClick={addClient}
+                                                style={{ ...btnBaseStyle, backgroundColor: m.forest, color: m.warmWhite, padding: "8px 14px", display: "flex", alignItems: "center", gap: 4 }}
+                                            >
+                                                <Icons.Plus size={14} /> Add
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 10 }}>
+                                    {state.clients.map(client => (
+                                        <div key={client.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 12px", borderRadius: 8, border: `1px solid ${m.stone}`, backgroundColor: m.warmWhite }}>
+                                            <div>
+                                                <span style={{ fontSize: 13, fontWeight: 600, color: m.darkForest }}>{client.name.split(" (")[0]}</span>
+                                                <span style={{ display: "block", fontSize: 10, color: m.coolGrey }}>Tier {client.weight} weight</span>
+                                            </div>
+                                            {state.clients.length > 3 && (
+                                                <button 
+                                                    onClick={() => removeClient(client.id)}
+                                                    style={{ border: "none", background: "none", cursor: "pointer", color: m.coolGrey }}
+                                                    title="Remove Client"
+                                                >
+                                                    <Icons.Trash2 size={14} />
+                                                </button>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+
+                        </main>
+                    )}
+
+                    {/* FLIGHT DECK (PAGE 2) */}
+                    {state.page === 2 && (
+                        <main style={{ maxWidth: 720, margin: "0 auto", padding: "24px 16px 100px" }}>
+                            
+                            {/* WEEKEND LAYOUT CARD PLACEHOLDER */}
+                            {state.mode === "weekend" && (
+                                <div style={{ ...cardStyle, marginBottom: 20, textAlign: "center", padding: 40 }}>
+                                    <Icons.Moon size={40} color={m.gold} style={{ margin: "0 auto 12px" }} />
+                                    <h2 style={{ ...textHeaderStyle, fontSize: 20, margin: 0 }}>Weekend Mode Active</h2>
+                                    <p style={{ color: m.warmGrey, marginTop: 8 }}>
+                                        Clinical telemetry is resting. Autonomic restore cycles enabled. Protect your attention from operational loops.
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* AUTONOMIC VARIANCE SCORE */}
+                            <section style={{ ...cardStyle, marginBottom: 20, borderTop: `4px solid ${avsFeedback.color}` }}>
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                                    <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: 0 }}>Autonomic Variance Score (AVS)</h2>
+                                    <span style={{ fontSize: 24, fontWeight: 700, color: avsFeedback.color }}>{state.avs}</span>
+                                </div>
+                                <input 
+                                    type="range" 
+                                    min="1" 
+                                    max="10" 
+                                    value={state.avs} 
+                                    onChange={e => updateState({ avs: Number(e.target.value) })}
+                                    style={{ width: "100%", accentColor: avsFeedback.color, cursor: "pointer" }}
+                                />
+                                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: m.coolGrey, marginTop: 4 }}>
+                                    <span>Freeze / Vagal</span>
+                                    <span>Ventral / Flow</span>
+                                    <span>Sympathetic / Drive</span>
+                                </div>
+                                <div style={{ marginTop: 12, padding: 12, borderRadius: 8, backgroundColor: avsFeedback.color + "20" }}>
+                                    <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: m.darkForest }}>{avsFeedback.label}</p>
+                                    <p style={{ margin: "4px 0 0", fontSize: 12, color: m.warmGrey }}>{avsFeedback.sub}</p>
+                                </div>
+                            </section>
+
+                            {/* WORKDAY TELEMETRY */}
+                            {state.mode === "workday" && (
+                                <React.Fragment>
+                                    
+                                    {/* CLINICIAN UTILIZATION METER */}
+                                    <section style={{ ...cardStyle, marginBottom: 20 }}>
+                                        <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: "0 0 12px" }}>Daily Clinician Utilization</h2>
+                                        <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+                                            {[1, 2, 3, 4, 5].map(level => {
+                                                const uFeedback = getUtilFeedback(level);
+                                                const isSelected = state.utilization === level;
+                                                return (
+                                                    <button
+                                                        key={level}
+                                                        onClick={() => updateState({ utilization: level })}
+                                                        style={{ flex: 1, padding: "10px 4px", borderRadius: 8, cursor: "pointer", border: `2px solid ${isSelected ? uFeedback.color : m.stone}`, backgroundColor: isSelected ? uFeedback.color + "20" : m.warmWhite, color: isSelected ? uFeedback.color : m.warmGrey, fontSize: 12, fontWeight: 600 }}
+                                                    >
+                                                        {level === 3 && <span style={{ display: "block", marginBottom: 2 }}>⭐</span>}
+                                                        {uFeedback.label}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                        <div style={{ height: 8, borderRadius: 4, backgroundColor: m.stone, overflow: "hidden" }}>
+                                            <div style={{ width: `${(state.utilization / 5) * 100}%`, height: "100%", backgroundColor: utilFeedback.color, transition: "width 0.3s ease" }}></div>
+                                        </div>
+                                    </section>
+
+                                    {/* CHRONOLOGICAL SESSION SLOT GRID */}
+                                    <section style={{ marginBottom: 20 }}>
+                                        <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: "0 0 12px" }}>Daily Telehealth Schedule</h2>
+                                        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                                            {state.sessions.map((session, idx) => {
+                                                const linkedClient = state.clients.find(c => c.id === session.clientId);
+                                                const baseWeight = linkedClient ? linkedClient.weight : 0;
+                                                const multiplier = session.intensity === "elevated" ? 1.3 : session.intensity === "crisis" ? 1.6 : 1.0;
+                                                const calculatedCCF = session.ghost || !linkedClient ? 0 : baseWeight * multiplier;
+
+                                                let borderHighlight = m.stone;
+                                                if (!session.ghost && linkedClient) {
+                                                    borderHighlight = baseWeight === 3 ? m.terracotta : baseWeight === 2 ? m.gold : m.forest;
+                                                }
+
+                                                return (
+                                                    <div key={idx} style={{ ...cardStyle, opacity: session.ghost ? 0.5 : 1, transition: "opacity 0.3s", borderLeft: `4px solid ${borderHighlight}` }}>
+                                                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                                                            <span style={{ fontSize: 14, fontWeight: 700, color: m.darkForest }}>{session.time}</span>
+                                                            <button 
+                                                                onClick={() => updateSession(idx, { ghost: !session.ghost })}
+                                                                style={{ ...btnBaseStyle, backgroundColor: session.ghost ? m.stone : "transparent", color: session.ghost ? m.warmWhite : m.warmGrey, border: `1px solid ${m.stone}`, padding: "6px 12px" }}
+                                                                title={session.ghost ? "Restore Session" : "Ghost Session / Late Cancel"}
+                                                            >
+                                                                <Icons.Ghost size={16} />
+                                                            </button>
+                                                        </div>
+
+                                                        {!session.ghost ? (
+                                                            <React.Fragment>
+                                                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
+                                                                    <select
+                                                                        value={session.clientId}
+                                                                        onChange={e => updateSession(idx, { clientId: e.target.value })}
+                                                                        style={{ padding: 8, borderRadius: 6, border: `1px solid ${m.stone}`, backgroundColor: m.warmWhite, color: m.darkForest, fontSize: 13 }}
+                                                                    >
+                                                                        <option value="">&mdash; Vacant Session Slot &mdash;</option>
+                                                                        {state.clients.map(c => (
+                                                                            <option key={c.id} value={c.id}>{c.name.split(" (")[0]} (Tier {c.weight})</option>
+                                                                        ))}
+                                                                    </select>
+                                                                    <select
+                                                                        value={session.intensity}
+                                                                        onChange={e => updateSession(idx, { intensity: e.target.value })}
+                                                                        style={{ padding: 8, borderRadius: 6, border: `1px solid ${m.stone}`, backgroundColor: m.warmWhite, color: m.darkForest, fontSize: 13 }}
+                                                                    >
+                                                                        <option value="standard">Standard Intensity</option>
+                                                                        <option value="elevated">Elevated Demand (1.3x)</option>
+                                                                        <option value="crisis">Active Crisis (1.6x)</option>
+                                                                    </select>
+                                                                </div>
+
+                                                                {linkedClient && (
+                                                                    <div style={{ fontSize: 11, color: m.coolGrey, marginBottom: 8 }}>
+                                                                        Baseline Weight: {baseWeight}.0 &times; {multiplier} = {calculatedCCF.toFixed(1)} CCF Load
+                                                                    </div>
+                                                                )}
+
+                                                                <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+                                                                    <button 
+                                                                        onClick={() => updateSession(idx, { noteWritten: !session.noteWritten })}
+                                                                        style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                                                                    >
+                                                                        {session.noteWritten ? <Icons.CircleCheck size={18} color={m.forest} /> : <Icons.Circle size={18} color={m.stone} />}
+                                                                    </button>
+                                                                    <span style={{ fontSize: 13, color: session.noteWritten ? m.forest : m.darkForest }}>
+                                                                        {session.noteWritten ? "Progress Note written" : "EHR Note pending"}
+                                                                    </span>
+                                                                </label>
+                                                            </React.Fragment>
+                                                        ) : (
+                                                            <p style={{ fontSize: 13, color: m.coolGrey, fontStyle: "italic", margin: 0 }}>
+                                                                Late Cancellation / Ghost Active. CCF: 0.0. Professional boundary protected.
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </section>
+
+                                    {/* CLINICAL COMPLEXITY THERMOMETER */}
+                                    <section style={{ ...cardStyle, marginBottom: 20 }}>
+                                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                                            <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: 0 }}>Case Complexity Factor (CCF)</h2>
+                                            <span style={{ fontSize: 20, fontWeight: 700, color: ccfColor }}>
+                                                {ccfLoad.toFixed(1)} / {dynamicCeiling.toFixed(1)}
+                                            </span>
+                                        </div>
+                                        <div style={{ height: 12, borderRadius: 6, backgroundColor: m.stone, overflow: "hidden", position: "relative" }}>
+                                            <div style={{ width: `${ccfPercentage}%`, height: "100%", backgroundColor: ccfColor, transition: "width 0.4s ease" }}></div>
+                                            <div style={{ position: "absolute", top: 0, bottom: 0, left: `${(dynamicCeiling / standardCeiling) * 100}%`, width: 2, backgroundColor: m.darkForest, opacity: 0.5 }}></div>
+                                        </div>
+                                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: m.coolGrey, marginTop: 4 }}>
+                                            <span>0.0</span>
+                                            <span style={{ color: m.darkForest, fontWeight: 700 }}>Limit Limit: {dynamicCeiling.toFixed(1)}</span>
+                                            <span>10.0</span>
+                                        </div>
+                                        {ccfLoad > dynamicCeiling && (
+                                            <div style={{ marginTop: 10, padding: 10, borderRadius: 6, backgroundColor: "rgba(182,141,118,0.15)", color: m.terracotta, fontSize: 13, display: "flex", alignItems: "center", gap: 8 }}>
+                                                <Icons.TriangleAlert size={16} />
+                                                <span>Workload capacity ceiling breached. Mandating active pacing adjustments.</span>
+                                            </div>
+                                        )}
+                                    </section>
+
+                                    {/* CORE DOCUMENTATION DEBT WIDGET */}
+                                    <section style={{ ...cardStyle, marginBottom: 20 }}>
+                                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                                            <Icons.FileText size={20} color={unwrittenNotesCount > 0 ? m.terracotta : m.forest} />
+                                            <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: 0 }}>Documentation Debt Index</h2>
+                                        </div>
+                                        {unwrittenNotesCount === 0 ? (
+                                            <p style={{ fontSize: 14, color: m.forest, margin: 0 }}>All notes locked. Zero administrative drag.</p>
+                                        ) : (
+                                            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                                                <p style={{ fontSize: 13, color: m.terracotta, margin: 0 }}>
+                                                    {unwrittenNotesCount} unwritten progress note{unwrittenNotesCount > 1 ? "s" : ""} remaining:
+                                                </p>
+                                                {state.sessions.map((s, idx) => !s.clientId || s.ghost || s.noteWritten ? null : (
+                                                    <div key={idx} style={{ padding: 10, borderRadius: 6, backgroundColor: "rgba(182,141,118,0.08)", fontSize: 13, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                                        <div>
+                                                            <span style={{ color: m.darkForest, fontWeight: 600 }}>{s.time}</span> &mdash; Client {state.clients.find(c => c.id === s.clientId)?.name.split(" (")[0]}
+                                                        </div>
+                                                        <button 
+                                                            onClick={() => updateSession(idx, { noteWritten: true })}
+                                                            style={{ ...btnBaseStyle, padding: "2px 8px", fontSize: 11, backgroundColor: m.forest, color: m.warmWhite }}
+                                                        >
+                                                            Write Note
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </section>
+
+                                </React.Fragment>
+                            )}
+
+                        </main>
+                    )}
+
+                    {/* SANDBOX / TRANSITION WORKSPACE (PAGE 3) */}
+                    {state.page === 3 && (
+                        <main style={{ maxWidth: 720, margin: "0 auto", padding: "24px 16px 100px" }}>
+                            
+                            {/* AFTERNOON AIRLOCK SHUTDOWN */}
+                            <section style={{ ...cardStyle, marginBottom: 20 }}>
+                                <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: "0 0 12px" }}>Afternoon Terminal Shutdown</h2>
+                                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                                    {shutdownChecklistTasks.map((task, idx) => (
+                                        <label key={idx} style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", padding: 8, borderRadius: 6, backgroundColor: state.shutdownChecklist[idx] ? "rgba(69,115,93,0.08)" : "transparent", transition: "background 0.2s" }}>
+                                            <button onClick={() => toggleShutdownTask(idx)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+                                                {state.shutdownChecklist[idx] ? <Icons.CircleCheck size={20} color={m.forest} /> : <Icons.Circle size={20} color={m.stone} />}
+                                            </button>
+                                            <span style={{ fontSize: 14, color: state.shutdownChecklist[idx] ? m.forest : m.darkForest, textDecoration: state.shutdownChecklist[idx] ? "line-through" : "none", opacity: state.shutdownChecklist[idx] ? 0.7 : 1 }}>
+                                                {task}
+                                            </span>
+                                        </label>
+                                    ))}
+                                </div>
+                                {state.shutdownChecklist.every(Boolean) && (
+                                    <div style={{ marginTop: 12, padding: 12, borderRadius: 8, backgroundColor: "rgba(69,115,93,0.1)", color: m.forest, fontSize: 14, textAlign: "center" }}>
+                                        <Icons.CircleCheck size={18} style={{ display: "inline", marginRight: 6, verticalAlign: "middle" }} />
+                                        Airlock Sealed. Workday securely packaged. Transition home.
+                                    </div>
+                                )}
+                            </section>
+
+                            {/* THE FRICTIONLESS NOTES SCRATCHPAD (AMBIENT SANDBOX) */}
+                            {state.mode === "workday" && (
+                                <section style={{ ...cardStyle, marginBottom: 20 }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                                        <Icons.FileText size={20} color={m.calmTeal} />
+                                        <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: 0 }}>Frictionless Note Scratchpad</h2>
+                                    </div>
+                                    <p style={{ fontSize: 12, color: m.coolGrey, marginBottom: 8 }}>
+                                        Drop unformatted transcripts, raw dictated bullet points, or session insights below before drafting note logs.
+                                    </p>
+                                    <textarea
+                                        value={state.scratchpadNotes}
+                                        onChange={e => updateState({ scratchpadNotes: e.target.value })}
+                                        placeholder="Pacing notes sandbox..."
+                                        style={{ width: "100%", height: 120, padding: 12, borderRadius: 8, border: `1px solid ${m.stone}`, backgroundColor: m.warmWhite, color: m.darkForest, fontSize: 13, outline: "none", resize: "vertical", fontFamily: "monospace" }}
+                                    />
+                                    <div style={{ display: "flex", justifyValue: "space-between", justifyContent: "space-between", marginTop: 8 }}>
+                                        <button 
+                                            onClick={() => updateState({ scratchpadNotes: "" })}
+                                            style={{ ...btnBaseStyle, padding: "6px 12px", fontSize: 12, color: m.terracotta, border: `1px solid ${m.stone}`, backgroundColor: "transparent" }}
+                                        >
+                                            Clear Sandbox
+                                        </button>
+                                        <button 
+                                            onClick={() => {
+                                                const el = document.createElement('textarea');
+                                                el.value = state.scratchpadNotes;
+                                                document.body.appendChild(el);
+                                                el.select();
+                                                document.execCommand('copy');
+                                                document.body.removeChild(el);
+                                                alert("Scratchpad notes copied to local clipboard!");
+                                            }}
+                                            style={{ ...btnBaseStyle, padding: "6px 12px", fontSize: 12, backgroundColor: m.calmTeal, color: m.warmWhite }}
+                                        >
+                                            Copy Draft
+                                        </button>
+                                    </div>
+                                </section>
+                            )}
+
+                            {/* DAILY SOMATIC TIME CAPSULE MODULE */}
+                            <section style={{ ...cardStyle, marginBottom: 20 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+                                    <Icons.Calendar size={20} color={m.gold} />
+                                    <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: 0 }}>Daily Somatic Time Capsule</h2>
+                                </div>
+                                
+                                <div style={{ marginBottom: 14 }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                                        <label style={{ fontSize: 12, color: m.coolGrey }}>Day Anchor Hallmark</label>
+                                        <button 
+                                            onClick={() => updateCapsule({ dayAnchorEnabled: !state.capsule.dayAnchorEnabled })}
+                                            style={{ fontSize: 11, padding: "4px 8px", borderRadius: 4, border: `1px solid ${m.stone}`, backgroundColor: state.capsule.dayAnchorEnabled ? m.warmWhite : m.cream, color: m.warmGrey, cursor: "pointer" }}
+                                        >
+                                            {state.capsule.dayAnchorEnabled ? "Active" : "Resting"}
+                                        </button>
+                                    </div>
+                                    {state.capsule.dayAnchorEnabled ? (
+                                        <input 
+                                            type="text" 
+                                            value={state.capsule.dayAnchor} 
+                                            onChange={e => updateCapsule({ dayAnchor: e.target.value })}
+                                            placeholder="Standard day routine anchor"
+                                            style={{ width: "100%", padding: 10, borderRadius: 6, border: `1px solid ${m.stone}`, backgroundColor: m.warmWhite, color: m.darkForest, fontSize: 14 }}
+                                        />
+                                    ) : (
+                                        <p style={{ fontSize: 13, color: m.coolGrey, fontStyle: "italic", margin: 0 }}>Logged as standard_routine_day</p>
+                                    )}
+                                </div>
+
+                                <div style={{ marginBottom: 14 }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                                        <label style={{ fontSize: 12, color: m.coolGrey }}>Hyperfocus Snippet</label>
+                                        <button 
+                                            onClick={() => updateCapsule({ hyperfocusEnabled: !state.capsule.hyperfocusEnabled })}
+                                            style={{ fontSize: 11, padding: "4px 8px", borderRadius: 4, border: `1px solid ${m.stone}`, backgroundColor: state.capsule.hyperfocusEnabled ? m.warmWhite : m.cream, color: m.warmGrey, cursor: "pointer" }}
+                                        >
+                                            {state.capsule.hyperfocusEnabled ? "Active" : "Resting"}
+                                        </button>
+                                    </div>
+                                    {state.capsule.hyperfocusEnabled ? (
+                                        <input 
+                                            type="text" 
+                                            value={state.capsule.hyperfocus} 
+                                            onChange={e => updateCapsule({ hyperfocus: e.target.value })}
+                                            placeholder="Today's cognitive rabbit hole..."
+                                            style={{ width: "100%", padding: 10, borderRadius: 6, border: `1px solid ${m.stone}`, backgroundColor: m.warmWhite, color: m.darkForest, fontSize: 14 }}
+                                        />
+                                    ) : (
+                                        <p style={{ fontSize: 13, color: m.coolGrey, fontStyle: "italic", margin: 0 }}>Logged as cognitive_rest</p>
+                                    )}
+                                </div>
+
+                                <div style={{ marginBottom: 14 }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                                        <label style={{ fontSize: 12, color: m.coolGrey, display: "flex", alignItems: "center", gap: 4 }}><Icons.BookOpen size={14} /> Read Shelf</label>
+                                        <button 
+                                            onClick={() => updateCapsule({ readEnabled: !state.capsule.readEnabled })}
+                                            style={{ fontSize: 11, padding: "4px 8px", borderRadius: 4, border: `1px solid ${m.stone}`, backgroundColor: state.capsule.readEnabled ? m.warmWhite : m.cream, color: m.warmGrey, cursor: "pointer" }}
+                                        >
+                                            {state.capsule.readEnabled ? "Active" : "Resting"}
+                                        </button>
+                                    </div>
+                                    {state.capsule.readEnabled ? (
+                                        <input 
+                                            type="text" 
+                                            value={state.capsule.currentBook} 
+                                            onChange={e => updateCapsule({ currentBook: e.target.value })}
+                                            placeholder="Active reading material..."
+                                            style={{ width: "100%", padding: 10, borderRadius: 6, border: `1px solid ${m.stone}`, backgroundColor: m.warmWhite, color: m.darkForest, fontSize: 14 }}
+                                        />
+                                    ) : (
+                                        <p style={{ fontSize: 13, color: m.coolGrey, fontStyle: "italic", margin: 0 }}>Logged as cognitive_rest</p>
+                                    )}
+                                </div>
+
+                                <div style={{ marginBottom: 14 }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                                        <label style={{ fontSize: 12, color: m.coolGrey, display: "flex", alignItems: "center", gap: 4 }}><Icons.Activity size={14} /> Course Track</label>
+                                        <button 
+                                            onClick={() => updateCapsule({ courseEnabled: !state.capsule.courseEnabled })}
+                                            style={{ fontSize: 11, padding: "4px 8px", borderRadius: 4, border: `1px solid ${m.stone}`, backgroundColor: state.capsule.courseEnabled ? m.warmWhite : m.cream, color: m.warmGrey, cursor: "pointer" }}
+                                        >
+                                            {state.capsule.courseEnabled ? "Active" : "Resting"}
+                                        </button>
+                                    </div>
+                                    {state.capsule.courseEnabled ? (
+                                        <input 
+                                            type="text" 
+                                            value={state.capsule.activeCourse} 
+                                            onChange={e => updateCapsule({ activeCourse: e.target.value })}
+                                            placeholder="Active lectures, webinars, CEUs..."
+                                            style={{ width: "100%", padding: 10, borderRadius: 6, border: `1px solid ${m.stone}`, backgroundColor: m.warmWhite, color: m.darkForest, fontSize: 14 }}
+                                        />
+                                    ) : (
+                                        <p style={{ fontSize: 13, color: m.coolGrey, fontStyle: "italic", margin: 0 }}>Logged as cognitive_rest</p>
+                                    )}
+                                </div>
+
+                                <div style={{ marginBottom: 14 }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                                        <label style={{ fontSize: 12, color: m.coolGrey, display: "flex", alignItems: "center", gap: 4 }}><Icons.Camera size={14} /> Photo Anchor Link</label>
+                                    </div>
+                                    <input 
+                                        type="text" 
+                                        value={state.capsule.photoAnchor} 
+                                        onChange={e => updateCapsule({ photoAnchor: e.target.value })}
+                                        placeholder="e.g. [[Upload/Drop Zone: daily_pic.jpg]]"
+                                        style={{ width: "100%", padding: 10, borderRadius: 6, border: `1px solid ${m.stone}`, backgroundColor: m.warmWhite, color: m.darkForest, fontSize: 14 }}
+                                    />
+                                </div>
+
+                                <div style={{ marginBottom: 8 }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                                        <label style={{ fontSize: 12, color: m.coolGrey }}>Media Loop / Noise</label>
+                                        <button 
+                                            onClick={() => updateCapsule({ mediaEnabled: !state.capsule.mediaEnabled })}
+                                            style={{ fontSize: 11, padding: "4px 8px", borderRadius: 4, border: `1px solid ${m.stone}`, backgroundColor: state.capsule.mediaEnabled ? m.warmWhite : m.cream, color: m.warmGrey, cursor: "pointer" }}
+                                        >
+                                            {state.capsule.mediaEnabled ? "Active" : "Resting"}
+                                        </button>
+                                    </div>
+                                    {state.capsule.mediaEnabled ? (
+                                        <input 
+                                            type="text" 
+                                            value={state.capsule.media} 
+                                            onChange={e => updateCapsule({ media: e.target.value })}
+                                            placeholder="White noise, specific loops, etc."
+                                            style={{ width: "100%", padding: 10, borderRadius: 6, border: `1px solid ${m.stone}`, backgroundColor: m.warmWhite, color: m.darkForest, fontSize: 14 }}
+                                        />
+                                    ) : (
+                                        <p style={{ fontSize: 13, color: m.coolGrey, fontStyle: "italic", margin: 0 }}>Logged as intentional_silence</p>
+                                    )}
+                                </div>
+                            </section>
+
+                            {/* OBSIDIAN YAML LOGGER EXPORT */}
+                            <section style={{ ...cardStyle, marginBottom: 20 }}>
+                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                                    <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: 0 }}>Export YAML Log</h2>
+                                    <button 
+                                        onClick={handleCopy}
+                                        style={{ ...btnBaseStyle, backgroundColor: copied ? m.forest : m.darkForest, color: m.warmWhite, display: "flex", alignItems: "center", gap: 6 }}
+                                    >
+                                        {copied ? <Icons.Check size={16} /> : <Icons.Copy size={16} />}
+                                        {copied ? "Copied!" : "Copy YAML"}
+                                    </button>
+                                </div>
+                                <pre style={{ backgroundColor: m.warmWhite, border: `1px solid ${m.stone}`, borderRadius: 8, padding: 16, fontSize: 12, color: m.darkForest, overflowX: "auto", whiteSpace: "pre-wrap", wordBreak: "break-all" }}>
+                                    {compiledMarkdown}
+                                </pre>
+                            </section>
+
+                        </main>
+                    )}
+
+                    {/* FIXED NAVIGATION INTERFACE */}
+                    <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, backgroundColor: m.cream, borderTop: `1px solid ${m.stone}`, padding:"12px 16px", display: "flex", justifyContent: "center", gap: 12, zIndex: 50 }}>
+                        <button onClick={() => updateState({ page: 1 })} style={pageSelectorStyle(state.page === 1)}>
+                            <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                <Icons.ChevronLeft size={16} /> Launchpad
+                            </span>
+                        </button>
+                        <button onClick={() => updateState({ page: 2 })} style={pageSelectorStyle(state.page === 2)}>
+                            <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                <Icons.Activity size={16} /> Flight Deck
+                            </span>
+                        </button>
+                        <button onClick={() => updateState({ page: 3 })} style={pageSelectorStyle(state.page === 3)}>
+                            <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                Sandbox / Terminal <Icons.ChevronRight size={16} />
+                            </span>
+                        </button>
+                    </nav>
+
+                </div>
+            );
+        }
+
+        const container = document.getElementById("root");
+        if (container) {
+            ReactDOM.createRoot(container).render(
+                <ErrorBoundary>
+                    <App />
+                </ErrorBoundary>
+            );
+        } else {
+            document.body.innerHTML = '<div style="padding:40px; color:red;">Missing Root Mount Element</div>';
+        }
+    </script>
+</body>
+</html>
