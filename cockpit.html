@@ -89,7 +89,13 @@
             mode: "workday",
             page: 1,
             cyclePhase: "luteal",
-            endocrineLoad: 2,
+            symptoms: {
+                pain: false,
+                sleep: false,
+                sensory: false,
+                fog: false,
+                bleeding: false
+            },
             energyStealers: ["tight_9am"],
             morningDropoff: "smooth",
             eveningPlan: "cook",
@@ -267,9 +273,25 @@
                 capsule: { ...prev.capsule, ...update }
             }));
 
+            const toggleSymptom = (key) => setState(prev => ({
+                ...prev,
+                symptoms: { ...prev.symptoms, [key]: !prev.symptoms[key] }
+            }));
+
+            // Automated Endocrine Load scoring logic based on symptom checklist tally
+            const activeSymptomCount = [
+                state.symptoms.pain,
+                state.symptoms.sleep,
+                state.symptoms.sensory,
+                state.symptoms.fog,
+                state.symptoms.bleeding
+            ].filter(Boolean).length;
+
+            const computedEndocrineLoad = activeSymptomCount === 0 ? 1.0 : activeSymptomCount <= 2 ? 2.0 : 3.0;
+
             // Endocrine Calculations
             const endocrinePhaseMod = (cyclePhases.find(p => p.id === state.cyclePhase) || cyclePhases[0]).modifier;
-            const dragCoefficient = endocrinePhaseMod * (state.endocrineLoad || 1);
+            const dragCoefficient = endocrinePhaseMod * computedEndocrineLoad;
 
             // Dynamic CCF Target calculation (Somatic Safeguard Override)
             let standardCeiling = 10.0;
@@ -355,12 +377,14 @@
                     `date: ${today}`,
                     `weekend_mode: ${state.mode === "weekend"}`,
                     `cycle_phase: ${state.cyclePhase}`,
-                    `endocrine_load: ${state.endocrineLoad}`,
+                    `endocrine_load: ${computedEndocrineLoad}`,
                     `somatic_drag_coefficient: ${dragCoefficient.toFixed(1)}`,
                     `autonomic_variance_score: ${state.avs}`,
                     `morning_focus: "${escapeQuotes(state.coreFocus || "")}"`,
                     "energy_stealers:",
                     ...(state.energyStealers || []).map(s => `  - ${s}`),
+                    "logged_somatic_symptoms:",
+                    ...(Object.keys(state.symptoms).filter(k => state.symptoms[k]).map(k => `  - ${k}`)),
                     "family_household:",
                     `  morning_dropoff: "${state.morningDropoff}"`,
                     `  evening_energy_plan: "${state.eveningPlan}"`,
@@ -380,10 +404,10 @@
                     "---",
                     "",
                     `**[#${today}-Somatic-Log]**`,
-                    `*   **Somatic Status:** Endocrine drag calculated at **${dragCoefficient.toFixed(1)}** with an Autonomic Variance Score of **${state.avs}/10**. ${dragCoefficient >= 3.0 ? "Luteal sensory override safeguard active." : "Operating inside normal somatic load margins."}`,
+                    `*   **Somatic Status:** Endocrine load auto-tallied at **${computedEndocrineLoad.toFixed(1)}** (${activeSymptomCount} symptoms). True biological drag coefficient calculated at **${dragCoefficient.toFixed(1)}** with an Autonomic Variance Score of **${state.avs}/10**. ${dragCoefficient >= 3.0 ? "Luteal sensory override safeguard active." : "Operating inside normal somatic load margins."}`,
                     `*   **Intellectual & Temporal Artifacts:** Anchored today's timeline via **"${state.capsule.dayAnchorEnabled && state.capsule.dayAnchor ? escapeQuotes(state.capsule.dayAnchor) : "standard_routine_day"}"**. Active hyperfocus captured under **"${currentHyperfocusVal}"**.`
                 ].join("\n");
-            }, [state, dragCoefficient, ccfLoad, dynamicCeiling, unwrittenNotesCount]);
+            }, [state, dragCoefficient, computedEndocrineLoad, activeSymptomCount, ccfLoad, dynamicCeiling, unwrittenNotesCount]);
 
             const [copied, setCopied] = React.useState(false);
             const handleCopy = () => {
@@ -459,7 +483,7 @@
                 <div style={{ minHeight: "100vh", backgroundColor: m.warmWhite, color: m.warmGrey, fontFamily: "system-ui, -apple-system, sans-serif" }}>
                     
                     {/* GLOBAL MASTER HEADER */}
-                    <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: `1px solid ${m.stone}` }}>
+                    <header style={{ display: "flex", alignItems: "center", justifyValue: "space-between", justifyContent: "space-between", padding: "16px 24px", borderBottom: `1px solid ${m.stone}` }}>
                         <div>
                             <h1 style={{ ...textHeaderStyle, fontSize: 22, margin: 0 }}>Second Arrow Cockpit</h1>
                             <p style={{ fontSize: 12, color: m.coolGrey, margin: "4px 0 0" }}>
@@ -523,13 +547,13 @@
                     {state.page === 1 && (
                         <main style={{ maxWidth: 720, margin: "0 auto", padding: "24px 16px 100px" }}>
                             
-                            {/* ENDOCRINE WEATHER STATION */}
+                            {/* AUTOMATED ENDOCRINE WEATHER STATION */}
                             <section style={{ ...cardStyle, marginBottom: 20 }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
                                     <Icons.Thermometer size={20} color={m.terracotta} />
                                     <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: 0 }}>Endocrine Weather Station</h2>
                                 </div>
-                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                                <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
                                     <div>
                                         <label style={{ fontSize: 12, color: m.coolGrey, display: "block", marginBottom: 4 }}>Cycle Phase</label>
                                         <select 
@@ -542,25 +566,44 @@
                                             ))}
                                         </select>
                                     </div>
+
+                                    {/* AUTOMATED SOMATIC SYMPTOM MATRIX GRID */}
                                     <div>
-                                        <label style={{ fontSize: 12, color: m.coolGrey, display: "block", marginBottom: 4 }}>Endocrine Load (1-3 Scale)</label>
-                                        <div style={{ display: "flex", gap: 8 }}>
-                                            {[1, 2, 3].map(level => (
-                                                <button
-                                                    key={level}
-                                                    onClick={() => updateState({ endocrineLoad: level })}
-                                                    style={{ flex: 1, padding: 10, borderRadius: 8, border: `1px solid ${m.stone}`, backgroundColor: state.endocrineLoad === level ? m.forest : m.warmWhite, color: state.endocrineLoad === level ? m.warmWhite : m.darkForest, cursor: "pointer" }}
-                                                >
-                                                    {level}
-                                                </button>
-                                            ))}
+                                        <label style={{ fontSize: 12, color: m.coolGrey, display: "block", marginBottom: 6 }}>Somatic Symptom Matrix (Quick-Tap Capacity Modifiers)</label>
+                                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 8 }}>
+                                            {[
+                                                { key: "pain", label: "Physical Pain / Cramps" },
+                                                { key: "sleep", label: "Sleep Disruption / Insomnia" },
+                                                { key: "sensory", label: "Sensory Hypersensitivity" },
+                                                { key: "fog", label: "Executive Fog / Fatigue" },
+                                                { key: "bleeding", label: "Active Menstruation / Bleeding" }
+                                            ].map(sym => {
+                                                const active = state.symptoms[sym.key];
+                                                return (
+                                                    <button
+                                                        key={sym.key}
+                                                        onClick={() => toggleSymptom(sym.key)}
+                                                        style={{ ...btnBaseStyle, padding: "10px", textAlign: "left", fontSize: 12, display: "flex", alignItems: "center", justifyValue: "space-between", justifyContent: "space-between", border: `1px solid ${active ? m.terracotta : m.stone}`, backgroundColor: active ? "rgba(182,141,118,0.12)" : m.warmWhite, color: active ? m.darkForest : m.warmGrey }}
+                                                    >
+                                                        <span>{sym.label}</span>
+                                                        <span style={{ width: 14, height: 14, borderRadius: "50%", border: `1px solid ${m.stone}`, display: "inline-block", backgroundColor: active ? m.terracotta : "transparent", position: "relative" }}>
+                                                            {active && <span style={{ position: "absolute", top: 3, left: 3, width: 6, height: 6, borderRadius: "50%", backgroundColor: "#fff" }} />}
+                                                        </span>
+                                                    </button>
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 </div>
+
                                 <div style={{ marginTop: 16, padding: 12, borderRadius: 8, backgroundColor: dragCoefficient >= 3 ? "rgba(182,141,118,0.15)" : "rgba(69,115,93,0.1)", display: "flex", alignItems: "center", gap: 10 }}>
                                     {dragCoefficient >= 3 ? <Icons.TriangleAlert size={18} color={m.terracotta} /> : <Icons.CircleCheck size={18} color={m.forest} />}
                                     <div>
-                                        <p style={{ margin: 0, fontSize: 14, color: m.darkForest, fontWeight: 600 }}>Somatic Drag (β): {dragCoefficient.toFixed(1)}</p>
+                                        <p style={{ margin: 0, fontSize: 14, color: m.darkForest, fontWeight: 600 }}>
+                                            Auto-Calculated Endocrine Load: {computedEndocrineLoad.toFixed(1)} 
+                                            <span style={{ fontWeight: 400, color: m.warmGrey, fontSize: 12, marginLeft: 6 }}>({activeSymptomCount} symptoms logged)</span>
+                                        </p>
+                                        <p style={{ margin: "2px 0 0", fontSize: 13, color: m.darkForest, fontWeight: 700 }}>True Somatic Drag (β): {dragCoefficient.toFixed(1)}</p>
                                         <p style={{ margin: "2px 0 0", fontSize: 12, color: m.warmGrey }}>
                                             {dragCoefficient >= 3 ? "Luteal sensory safeguard active: daily CCF ceiling limited." : "Somatic load remains within manageable margins."}
                                         </p>
@@ -817,7 +860,7 @@
 
                                                 return (
                                                     <div key={idx} style={{ ...cardStyle, opacity: session.ghost ? 0.5 : 1, transition: "opacity 0.3s", borderLeft: `4px solid ${borderHighlight}` }}>
-                                                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                                                        <div style={{ display: "flex", alignItems: "center", justifyValue: "space-between", justifyContent: "space-between", marginBottom: 10 }}>
                                                             <span style={{ fontSize: 14, fontWeight: 700, color: m.darkForest }}>{session.time}</span>
                                                             <button 
                                                                 onClick={() => updateSession(idx, { ghost: !session.ghost })}
@@ -883,7 +926,7 @@
 
                                     {/* CLINICAL COMPLEXITY THERMOMETER */}
                                     <section style={{ ...cardStyle, marginBottom: 20 }}>
-                                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                                        <div style={{ display: "flex", alignItems: "center", justifyValue: "space-between", justifyContent: "space-between", marginBottom: 8 }}>
                                             <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: 0 }}>Case Complexity Factor (CCF)</h2>
                                             <span style={{ fontSize: 20, fontWeight: 700, color: ccfColor }}>
                                                 {ccfLoad.toFixed(1)} / {dynamicCeiling.toFixed(1)}
@@ -893,9 +936,9 @@
                                             <div style={{ width: `${ccfPercentage}%`, height: "100%", backgroundColor: ccfColor, transition: "width 0.4s ease" }}></div>
                                             <div style={{ position: "absolute", top: 0, bottom: 0, left: `${(dynamicCeiling / standardCeiling) * 100}%`, width: 2, backgroundColor: m.darkForest, opacity: 0.5 }}></div>
                                         </div>
-                                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: m.coolGrey, marginTop: 4 }}>
+                                        <div style={{ display: "flex", justifyValue: "space-between", justifyContent: "space-between", fontSize: 11, color: m.coolGrey, marginTop: 4 }}>
                                             <span>0.0</span>
-                                            <span style={{ color: m.darkForest, fontWeight: 700 }}>Limit Limit: {dynamicCeiling.toFixed(1)}</span>
+                                            <span style={{ color: m.darkForest, fontWeight: 700 }}>Limit Ceiling: {dynamicCeiling.toFixed(1)}</span>
                                             <span>10.0</span>
                                         </div>
                                         {ccfLoad > dynamicCeiling && (
@@ -920,7 +963,7 @@
                                                     {unwrittenNotesCount} unwritten progress note{unwrittenNotesCount > 1 ? "s" : ""} remaining:
                                                 </p>
                                                 {state.sessions.map((s, idx) => !s.clientId || s.ghost || s.noteWritten ? null : (
-                                                    <div key={idx} style={{ padding: 10, borderRadius: 6, backgroundColor: "rgba(182,141,118,0.08)", fontSize: 13, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                                    <div key={idx} style={{ padding: 10, borderRadius: 6, backgroundColor: "rgba(182,141,118,0.08)", fontSize: 13, display: "flex", justifyValue: "space-between", justifyContent: "space-between", alignItems: "center" }}>
                                                         <div>
                                                             <span style={{ color: m.darkForest, fontWeight: 600 }}>{s.time}</span> &mdash; Client {state.clients.find(c => c.id === s.clientId)?.name.split(" (")[0]}
                                                         </div>
@@ -1018,7 +1061,7 @@
                                 </div>
                                 
                                 <div style={{ marginBottom: 14 }}>
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyValue: "space-between", justifyContent: "space-between", marginBottom: 4 }}>
                                         <label style={{ fontSize: 12, color: m.coolGrey }}>Day Anchor Hallmark</label>
                                         <button 
                                             onClick={() => updateCapsule({ dayAnchorEnabled: !state.capsule.dayAnchorEnabled })}
@@ -1041,7 +1084,7 @@
                                 </div>
 
                                 <div style={{ marginBottom: 14 }}>
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyValue: "space-between", justifyContent: "space-between", marginBottom: 4 }}>
                                         <label style={{ fontSize: 12, color: m.coolGrey }}>Hyperfocus Snippet</label>
                                         <button 
                                             onClick={() => updateCapsule({ hyperfocusEnabled: !state.capsule.hyperfocusEnabled })}
@@ -1064,7 +1107,7 @@
                                 </div>
 
                                 <div style={{ marginBottom: 14 }}>
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyValue: "space-between", justifyContent: "space-between", marginBottom: 4 }}>
                                         <label style={{ fontSize: 12, color: m.coolGrey, display: "flex", alignItems: "center", gap: 4 }}><Icons.BookOpen size={14} /> Read Shelf</label>
                                         <button 
                                             onClick={() => updateCapsule({ readEnabled: !state.capsule.readEnabled })}
@@ -1087,7 +1130,7 @@
                                 </div>
 
                                 <div style={{ marginBottom: 14 }}>
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyValue: "space-between", justifyContent: "space-between", marginBottom: 4 }}>
                                         <label style={{ fontSize: 12, color: m.coolGrey, display: "flex", alignItems: "center", gap: 4 }}><Icons.Activity size={14} /> Course Track</label>
                                         <button 
                                             onClick={() => updateCapsule({ courseEnabled: !state.capsule.courseEnabled })}
@@ -1110,7 +1153,7 @@
                                 </div>
 
                                 <div style={{ marginBottom: 14 }}>
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyValue: "space-between", justifyContent: "space-between", marginBottom: 4 }}>
                                         <label style={{ fontSize: 12, color: m.coolGrey, display: "flex", alignItems: "center", gap: 4 }}><Icons.Camera size={14} /> Photo Anchor Link</label>
                                     </div>
                                     <input 
@@ -1123,7 +1166,7 @@
                                 </div>
 
                                 <div style={{ marginBottom: 8 }}>
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyValue: "space-between", justifyContent: "space-between", marginBottom: 4 }}>
                                         <label style={{ fontSize: 12, color: m.coolGrey }}>Media Loop / Noise</label>
                                         <button 
                                             onClick={() => updateCapsule({ mediaEnabled: !state.capsule.mediaEnabled })}
@@ -1148,7 +1191,7 @@
 
                             {/* OBSIDIAN YAML LOGGER EXPORT */}
                             <section style={{ ...cardStyle, marginBottom: 20 }}>
-                                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                                <div style={{ display: "flex", alignItems: "center", justifyValue: "space-between", justifyContent: "space-between", Richmond: "space-between", marginBottom: 12 }}>
                                     <h2 style={{ ...textHeaderStyle, fontSize: 18, margin: 0 }}>Export YAML Log</h2>
                                     <button 
                                         onClick={handleCopy}
