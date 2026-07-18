@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Metabolic Battery & Relational Safety Map</title>
+    <!-- Google Fonts: Libre Baskerville (headings) & Nunito Sans (body/UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,opsz,wght@0,6..12,300..900;1,6..12,300..900&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        nt: '#45735d',      // Forest Green
+                        adhd: '#b68d76',    // Terracotta
+                        autism: '#ba945e',  // Gold
+                        audhd: '#35361c',   // Dark Forest
+                        bgWarm: '#faf8f5',   // Warm White
+                        panelBg: '#F5F3EF',  // Accent Cream
+                        stoneBorder: '#bdb7a2', // Stone
+                        warmGrey: '#6d7873', // Warm Grey
+                        darkText: '#222a26', // Deep Charcoal
+                    },
+                    fontFamily: {
+                        serif: ['"Libre Baskerville"', 'serif'],
+                        sans: ['"Nunito Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background-color: #faf8f5;
+            color: #222a26;
+        }
+        h1, h2, h3, .brand-font {
+            font-family: 'Libre Baskerville', serif;
+        }
+        /* Custom styled range inputs based on theme values */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e3ded5;
+            height: 6px;
+            border-radius: 5px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.15s ease-in-out;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            transition: background 0.15s ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-panelBg selection:text-darkText">
+
+    <!-- Top Brand Bar -->
+    <header class="w-full border-b border-stoneBorder/40 bg-bgWarm py-3 px-6 md:px-12 flex justify-between items-center z-10">
+        <a href="https://secondarrow.net" target="_blank" class="brand-font text-audhd text-lg font-bold hover:opacity-80 transition-opacity flex items-center gap-2">
+            <!-- Custom brain SVG colored terracotta to match standard brand icon -->
+            <svg class="w-6 h-6 text-adhd fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+            </svg>
+            Second Arrow Counseling
+        </a>
+        <span class="text-xs text-warmGrey hidden sm:inline-block font-sans tracking-wide uppercase">Psychoeducational Tool Suite</span>
+    </header>
+
+    <main class="max-w-[1100px] w-full mx-auto px-4 md:px-8 py-8 flex-grow">
+        
+        <!-- Header & Introduction Section -->
+        <section class="mb-8">
+            <h1 class="text-3xl md:text-4xl text-audhd font-bold mb-3 leading-tight">The Metabolic Battery & Relational Safety Map</h1>
+            <p class="text-base text-warmGrey max-w-2xl leading-relaxed mb-6">
+                When a neurodivergent partner goes quiet, it's easy for their spouse to feel rejected. This tool frames decompression as a physiological necessity rather than an emotional withdrawal. Adjust the inputs below to see how metabolic energy behaves and how both of you can navigate connection safely.
+            </p>
+
+            <!-- Profile Selector -->
+            <div class="bg-panelBg p-4 rounded-xl border border-stoneBorder/30 shadow-sm">
+                <p class="text-xs font-bold uppercase tracking-wider text-warmGrey mb-3">Select a Neurological Profile to Load Presets:</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    <button onclick="selectProfile('nt')" id="btn-nt" class="profile-btn px-4 py-2.5 rounded-lg font-bold text-sm border transition-all duration-200 bg-white text-nt border-nt hover:bg-nt/5">
+                        Neurotypical
+                    </button>
+                    <button onclick="selectProfile('adhd')" id="btn-adhd" class="profile-btn px-4 py-2.5 rounded-lg font-bold text-sm border transition-all duration-200 bg-white text-adhd border-adhd hover:bg-adhd/5">
+                        ADHD
+                    </button>
+                    <button onclick="selectProfile('autism')" id="btn-autism" class="profile-btn px-4 py-2.5 rounded-lg font-bold text-sm border transition-all duration-200 bg-white text-autism border-autism hover:bg-autism/5">
+                        Autistic
+                    </button>
+                    <button onclick="selectProfile('audhd')" id="btn-audhd" class="profile-btn px-4 py-2.5 rounded-lg font-bold text-sm border transition-all duration-200 bg-white text-audhd border-audhd hover:bg-audhd/5">
+                        AuDHD (Combined)
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Three-Column Layout Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- COLUMN 1: Daily Ledger (Controls) -->
+            <div class="lg:col-span-4 space-y-6">
+                <div class="bg-panelBg p-5 rounded-xl border border-stoneBorder/30 shadow-md">
+                    <h3 class="brand-font text-lg font-bold text-audhd mb-4 border-b border-stoneBorder/20 pb-2">The Daily Ledger</h3>
+                    <p class="text-xs text-warmGrey mb-5">These sliders represent the hidden metabolic taxes that draw on battery reserves throughout the day.</p>
+                    
+                    <!-- Slider 1: Sensory Friction -->
+                    <div class="mb-5">
+                        <div class="flex justify-between text-xs font-bold text-darkText mb-1">
+                            <label id="label-sensory" for="input-sensory">Sensory Friction</label>
+                            <span id="val-sensory">40%</span>
+                        </div>
+                        <input id="input-sensory" type="range" min="0" max="100" value="40" class="w-full transition-all" oninput="updateCalculations()">
+                        <p class="text-[11px] text-warmGrey mt-1 leading-snug">Processing background noise, bright lights, and sudden transitions.</p>
+                    </div>
+
+                    <!-- Slider 2: Social Masking -->
+                    <div class="mb-5">
+                        <div class="flex justify-between text-xs font-bold text-darkText mb-1">
+                            <label id="label-masking" for="input-masking">Social Masking</label>
+                            <span id="val-masking">50%</span>
+                        </div>
+                        <input id="input-masking" type="range" min="0" max="100" value="50" class="w-full transition-all" oninput="updateCalculations()">
+                        <p class="text-[11px] text-warmGrey mt-1 leading-snug">Suppressing natural stims, holding eye contact, and managing social scripts.</p>
+                    </div>
+
+                    <!-- Slider 3: Cognitive Switching -->
+                    <div class="mb-5">
+                        <div class="flex justify-between text-xs font-bold text-darkText mb-1">
+                            <label id="label-switching" for="input-switching">Task & Plan Shifting</label>
+                            <span id="val-switching">35%</span>
+                        </div>
+                        <input id="input-switching" type="range" min="0" max="100" value="35" class="w-full transition-all" oninput="updateCalculations()">
+                        <p class="text-[11px] text-warmGrey mt-1 leading-snug">Friction when stopping tasks, changing focus, or shifting routine.</p>
+                    </div>
+
+                    <!-- Ambient Background Load Info -->
+                    <div class="bg-white/60 p-3 rounded-lg border border-stoneBorder/10 text-xs">
+                        <p class="font-bold text-darkText mb-1 flex items-center justify-between">
+                            <span>Invisible Background Load</span>
+                            <span id="val-ambient" class="font-bold">Low</span>
+                        </p>
+                        <p id="desc-ambient" class="text-warmGrey leading-normal">
+                            Systemic nervous system drain from maintaining basic equilibrium in a misaligned environment.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Co-Regulation Booster Panel -->
+                <div class="bg-panelBg p-5 rounded-xl border border-stoneBorder/30 shadow-md">
+                    <h3 class="brand-font text-lg font-bold text-audhd mb-2 border-b border-stoneBorder/20 pb-2">Co-Regulation Boosters</h3>
+                    <p class="text-xs text-warmGrey mb-4">Actions the supporting spouse can take to actively buffer background drainage and reduce stress.</p>
+                    
+                    <div class="space-y-3">
+                        <label class="flex items-start gap-3 p-2.5 bg-white/60 rounded-lg hover:bg-white transition-colors cursor-pointer text-xs">
+                            <input id="toggle-sensory-insulation" type="checkbox" class="mt-0.5 rounded border-stoneBorder text-nt focus:ring-nt" onchange="updateCalculations()">
+                            <div>
+                                <span class="font-bold text-darkText block">Provide Sensory Insulation</span>
+                                <span class="text-warmGrey leading-normal block">Dimming overhead lights, turning down volumes, closing doors.</span>
+                            </div>
+                        </label>
+
+                        <label class="flex items-start gap-3 p-2.5 bg-white/60 rounded-lg hover:bg-white transition-colors cursor-pointer text-xs">
+                            <input id="toggle-executive-shield" type="checkbox" class="mt-0.5 rounded border-stoneBorder text-nt focus:ring-nt" onchange="updateCalculations()">
+                            <div>
+                                <span class="font-bold text-darkText block">Executive Shielding</span>
+                                <span class="text-warmGrey leading-normal block">Taking over meal choices, handling household sorting, or pet duties.</span>
+                            </div>
+                        </label>
+
+                        <label class="flex items-start gap-3 p-2.5 bg-white/60 rounded-lg hover:bg-white transition-colors cursor-pointer text-xs">
+                            <input id="toggle-demand-reassure" type="checkbox" class="mt-0.5 rounded border-stoneBorder text-nt focus:ring-nt" onchange="updateCalculations()">
+                            <div>
+                                <span class="font-bold text-darkText block">Clear 'No-Demand' Reassurance</span>
+                                <span class="text-warmGrey leading-normal block">Verbally verifying: "I have dinner, there's no pressure to respond or talk."</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMN 2: The Metabolic Battery Canvas & Display -->
+            <div class="lg:col-span-4 space-y-6 flex flex-col justify-stretch">
+                <div class="bg-panelBg p-5 rounded-xl border border-stoneBorder/30 shadow-md flex-grow flex flex-col items-center justify-between text-center min-h-[450px]">
+                    
+                    <div class="w-full">
+                        <h3 class="brand-font text-lg font-bold text-audhd mb-1">Metabolic Battery</h3>
+                        <p id="battery-state-name" class="text-xs uppercase tracking-widest font-bold text-warmGrey">Stabilized System</p>
+                    </div>
+
+                    <!-- Dynamic Battery Visualizer (Canvas + Styling) -->
+                    <div class="relative w-40 h-72 my-4 border-4 border-darkText rounded-2xl p-1 flex items-end overflow-hidden shadow-inner bg-stone-100">
+                        <!-- Battery Tip -->
+                        <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-12 h-3 bg-darkText rounded-t-md"></div>
+                        
+                        <!-- Battery Fill Canvas (Liquid wave physics representing neural reserve) -->
+                        <canvas id="batteryCanvas" class="w-full h-full rounded-xl transition-all duration-300"></canvas>
+                        
+                        <!-- Percentage Indicator Overlay -->
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <span id="batteryPercentText" class="text-3xl font-black text-darkText bg-white/80 px-2 py-0.5 rounded-md shadow-sm">100%</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full">
+                        <!-- Simulated Recharge Mode Buttons -->
+                        <p class="text-xs font-bold text-darkText mb-2">Recharge State:</p>
+                        <div class="grid grid-cols-3 gap-1.5 text-[11px] font-bold">
+                            <button id="recharge-none" onclick="setRecharge('none')" class="py-1.5 rounded bg-darkText text-white border border-darkText">
+                                Drain Active
+                            </button>
+                            <button id="recharge-active" onclick="setRecharge('active')" class="py-1.5 rounded bg-white text-darkText border border-stoneBorder hover:bg-stone-50">
+                                Active Rest
+                            </button>
+                            <button id="recharge-pure" onclick="setRecharge('pure')" class="py-1.5 rounded bg-white text-darkText border border-stoneBorder hover:bg-stone-50">
+                                Isolation
+                            </button>
+                        </div>
+                        <p id="recharge-rate-msg" class="text-[10px] text-warmGrey mt-2 italic leading-tight">
+                            The brain is constantly metabolizing. Rest speeds vary by profile environment.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- COLUMN 3: Connection Guide (empowering, non-blaming partner roadmap) -->
+            <div class="lg:col-span-4 space-y-6">
+                <div class="bg-panelBg p-5 rounded-xl border border-stoneBorder/30 shadow-md min-h-[450px] flex flex-col justify-between">
+                    
+                    <div>
+                        <h3 class="brand-font text-lg font-bold text-audhd mb-1 border-b border-stoneBorder/20 pb-2">The Connection Map</h3>
+                        <p class="text-xs text-warmGrey mb-4 leading-normal">
+                            How to establish safe connection without draining remaining neural reserves. Aligning expectations with biological bandwidth.
+                        </p>
+
+                        <!-- Dynamic Alert Box -->
+                        <div id="connection-tier-box" class="p-4 rounded-xl border mb-5 transition-all duration-300">
+                            <div class="flex items-center gap-2.5 mb-2">
+                                <span id="tier-badge" class="px-2.5 py-0.5 rounded text-[11px] font-black uppercase tracking-wider text-white">
+                                    Normal
+                                </span>
+                                <h4 id="tier-title" class="brand-font font-bold text-base text-darkText">
+                                    Connection Title
+                                </h4>
+                            </div>
+                            <p id="tier-summary" class="text-xs text-darkText leading-relaxed italic">
+                                Actionable summary context.
+                            </p>
+                        </div>
+
+                        <!-- Partner Validation Panel -->
+                        <div class="mb-5">
+                            <h5 class="text-xs font-bold text-darkText uppercase tracking-wider mb-1.5">For the Supporting Partner</h5>
+                            <div class="p-3 bg-white/70 rounded-lg border border-stoneBorder/15 text-xs text-warmGrey leading-relaxed">
+                                <p id="partner-validation">
+                                    It's natural to desire reassurance when your partner checks out. However, they aren't angry with you.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Suggested Activities (Actionable team play) -->
+                        <div>
+                            <h5 class="text-xs font-bold text-darkText uppercase tracking-wider mb-2">Suggested Actions Right Now</h5>
+                            <ul id="suggested-activities-list" class="space-y-2 text-xs text-darkText">
+                                <!-- Generated Dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Shared Compassion Affirmation -->
+                    <div class="border-t border-stoneBorder/20 pt-3 mt-4 text-[11px] text-warmGrey text-center italic">
+                        Both safety needs are completely valid: sensory safety for one, and relational safety for the other.
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- System Context Explanation Box -->
+        <section class="mt-8 bg-panelBg p-6 rounded-xl border border-stoneBorder/30 shadow-sm">
+            <h3 class="brand-font text-lg font-bold text-audhd mb-3">Understanding the Mechanism</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-warmGrey leading-relaxed">
+                <div>
+                    <h4 class="font-bold text-darkText mb-1.5">The Alternator vs. The Battery</h4>
+                    <p class="mb-3">
+                        A typical nervous system often operates like a car alternator—engaging in low-stakes social connection or everyday tasks doesn't completely drain them; it can sometimes act to recharge or sustain general arousal.
+                    </p>
+                    <p>
+                        An ADHD, Autistic, or AuDHD brain operates almost entirely on battery. Social interactions, sensory environments, and task switches draw heavily on finite metabolic reserves. This drain occurs silently and continuously.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-darkText mb-1.5">Why Silence is Not Rejection</h4>
+                    <p class="mb-3">
+                        When reserves hit critical zones, the brain automatically initiates <strong>Power-Saving Mode</strong>. It suppresses high-bandwidth processes (such as speech processing, facial animation, and predictive empathy loops).
+                    </p>
+                    <p>
+                        This is a survival function, not an emotional statement. By understanding this state, you can support your partner by helping protect their isolation space, which actively restores their energy so they can safely re-engage sooner.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Disclaimer Footer -->
+    <footer class="w-full border-t border-stoneBorder/40 bg-bgWarm py-6 px-6 md:px-12 mt-12 text-center text-xs text-warmGrey leading-relaxed">
+        <div class="max-w-[1100px] mx-auto space-y-3">
+            <p class="italic max-w-3xl mx-auto">
+                This tool is intended for psychoeducational purposes only. It does not constitute medical advice, diagnosis, or treatment. The information presented is a simplified representation of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.
+            </p>
+            <div class="border-t border-stoneBorder/20 pt-3 flex flex-col sm:flex-row justify-between items-center text-[11px] text-warmGrey/80">
+                <span>&copy; 2026 Second Arrow Counseling. All rights reserved.</span>
+                <span class="mt-2 sm:mt-0">Reframing neurodivergent architectures with self-compassion.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // State management
+        let currentProfile = 'audhd';
+        let batteryLevel = 50.0;
+        let rechargeMode = 'none'; // 'none' | 'active' | 'pure'
+        
+        // Element references
+        const btnNt = document.getElementById('btn-nt');
+        const btnAdhd = document.getElementById('btn-adhd');
+        const btnAutism = document.getElementById('btn-autism');
+        const btnAudhd = document.getElementById('btn-audhd');
+
+        const sliderSensory = document.getElementById('input-sensory');
+        const sliderMasking = document.getElementById('input-masking');
+        const sliderSwitching = document.getElementById('input-switching');
+
+        const valSensory = document.getElementById('val-sensory');
+        const valMasking = document.getElementById('val-masking');
+        const valSwitching = document.getElementById('val-switching');
+        
+        const valAmbient = document.getElementById('val-ambient');
+        const descAmbient = document.getElementById('desc-ambient');
+
+        const toggleSensoryIns = document.getElementById('toggle-sensory-insulation');
+        const toggleExecutiveShield = document.getElementById('toggle-executive-shield');
+        const toggleDemandReassure = document.getElementById('toggle-demand-reassure');
+
+        const batteryPercentText = document.getElementById('batteryPercentText');
+        const batteryStateName = document.getElementById('battery-state-name');
+
+        const canvas = document.getElementById('batteryCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Recharge state elements
+        const rechargeNone = document.getElementById('recharge-none');
+        const rechargeActive = document.getElementById('recharge-active');
+        const rechargePure = document.getElementById('recharge-pure');
+        const rechargeRateMsg = document.getElementById('recharge-rate-msg');
+
+        // Connection map UI elements
+        const connectionTierBox = document.getElementById('connection-tier-box');
+        const tierBadge = document.getElementById('tier-badge');
+        const tierTitle = document.getElementById('tier-title');
+        const tierSummary = document.getElementById('tier-summary');
+        const partnerValidation = document.getElementById('partner-validation');
+        const suggestedList = document.getElementById('suggested-activities-list');
+
+        // Profile details mapping
+        const profiles = {
+            nt: {
+                color: '#45735d',
+                ambientDrain: 10,
+                sensory: 15,
+                masking: 10,
+                switching: 15,
+                ambientDesc: "Highly efficient prediction filters. Everyday sounds and social requirements process with little core friction."
+            },
+            adhd: {
+                color: '#b68d76',
+                ambientDrain: 25,
+                sensory: 35,
+                masking: 45,
+                switching: 40,
+                ambientDesc: "Constant stimulation-seeking state. High mental drag from filtering unengaging tasks and forcing alertness."
+            },
+            autism: {
+                color: '#ba945e',
+                ambientDrain: 35,
+                sensory: 65,
+                masking: 55,
+                switching: 60,
+                ambientDesc: "Intense environmental sensitivity. The brain maintains hyper-vigilance to handle unexpected details or sensory shifts."
+            },
+            audhd: {
+                color: '#35361c',
+                ambientDrain: 45,
+                sensory: 70,
+                masking: 65,
+                switching: 65,
+                ambientDesc: "The ultimate paradox. High-volume sensory inputs combined with weak dopamine sorting creates extreme silent energy drain."
+            }
+        };
+
+        // Custom theme properties for sliders
+        function applySliderTheme(color) {
+            const styleId = 'slider-custom-style';
+            let styleEl = document.getElementById(styleId);
+            if (!styleEl) {
+                styleEl = document.createElement('style');
+                styleEl.id = styleId;
+                document.head.appendChild(styleEl);
+            }
+            styleEl.innerHTML = `
+                input[type="range"]::-webkit-slider-thumb { background: ${color}; }
+                input[type="range"]::-moz-range-thumb { background: ${color}; }
+                input[type="checkbox"]:checked { background-color: ${color}; border-color: ${color}; }
+            `;
+        }
+
+        // Initialize and change profile
+        function selectProfile(profileKey) {
+            currentProfile = profileKey;
+            
+            // Toggle active classes on profile buttons
+            document.querySelectorAll('.profile-btn').forEach(btn => {
+                btn.className = btn.className.replace(/\bbg-[^\s]+/, '').replace(/\btext-white\b/, '');
+            });
+
+            const activeBtn = document.getElementById(`btn-${profileKey}`);
+            const profileData = profiles[profileKey];
+            
+            // Set dynamic colored background of buttons based on selection
+            if (profileKey === 'nt') activeBtn.classList.add('bg-nt', 'text-white');
+            if (profileKey === 'adhd') activeBtn.classList.add('bg-adhd', 'text-white');
+            if (profileKey === 'autism') activeBtn.classList.add('bg-autism', 'text-white');
+            if (profileKey === 'audhd') activeBtn.classList.add('bg-audhd', 'text-white');
+
+            // Apply specific custom slider handles
+            applySliderTheme(profileData.color);
+
+            // Load presets
+            sliderSensory.value = profileData.sensory;
+            sliderMasking.value = profileData.masking;
+            sliderSwitching.value = profileData.switching;
+
+            // Reset toggles when swapping profiles
+            toggleSensoryIns.checked = false;
+            toggleExecutiveShield.checked = false;
+            toggleDemandReassure.checked = false;
+
+            // Run math calculation
+            updateCalculations();
+        }
+
+        // Compute metabolic drain values and current battery percentage
+        function updateCalculations() {
+            const profileData = profiles[currentProfile];
+            
+            // Update value labels
+            valSensory.innerText = `${sliderSensory.value}%`;
+            valMasking.innerText = `${sliderMasking.value}%`;
+            valSwitching.innerText = `${sliderSwitching.value}%`;
+
+            // Display ambient background description
+            valAmbient.innerText = currentProfile === 'nt' ? 'Low' : currentProfile === 'adhd' ? 'Moderate' : 'High';
+            descAmbient.innerText = profileData.ambientDesc;
+
+            // Calculate actual total depletion index (0 to 100)
+            const sensTerm = parseFloat(sliderSensory.value) * 0.35;
+            const maskTerm = parseFloat(sliderMasking.value) * 0.35;
+            const switchTerm = parseFloat(sliderSwitching.value) * 0.30;
+            
+            let baselineCost = profileData.ambientDrain;
+            let dynamicCost = sensTerm + maskTerm + switchTerm;
+
+            // Calculate support mitigation
+            let supportMitigation = 0;
+            if (toggleSensoryIns.checked) supportMitigation += 15;
+            if (toggleExecutiveShield.checked) supportMitigation += 15;
+            if (toggleDemandReassure.checked) supportMitigation += 10;
+
+            // Net daily battery drain
+            let netDrain = (baselineCost + dynamicCost) - supportMitigation;
+            netDrain = Math.max(10, Math.min(100, netDrain));
+
+            // Set dynamic baseline battery calculation based on daily cost index
+            batteryLevel = 100 - (netDrain - 10);
+            
+            // Ensure bounds are safe
+            batteryLevel = Math.max(5, Math.min(100, batteryLevel));
+
+            // Update UI
+            updateBatteryUI();
+        }
+
+        // Handle recharge toggles
+        function setRecharge(mode) {
+            rechargeMode = mode;
+            
+            // Visual reset
+            rechargeNone.className = "py-1.5 rounded bg-white text-darkText border border-stoneBorder hover:bg-stone-50";
+            rechargeActive.className = "py-1.5 rounded bg-white text-darkText border border-stoneBorder hover:bg-stone-50";
+            rechargePure.className = "py-1.5 rounded bg-white text-darkText border border-stoneBorder hover:bg-stone-50";
+
+            if (mode === 'none') {
+                rechargeNone.className = "py-1.5 rounded bg-darkText text-white border border-darkText";
+                rechargeRateMsg.innerText = "The brain is constantly metabolizing. Rest speeds vary by profile environment.";
+            } else if (mode === 'active') {
+                rechargeActive.className = `py-1.5 rounded text-white border border-transparent`;
+                // Add conditional color
+                rechargeActive.style.backgroundColor = profiles[currentProfile].color;
+                rechargeNone.style.backgroundColor = '';
+                rechargePure.style.backgroundColor = '';
+                rechargeRateMsg.innerText = "Watching TV or eating together reduces external strain, but sensory processing is still ticking.";
+            } else if (mode === 'pure') {
+                rechargePure.className = `py-1.5 rounded text-white border border-transparent`;
+                rechargePure.style.backgroundColor = profiles[currentProfile].color;
+                rechargeNone.style.backgroundColor = '';
+                rechargeActive.style.backgroundColor = '';
+                rechargeRateMsg.innerText = "Absolute sensory insulation halts processing loops, starting real, structural metabolic recharge.";
+            }
+
+            // Adjust battery level directly based on recharge
+            updateCalculations();
+        }
+
+        // Change physical battery rendering
+        function updateBatteryUI() {
+            let finalLevel = batteryLevel;
+            
+            // Apply modifiers for live rest states
+            if (rechargeMode === 'active') {
+                finalLevel = Math.min(100, finalLevel + 15);
+            } else if (rechargeMode === 'pure') {
+                finalLevel = Math.min(100, finalLevel + 35);
+            }
+
+            const intLevel = Math.round(finalLevel);
+            batteryPercentText.innerText = `${intLevel}%`;
+
+            // State styling and descriptions
+            let stateName = "";
+            let color = "";
+
+            if (intLevel > 75) {
+                stateName = "System Stable";
+                color = "#45735d"; // NT Green
+                batteryStateName.className = "text-xs uppercase tracking-widest font-bold text-nt";
+            } else if (intLevel > 50) {
+                stateName = "Mild Straining";
+                color = "#ba945e"; // Gold
+                batteryStateName.className = "text-xs uppercase tracking-widest font-bold text-autism";
+            } else if (intLevel > 20) {
+                stateName = "Severe Exhaustion";
+                color = "#b68d76"; // Terracotta
+                batteryStateName.className = "text-xs uppercase tracking-widest font-bold text-adhd";
+            } else {
+                stateName = "Power-Saving Mode";
+                color = "#8b2619"; // Deep Red Alert
+                batteryStateName.className = "text-xs uppercase tracking-widest font-bold text-red-700 animate-pulse";
+            }
+
+            batteryStateName.innerText = stateName;
+
+            // Generate content for Connection Map
+            updateConnectionMap(intLevel);
+        }
+
+        // Update the relational guide depending on calculated battery energy level
+        function updateConnectionMap(level) {
+            suggestedList.innerHTML = ""; // Clear list
+
+            let tierColorBg = "";
+            let tierBorder = "";
+            let badgeText = "";
+            let title = "";
+            let summary = "";
+            let validationText = "";
+            let suggestions = [];
+
+            if (level > 75) {
+                // STABLE CONNECTION TIER
+                tierColorBg = "bg-green-50";
+                tierBorder = "border-green-200";
+                badgeText = "Optimal";
+                title = "High-Exchange Connection";
+                summary = "Sufficient metabolic capacity is available for complex speech, planning, processing schedules, and deep emotional conversations.";
+                
+                validationText = "Both partners feel safe and clear. This is the natural window to address administrative details, plan future scheduling, and enjoy heavy verbal processing.";
+                suggestions = [
+                    "Plan future household tasks, events, and scheduling details.",
+                    "Enjoy long, direct conversations and emotional checks.",
+                    "Engage in joint dynamic social activities outside of the home."
+                ];
+                
+                // Set text color for stable badge
+                tierBadge.className = "px-2.5 py-0.5 rounded text-[11px] font-black uppercase tracking-wider text-white bg-nt";
+            } else if (level > 50) {
+                // MODERATE CONNECTION TIER
+                tierColorBg = "bg-amber-50/70";
+                tierBorder = "border-amber-200/60";
+                badgeText = "Caution";
+                title = "Low-Demand Connection";
+                summary = "Nervous system has a smaller margin. Speech capacity is active, but heavy debates or emotional scheduling will easily cause over-arousal.";
+                
+                validationText = "Your partner is still fully present, but complex or emotionally charged logistics can feel overwhelming. Keeping interactions collaborative and light preserves energy.";
+                suggestions = [
+                    "Watch a casual, non-complex show or classic film together.",
+                    "Share funny memes, videos, or brief, low-stakes verbal stories.",
+                    "Participate in light physical comfort like casual back rubs or hand holding."
+                ];
+                
+                tierBadge.className = "px-2.5 py-0.5 rounded text-[11px] font-black uppercase tracking-wider text-white bg-autism";
+            } else if (level > 20) {
+                // STRAINED CONNECTION TIER
+                tierColorBg = "bg-orange-50/50";
+                tierBorder = "border-orange-200/50";
+                badgeText = "Low Battery";
+                title = "Parallel Space";
+                summary = "Verbal processing is slow. Forcing eye contact or responsive conversation drains remaining power. Silence is preferred.";
+                
+                validationText = "If they drop contact or look quiet, their brain is prioritizing staying regulated. You can connect through silent physical proximity without expecting anything back.";
+                suggestions = [
+                    "Engage in side-by-side low-sensory hobbies (reading, scrolling) without talking.",
+                    "Sit next to each other on the sofa with sensory friendly headphones on.",
+                    "Exchange simple hand squeezes or brief deep-pressure hugs."
+                ];
+                
+                tierBadge.className = "px-2.5 py-0.5 rounded text-[11px] font-black uppercase tracking-wider text-white bg-adhd";
+            } else {
+                // CRITICAL / ISOLATION TIER
+                tierColorBg = "bg-red-50/40";
+                tierBorder = "border-red-200/50";
+                badgeText = "Critical Alert";
+                title = "Pure Sensory Isolation";
+                summary = "The neural network has tripped its circuit breaker. Any verbal demand or environmental noise feels physically painful. Pure retreat is required.";
+                
+                validationText = "This flat look or physical distance is NOT rejection—it is vital medical rest. By actively creating space and expecting zero communication, you are helping them heal.";
+                suggestions = [
+                    "Provide a dark, noise-insulated bedroom or decompression space.",
+                    "Assure them with a simple note: 'I have everything handled. Rest without pressure.'",
+                    "Expect zero response, zero eye contact, and zero performance until they recover."
+                ];
+                
+                tierBadge.className = "px-2.5 py-0.5 rounded text-[11px] font-black uppercase tracking-wider text-white bg-red-700 animate-pulse";
+            }
+
+            // Apply updates
+            connectionTierBox.className = `p-4 rounded-xl border ${tierColorBg} ${tierBorder} mb-5 transition-all duration-300`;
+            tierTitle.innerText = title;
+            tierSummary.innerText = summary;
+            partnerValidation.innerText = validationText;
+
+            suggestions.forEach(item => {
+                const li = document.createElement('li');
+                li.className = "flex items-start gap-2 leading-relaxed";
+                li.innerHTML = `<span class="text-stoneBorder mt-0.5 font-bold">&#8226;</span> <span>${item}</span>`;
+                suggestedList.appendChild(li);
+            });
+        }
+
+        // Variables for wave physics inside the battery
+        let waveOffset = 0;
+
+        function animateWave() {
+            if (!canvas || !ctx) return;
+
+            // Fit canvas buffer size to client layout display
+            if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+            }
+
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+
+            let displayLevel = batteryLevel;
+            if (rechargeMode === 'active') displayLevel = Math.min(100, displayLevel + 15);
+            if (rechargeMode === 'pure') displayLevel = Math.min(100, displayLevel + 35);
+
+            // Calculate fill height based on level
+            const fillHeight = height * (displayLevel / 100);
+            const targetY = height - fillHeight;
+
+            // Pick drawing color based on current state
+            let color = "#45735d"; // NT Forest Green default
+            if (displayLevel > 75) color = "#45735d";
+            else if (displayLevel > 50) color = "#ba945e";
+            else if (displayLevel > 20) color = "#b68d76";
+            else color = "#a33626"; // Deep Alert red-orange
+
+            // Create wavy liquid gradient
+            const gradient = ctx.createLinearGradient(0, targetY, 0, height);
+            gradient.addColorStop(0, color);
+            gradient.addColorStop(1, adjustColorBrightness(color, -25));
+
+            ctx.fillStyle = gradient;
+
+            // Draw fluid wave
+            ctx.beginPath();
+            ctx.moveTo(0, height);
+            
+            for (let x = 0; x <= width; x++) {
+                // Sine wave formula for natural fluid liquid representation
+                const waveHeight = displayLevel < 98 ? Math.sin(x * 0.04 + waveOffset) * 4 : 0;
+                ctx.lineTo(x, targetY + waveHeight);
+            }
+            
+            ctx.lineTo(width, height);
+            ctx.closePath();
+            ctx.fill();
+
+            // Render particles escaping if draining, or rising if charging
+            renderParticles(width, height, targetY, color);
+
+            waveOffset += 0.05;
+            requestAnimationFrame(animateWave);
+        }
+
+        // Helper function for building a rich dark gradient base inside battery
+        function adjustColorBrightness(hex, percent) {
+            let num = parseInt(hex.replace("#",""), 16),
+                amt = Math.round(2.55 * percent),
+                R = (num >> 16) + amt,
+                G = (num >> 8 & 0x00FF) + amt,
+                B = (num & 0x0000FF) + amt;
+            return "#" + (0x1000000 + (R<255?R<0?0:R:255)*0x10000 + (G<255?G<0?0:G:255)*0x100 + (B<255?B<0?0:B:255)).toString(16).slice(1);
+        }
+
+        // Simple particle generator to show active metabolic processing loops
+        const particles = [];
+        function renderParticles(width, height, targetY, color) {
+            // Only add particles if there's active depletion or recharge
+            if (Math.random() < 0.15) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: rechargeMode !== 'none' ? height : targetY,
+                    size: Math.random() * 3 + 1,
+                    speed: (Math.random() * 0.8 + 0.3) * (rechargeMode !== 'none' ? -1 : 1),
+                    alpha: 1
+                });
+            }
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.y += p.speed;
+                p.alpha -= 0.008;
+
+                ctx.fillStyle = color;
+                ctx.globalAlpha = Math.max(0, p.alpha);
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Kill dead particles
+                if (p.alpha <= 0 || p.y < 0 || p.y > height) {
+                    particles.splice(i, 1);
+                }
+            }
+            ctx.globalAlpha = 1.0; // Reset canvas alpha
+        }
+
+        // Window startup trigger
+        window.onload = function () {
+            // Default select AuDHD profile baseline
+            selectProfile('audhd');
+            // Trigger animation thread
+            animateWave();
+        };
+    </script>
+</body>
+</html>
