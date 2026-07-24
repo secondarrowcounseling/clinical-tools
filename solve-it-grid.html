@@ -11,26 +11,27 @@
     
     <style>
         :root {
-            --green:     #45735d;  /* Forest Green / NT */
-            --gold:      #ba945e;  /* Warm Gold / Autism */
-            --terra:     #b68d76;  /* Terracotta / ADHD */
-            --forest:    #35361c;  /* Dark Forest / AuDHD */
-            --text:      #222a26;
-            --grey:      #6d7873;
-            --bg:        #faf8f5;
-            --accent-bg: #F5F3EF;
-            --stone:     #bdb7a2;
-            --cool-grey: #a6aea6;
+            /* Second Arrow Counseling Brand Palette */
+            --green:        #45735d;  /* Forest Green / NT */
+            --gold:         #ba945e;  /* Warm Gold / Autism */
+            --terra:        #b68d76;  /* Terracotta / ADHD */
+            --forest:       #35361c;  /* Dark Forest / AuDHD */
+            --text:         #222a26;
+            --grey:         #6d7873;
+            --bg:           #faf8f5;  /* Warm White */
+            --accent-bg:    #F5F3EF;  /* Accent Cream */
+            --stone:        #bdb7a2;
+            --cool-grey:    #a6aea6;
 
             /* Solve-It Quadrant Color Tints */
-            --red-quad:    #f4e7e4;
-            --red-border:  #d98b7d;
-            --green-quad:  #e7efe9;
-            --green-border:#71a388;
-            --yellow-quad: #f8f1e5;
+            --red-quad:     #f4e7e4;
+            --red-border:   #d98b7d;
+            --green-quad:   #e7efe9;
+            --green-border: #71a388;
+            --yellow-quad:  #f8f1e5;
             --yellow-border:#d1a85c;
-            --blue-quad:   #e8f0f3;
-            --blue-border: #7ba3b5;
+            --blue-quad:    #e8f0f3;
+            --blue-border:  #7ba3b5;
         }
 
         * {
@@ -86,7 +87,7 @@
             color: var(--grey);
         }
 
-        /* Hero / Header Panel */
+        /* Hero Panel */
         .header-panel {
             background-color: var(--accent-bg);
             border-radius: 10px;
@@ -107,7 +108,6 @@
             max-width: 900px;
         }
 
-        /* Input Bar & Controls */
         .controls-section {
             background-color: var(--accent-bg);
             border-radius: 10px;
@@ -183,7 +183,7 @@
         .presets-row {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
@@ -210,7 +210,7 @@
             background-color: #e2ded5;
         }
 
-        /* Loop Mode Selectors */
+        /* Loop Selectors */
         .loop-selector {
             display: flex;
             gap: 8px;
@@ -221,22 +221,23 @@
         }
 
         .loop-btn {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             padding: 6px 12px;
             border-radius: 6px;
             border: 1px solid var(--stone);
             background: #ffffff;
             color: var(--text);
             cursor: pointer;
+            transition: all 0.2s;
         }
 
         .loop-btn.active {
             background-color: var(--forest);
             color: #ffffff;
             border-color: var(--forest);
+            font-weight: 700;
         }
 
-        /* Main Workspace Layout */
         .workspace {
             display: grid;
             grid-template-columns: 1fr 340px;
@@ -249,7 +250,6 @@
             }
         }
 
-        /* Grid Wrapper & Axes Labels */
         .grid-container {
             background-color: var(--accent-bg);
             border-radius: 10px;
@@ -292,7 +292,6 @@
             letter-spacing: 0.8px;
         }
 
-        /* 2x2 Grid */
         .grid-2x2 {
             flex: 1;
             display: grid;
@@ -313,6 +312,12 @@
             position: relative;
             min-height: 220px;
             border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .quadrant.active-selected {
+            border-width: 2px;
+            box-shadow: 0 0 0 3px var(--forest);
         }
 
         .quadrant.highlight-loop {
@@ -321,29 +326,10 @@
             z-index: 2;
         }
 
-        /* Red Quadrant */
-        .quad-red {
-            background-color: var(--red-quad);
-            border-color: var(--red-border);
-        }
-
-        /* Green Quadrant */
-        .quad-green {
-            background-color: var(--green-quad);
-            border-color: var(--green-border);
-        }
-
-        /* Yellow Quadrant */
-        .quad-yellow {
-            background-color: var(--yellow-quad);
-            border-color: var(--yellow-border);
-        }
-
-        /* Blue Quadrant */
-        .quad-blue {
-            background-color: var(--blue-quad);
-            border-color: var(--blue-border);
-        }
+        .quad-red { background-color: var(--red-quad); border-color: var(--red-border); }
+        .quad-green { background-color: var(--green-quad); border-color: var(--green-border); }
+        .quad-yellow { background-color: var(--yellow-quad); border-color: var(--yellow-border); }
+        .quad-blue { background-color: var(--blue-quad); border-color: var(--blue-border); }
 
         .quad-header {
             display: flex;
@@ -380,7 +366,6 @@
             padding-right: 2px;
         }
 
-        /* Task Cards */
         .task-card {
             background: #ffffff;
             border-radius: 6px;
@@ -419,7 +404,7 @@
             background: none;
             border: none;
             color: var(--cool-grey);
-            font-size: 1rem;
+            font-size: 1.1rem;
             cursor: pointer;
             padding: 0 4px;
             line-height: 1;
@@ -429,7 +414,6 @@
             color: #b00000;
         }
 
-        /* Right Side Strategy Panel */
         .side-panel {
             display: flex;
             flex-direction: column;
@@ -453,7 +437,6 @@
             justify-content: space-between;
         }
 
-        /* Metabolic Fuel Meter */
         .meter-container {
             margin-bottom: 8px;
         }
@@ -488,12 +471,11 @@
             color: var(--text);
         }
 
-        /* Strategy & Coaching Details */
         .strategy-content {
             font-size: 0.9rem;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .strategy-tag {
@@ -533,7 +515,6 @@
             font-weight: bold;
         }
 
-        /* Loop Explanation Note */
         .loop-explanation {
             background-color: #ffffff;
             border-left: 3px solid var(--forest);
@@ -543,7 +524,15 @@
             color: var(--text);
         }
 
-        /* Footer Disclaimer */
+        .toast-notify {
+            font-size: 0.8rem;
+            color: var(--green);
+            font-weight: 700;
+            text-align: center;
+            margin-top: 6px;
+            display: none;
+        }
+
         .disclaimer-footer {
             margin-top: 10px;
             padding-top: 14px;
@@ -554,7 +543,6 @@
             line-height: 1.4;
         }
 
-        /* SVG Loop Overlay */
         .svg-overlay {
             position: absolute;
             top: 0;
@@ -620,10 +608,10 @@
         <div class="presets-row">
             <span class="presets-label">Quick Presets:</span>
             <button type="button" class="chip-btn" onclick="addPreset('Filing Taxes', 'yellow')">+ Filing Taxes</button>
-            <button type="button" class="chip-btn" onclick="addPreset('Late Work Emergency', 'red')">+ Urgent Deadline Sprint</button>
-            <button type="button" class="chip-btn" onclick="addPreset('Hyperfocus Hobby', 'green')">+ Deep Interest Project</button>
+            <button type="button" class="chip-btn" onclick="addPreset('Urgent Deadline Sprint', 'red')">+ Urgent Deadline Sprint</button>
+            <button type="button" class="chip-btn" onclick="addPreset('Deep Interest Project', 'green')">+ Deep Interest Project</button>
             <button type="button" class="chip-btn" onclick="addPreset('Doomscrolling', 'blue')">+ Unintentional Scrolling</button>
-            <button type="button" class="chip-btn" onclick="addPreset('Guilt-Free Rest', 'blue')">+ Restorative Napping</button>
+            <button type="button" class="chip-btn" onclick="addPreset('Restorative Napping', 'blue')">+ Restorative Napping</button>
         </div>
 
         <div class="loop-selector">
@@ -716,7 +704,7 @@
                     <div class="meter-labels">
                         <span>Low Drain</span>
                         <span>Moderate</span>
-                        <span>High Exhaustion</span>
+                        <span>Exhaustion Risk</span>
                     </div>
                 </div>
                 <div class="meter-status" id="fuel-status">
@@ -741,11 +729,12 @@
                     <span>Session Notes</span>
                 </div>
                 <p style="font-size:0.85rem; color:var(--grey); margin-bottom:10px;">
-                    Generate a clean plain-text summary of your current grid to copy into therapy notes.
+                    Generate a plain-text summary of your current grid to paste into therapy documentation.
                 </p>
                 <button type="button" class="btn btn-secondary" style="width:100%;" onclick="copySessionSummary()">
                     📋 Copy Summary to Clipboard
                 </button>
+                <div class="toast-notify" id="toast-notify">Summary copied to clipboard!</div>
             </div>
 
         </aside>
@@ -760,8 +749,19 @@
 </div>
 
 <script>
-    /* State Management */
-    /* Strategy Content Database - Aligned with Rosier's Book & Workbook */
+
+    // Core State Variables
+    let tasks = [
+        { id: '1', name: 'Filing Annual Taxes', quad: 'yellow' },
+        { id: '2', name: 'Urgent Work Sprint', quad: 'red' },
+        { id: '3', name: 'Deep Interest Project', quad: 'green' },
+        { id: '4', name: 'Unintentional Scrolling', quad: 'blue' }
+    ];
+    let activeQuadrant = 'yellow';
+    let selectedTaskID = null;
+    let currentLoopMode = 'none';
+
+    // Strategy Content Database (Aligned with Rosier's Book & Workbook)
     const strategyData = {
         yellow: {
             title: 'Yellow: The Friction Zone',
@@ -780,7 +780,7 @@
                     <ul style="font-size:0.82rem; padding-left:14px; margin-top:4px; color:var(--text);">
                         <li><strong>Emotional Block:</strong> "I hate this task." <em>Fix: Take a timed 10-min Blue break, then reset.</em></li>
                         <li><strong>Technical Block:</strong> "I lack tools or info." <em>Fix: Add acquiring the tool as Step 1 on your list.</em></li>
-                        <li><strong>Cognitive Block:</strong> "I don't know how to do this." <em>Fix: Identify the learning gap or ask for guidance.</em></li>
+                        <li><strong>Cognitive Block:</strong> "I don't know how." <em>Fix: Identify the learning gap or ask for guidance.</em></li>
                     </ul>
                 </div>
             `
@@ -827,13 +827,6 @@
         anchor: '<strong>The Sustainable Bridge:</strong> Pairing Yellow tasks with Green dopamine anchors, followed by planned, restorative Blue rest.'
     };
 
-    const loopExplanations = {
-        panic: '<strong>The Panic Cycle:</strong> Tasks linger in Yellow due to low activation dopamine until panic pushes them into Red. The massive adrenaline rush completes the task but forces an involuntary burnout crash straight into Blue.',
-        burnout: '<strong>The Hyperfocus Drain:</strong> Spending extended periods in Green hyperfocus without pacing drains metabolic reserves, causing an abrupt collapse into Blue numbing/recovery.',
-        anchor: '<strong>The Sustainable Bridge:</strong> By pairing Yellow friction tasks with Green dopamine anchors, activation becomes smoother, protecting energy and leading to intentional, guilt-free Blue rest.'
-    };
-
-    /* Render Functions */
     function render() {
         renderTasks();
         renderStrategy();
@@ -842,7 +835,7 @@
     }
 
     function renderTasks() {
-        // Clear lists
+        // Clear task lists
         document.getElementById('list-red').innerHTML = '';
         document.getElementById('list-green').innerHTML = '';
         document.getElementById('list-yellow').innerHTML = '';
@@ -882,6 +875,15 @@
     function selectQuadrant(quad) {
         activeQuadrant = quad;
         selectedTaskID = null;
+
+        // Visual active border state on quadrants
+        ['red', 'green', 'yellow', 'blue'].forEach(q => {
+            const el = document.getElementById(`quad-${q}`);
+            if (el) {
+                el.classList.toggle('active-selected', q === quad);
+            }
+        });
+
         render();
     }
 
@@ -948,9 +950,9 @@
     }
 
     function updateLoopHighlights() {
-        // Reset highlights
         ['red', 'green', 'yellow', 'blue'].forEach(q => {
-            document.getElementById(`quad-${q}`).classList.remove('highlight-loop');
+            const el = document.getElementById(`quad-${q}`);
+            if (el) el.classList.remove('highlight-loop');
         });
 
         const svg = document.getElementById('svg-overlay');
@@ -1044,9 +1046,8 @@
         const countRed = tasks.filter(t => t.quad === 'red').length;
         const countYellow = tasks.filter(t => t.quad === 'yellow').length;
         const countGreen = tasks.filter(t => t.quad === 'green').length;
-        const countBlue = tasks.filter(t => t.quad === 'blue').length;
-
-        // Weightings: Red = 3 (rapid drain), Yellow = 2 (gradual drain), Green = 0.5 (recharge), Blue = 0
+        
+        // Weightings based on Rosier Ch. 8: Red = 3 (rapid drain), Yellow = 2 (gradual drain), Green = 0.5 (recharge)
         const totalPoints = (countRed * 3) + (countYellow * 2) + (countGreen * 0.5);
         const totalTasks = tasks.length || 1;
         
@@ -1066,7 +1067,7 @@
 
         if (fillPercent > 65) {
             fillBar.style.backgroundColor = '#8c3223';
-            statusText.textContent = 'Rapid Drain Risk: High concentration in Red / Yellow zones. Battery depleting quickly.';
+            statusText.textContent = 'High Exhaustion Risk: Heavy concentration in Red / Yellow zones. Rapid metabolic battery drain.';
         } else if (fillPercent > 35) {
             fillBar.style.backgroundColor = '#87621c';
             statusText.textContent = 'Moderate Battery Expenditure: Balanced mixture of friction and active tasks.';
@@ -1097,19 +1098,35 @@ RECOMMENDED MICRO-INTERVENTIONS:
 --------------------------------------------------
 Intentional systems, not character flaws.`;
 
-        navigator.clipboard.writeText(summaryText).then(() => {
-            alert('Session summary copied to clipboard!');
-        }).catch(err => {
-            console.error('Failed to copy: ', err);
-        });
+        // ExecCommand fallback for iframe constraints
+        const textarea = document.createElement('textarea');
+        textarea.value = summaryText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            showToast();
+        } catch (err) {
+            console.error('Copy failed', err);
+        }
+        document.body.removeChild(textarea);
     }
 
-    // Initial Render
+    function showToast() {
+        const toast = document.getElementById('toast-notify');
+        if (toast) {
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+    }
+
+    // Initial Load & Listeners
     window.addEventListener('DOMContentLoaded', () => {
-        render();
+        selectQuadrant('yellow');
     });
 
-    // Handle window resize for dynamic SVG recalculation
     window.addEventListener('resize', () => {
         updateLoopHighlights();
     });
