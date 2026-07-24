@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solve-It Grid & Energy Mapper | Second Arrow Counseling</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --green:     #45735d;  /* Forest Green / NT */
+            --gold:      #ba945e;  /* Warm Gold / Autism */
+            --terra:     #b68d76;  /* Terracotta / ADHD */
+            --forest:    #35361c;  /* Dark Forest / AuDHD */
+            --text:      #222a26;
+            --grey:      #6d7873;
+            --bg:        #faf8f5;
+            --accent-bg: #F5F3EF;
+            --stone:     #bdb7a2;
+            --cool-grey: #a6aea6;
+
+            /* Solve-It Quadrant Color Tints */
+            --red-quad:    #f4e7e4;
+            --red-border:  #d98b7d;
+            --green-quad:  #e7efe9;
+            --green-border:#71a388;
+            --yellow-quad: #f8f1e5;
+            --yellow-border:#d1a85c;
+            --blue-quad:   #e8f0f3;
+            --blue-border: #7ba3b5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Topbar Header */
+        .sac-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--stone);
+        }
+
+        .sac-brand {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--forest);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sac-brand:hover {
+            opacity: 0.85;
+        }
+
+        .tagline {
+            font-size: 0.85rem;
+            color: var(--grey);
+        }
+
+        /* Hero / Header Panel */
+        .header-panel {
+            background-color: var(--accent-bg);
+            border-radius: 10px;
+            padding: 20px 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        }
+
+        .header-panel h1 {
+            font-family: 'Libre Baskerville', serif;
+            color: var(--forest);
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+        }
+
+        .header-panel p {
+            color: var(--text);
+            font-size: 0.98rem;
+            max-width: 900px;
+        }
+
+        /* Input Bar & Controls */
+        .controls-section {
+            background-color: var(--accent-bg);
+            border-radius: 10px;
+            padding: 18px 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .task-input-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .task-input-group input[type="text"] {
+            flex: 1;
+            min-width: 220px;
+            padding: 10px 14px;
+            border: 1px solid var(--stone);
+            border-radius: 6px;
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: 0.95rem;
+            background-color: #ffffff;
+            color: var(--text);
+        }
+
+        .task-input-group select {
+            padding: 10px 14px;
+            border: 1px solid var(--stone);
+            border-radius: 6px;
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: 0.95rem;
+            background-color: #ffffff;
+            color: var(--text);
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background-color: var(--forest);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #262714;
+        }
+
+        .btn-secondary {
+            background-color: #ffffff;
+            color: var(--forest);
+            border: 1px solid var(--stone);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f0ede6;
+        }
+
+        .presets-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .presets-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--grey);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .chip-btn {
+            background: #ffffff;
+            border: 1px solid var(--stone);
+            padding: 5px 11px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .chip-btn:hover {
+            background-color: #e2ded5;
+        }
+
+        /* Loop Mode Selectors */
+        .loop-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            padding-top: 8px;
+            border-top: 1px dashed var(--stone);
+        }
+
+        .loop-btn {
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--stone);
+            background: #ffffff;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .loop-btn.active {
+            background-color: var(--forest);
+            color: #ffffff;
+            border-color: var(--forest);
+        }
+
+        /* Main Workspace Layout */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 20px;
+        }
+
+        @media (max-width: 850px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Grid Wrapper & Axes Labels */
+        .grid-container {
+            background-color: var(--accent-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .axis-label {
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: var(--grey);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .axis-y-top { margin-bottom: 8px; }
+        .axis-y-bottom { margin-top: 8px; }
+
+        .grid-main-wrapper {
+            display: flex;
+            align-items: stretch;
+            gap: 8px;
+        }
+
+        .axis-x-side {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--grey);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        /* 2x2 Grid */
+        .grid-2x2 {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 12px;
+            min-height: 480px;
+            position: relative;
+        }
+
+        .quadrant {
+            border-radius: 8px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.2s ease;
+            position: relative;
+            min-height: 220px;
+            border: 2px solid transparent;
+        }
+
+        .quadrant.highlight-loop {
+            box-shadow: 0 0 0 3px var(--forest);
+            transform: scale(1.01);
+            z-index: 2;
+        }
+
+        /* Red Quadrant */
+        .quad-red {
+            background-color: var(--red-quad);
+            border-color: var(--red-border);
+        }
+
+        /* Green Quadrant */
+        .quad-green {
+            background-color: var(--green-quad);
+            border-color: var(--green-border);
+        }
+
+        /* Yellow Quadrant */
+        .quad-yellow {
+            background-color: var(--yellow-quad);
+            border-color: var(--yellow-border);
+        }
+
+        /* Blue Quadrant */
+        .quad-blue {
+            background-color: var(--blue-quad);
+            border-color: var(--blue-border);
+        }
+
+        .quad-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            padding-bottom: 6px;
+        }
+
+        .quad-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .quad-red .quad-title { color: #8c3223; }
+        .quad-green .quad-title { color: #2d5440; }
+        .quad-yellow .quad-title { color: #87621c; }
+        .quad-blue .quad-title { color: #2e596b; }
+
+        .quad-subtitle {
+            font-size: 0.75rem;
+            color: var(--grey);
+            font-weight: 600;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+            overflow-y: auto;
+            max-height: 240px;
+            padding-right: 2px;
+        }
+
+        /* Task Cards */
+        .task-card {
+            background: #ffffff;
+            border-radius: 6px;
+            padding: 8px 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            font-size: 0.88rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            border-left: 4px solid var(--stone);
+            transition: transform 0.1s, box-shadow 0.15s;
+        }
+
+        .task-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        }
+
+        .task-card.selected {
+            outline: 2px solid var(--forest);
+        }
+
+        .quad-red .task-card { border-left-color: var(--red-border); }
+        .quad-green .task-card { border-left-color: var(--green-border); }
+        .quad-yellow .task-card { border-left-color: var(--yellow-border); }
+        .quad-blue .task-card { border-left-color: var(--blue-border); }
+
+        .task-name {
+            font-weight: 600;
+            color: var(--text);
+            word-break: break-word;
+        }
+
+        .task-delete {
+            background: none;
+            border: none;
+            color: var(--cool-grey);
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0 4px;
+            line-height: 1;
+        }
+
+        .task-delete:hover {
+            color: #b00000;
+        }
+
+        /* Right Side Strategy Panel */
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .panel-box {
+            background-color: var(--accent-bg);
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        }
+
+        .panel-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.05rem;
+            color: var(--forest);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Metabolic Fuel Meter */
+        .meter-container {
+            margin-bottom: 8px;
+        }
+
+        .meter-bar-bg {
+            height: 14px;
+            background-color: #e0dcd3;
+            border-radius: 7px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .meter-bar-fill {
+            height: 100%;
+            width: 30%;
+            background-color: var(--green);
+            transition: width 0.4s ease, background-color 0.4s ease;
+        }
+
+        .meter-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--grey);
+            font-weight: 700;
+        }
+
+        .meter-status {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 6px;
+            color: var(--text);
+        }
+
+        /* Strategy & Coaching Details */
+        .strategy-content {
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .strategy-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .tag-red { background: var(--red-quad); color: #8c3223; }
+        .tag-green { background: var(--green-quad); color: #2d5440; }
+        .tag-yellow { background: var(--yellow-quad); color: #87621c; }
+        .tag-blue { background: var(--blue-quad); color: #2e596b; }
+
+        .strategy-list {
+            list-style-type: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .strategy-list li {
+            position: relative;
+            padding-left: 16px;
+            line-height: 1.4;
+        }
+
+        .strategy-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--forest);
+            font-weight: bold;
+        }
+
+        /* Loop Explanation Note */
+        .loop-explanation {
+            background-color: #ffffff;
+            border-left: 3px solid var(--forest);
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--text);
+        }
+
+        /* Footer Disclaimer */
+        .disclaimer-footer {
+            margin-top: 10px;
+            padding-top: 14px;
+            border-top: 1px solid var(--stone);
+            font-size: 0.78rem;
+            color: var(--grey);
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* SVG Loop Overlay */
+        .svg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .loop-path {
+            stroke: var(--forest);
+            stroke-width: 3;
+            stroke-dasharray: 6;
+            fill: none;
+            animation: dash 1.5s linear infinite;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -12;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- Topbar -->
+    <header class="sac-topbar">
+        <a href="https://secondarrow.net" target="_blank" class="sac-brand" aria-label="Second Arrow Counseling Website">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 8l4 4-4 4M8 12h8"></path>
+            </svg>
+            Second Arrow Counseling
+        </a>
+        <span class="tagline">Systems, Not Symptoms</span>
+    </header>
+
+    <!-- Header Panel -->
+    <section class="header-panel">
+        <h1>The Solve-It Grid & Energy Mapper</h1>
+        <p>Map your daily activities across emotional stimulation and dopamine availability. Understand where your metabolic energy goes, spot cycle patterns, and apply non-judgmental micro-interventions.</p>
+    </section>
+
+    <!-- Controls & Task Creator -->
+    <section class="controls-section">
+        <form id="task-form" class="task-input-group" onsubmit="handleAddTask(event)">
+            <input type="text" id="task-name" placeholder="Type a task (e.g., Filing taxes, Meal prep, Passion project)..." aria-label="Task Name" required>
+            <select id="task-quadrant" aria-label="Select Quadrant">
+                <option value="yellow">Yellow: Friction Zone (Not Fun / Low Urgency)</option>
+                <option value="red">Red: Rocket Fuel Zone (Not Fun / High Urgency)</option>
+                <option value="green">Green: Spark Zone (Fun / High Urgency)</option>
+                <option value="blue">Blue: Recharge / Trap Zone (Fun / Low Urgency)</option>
+            </select>
+            <button type="submit" class="btn btn-primary" aria-label="Add Task to Grid">
+                + Add Task
+            </button>
+        </form>
+
+        <div class="presets-row">
+            <span class="presets-label">Quick Presets:</span>
+            <button type="button" class="chip-btn" onclick="addPreset('Filing Taxes', 'yellow')">+ Filing Taxes</button>
+            <button type="button" class="chip-btn" onclick="addPreset('Late Work Emergency', 'red')">+ Urgent Deadline Sprint</button>
+            <button type="button" class="chip-btn" onclick="addPreset('Hyperfocus Hobby', 'green')">+ Deep Interest Project</button>
+            <button type="button" class="chip-btn" onclick="addPreset('Doomscrolling', 'blue')">+ Unintentional Scrolling</button>
+            <button type="button" class="chip-btn" onclick="addPreset('Guilt-Free Rest', 'blue')">+ Restorative Napping</button>
+        </div>
+
+        <div class="loop-selector">
+            <span class="presets-label">Simulate Pattern (Ch. 9):</span>
+            <button type="button" class="loop-btn active" id="btn-loop-none" onclick="setLoopMode('none')">None (Freeform)</button>
+            <button type="button" class="loop-btn" id="btn-loop-fire" onclick="setLoopMode('fire')">Playing with Fire (Yellow → Red)</button>
+            <button type="button" class="loop-btn" id="btn-loop-redblue" onclick="setLoopMode('redblue')">Red, Blue & Back Again (Red → Blue → Red)</button>
+            <button type="button" class="loop-btn" id="btn-loop-blueonly" onclick="setLoopMode('blueonly')">Nothin' but Blue (Blue Trap)</button>
+            <button type="button" class="loop-btn" id="btn-loop-anchor" onclick="setLoopMode('anchor')">Sustainable Bridge (Yellow + Green → Blue)</button>
+        </div>
+    </section>
+
+    <!-- Workspace Grid & Side Panel -->
+    <main class="workspace">
+        
+        <!-- Left: Grid -->
+        <div class="grid-container">
+            <div class="axis-label axis-y-top">High Emotional Stimulation & Urgency</div>
+            
+            <div class="grid-main-wrapper">
+                <div class="axis-x-side">Not Fun (Low Dopamine)</div>
+                
+                <div class="grid-2x2" id="grid-element">
+                    <!-- Red Quadrant -->
+                    <div class="quadrant quad-red" id="quad-red" onclick="selectQuadrant('red')" tabindex="0" role="region" aria-label="Red Quadrant: Rocket Fuel Zone">
+                        <div class="quad-header">
+                            <div>
+                                <div class="quad-title">RED: Rocket Fuel</div>
+                                <div class="quad-subtitle">Driven by Anxiety & Urgency</div>
+                            </div>
+                        </div>
+                        <div class="task-list" id="list-red"></div>
+                    </div>
+
+                    <!-- Green Quadrant -->
+                    <div class="quadrant quad-green" id="quad-green" onclick="selectQuadrant('green')" tabindex="0" role="region" aria-label="Green Quadrant: Spark Zone">
+                        <div class="quad-header">
+                            <div>
+                                <div class="quad-title">GREEN: The Spark</div>
+                                <div class="quad-subtitle">Driven by Passion & Novelty</div>
+                            </div>
+                        </div>
+                        <div class="task-list" id="list-green"></div>
+                    </div>
+
+                    <!-- Yellow Quadrant -->
+                    <div class="quadrant quad-yellow" id="quad-yellow" onclick="selectQuadrant('yellow')" tabindex="0" role="region" aria-label="Yellow Quadrant: Friction Zone">
+                        <div class="quad-header">
+                            <div>
+                                <div class="quad-title">YELLOW: The Friction Zone</div>
+                                <div class="quad-subtitle">Mundane Chores & Task Paralysis</div>
+                            </div>
+                        </div>
+                        <div class="task-list" id="list-yellow"></div>
+                    </div>
+
+                    <!-- Blue Quadrant -->
+                    <div class="quadrant quad-blue" id="quad-blue" onclick="selectQuadrant('blue')" tabindex="0" role="region" aria-label="Blue Quadrant: Recharge Zone">
+                        <div class="quad-header">
+                            <div>
+                                <div class="quad-title">BLUE: Recharge & Trap</div>
+                                <div class="quad-subtitle">Low Stakes Rest or Avoidance</div>
+                            </div>
+                        </div>
+                        <div class="task-list" id="list-blue"></div>
+                    </div>
+
+                    <!-- Dynamic SVG Overlay for Loop Vectors -->
+                    <svg class="svg-overlay" id="svg-overlay"></svg>
+                </div>
+
+                <div class="axis-x-side" style="transform: rotate(0deg);">Fun (High Dopamine)</div>
+            </div>
+
+            <div class="axis-label axis-y-bottom">Low Emotional Stimulation & Urgency</div>
+        </div>
+
+        <!-- Right: Strategy Panel -->
+        <aside class="side-panel">
+            
+            <!-- Fuel / Metabolic Meter Box -->
+            <div class="panel-box">
+                <div class="panel-title">
+                    <span>Metabolic Energy Cost</span>
+                </div>
+                <div class="meter-container">
+                    <div class="meter-bar-bg">
+                        <div class="meter-bar-fill" id="fuel-bar"></div>
+                    </div>
+                    <div class="meter-labels">
+                        <span>Low Drain</span>
+                        <span>Moderate</span>
+                        <span>High Exhaustion</span>
+                    </div>
+                </div>
+                <div class="meter-status" id="fuel-status">
+                    Balanced task distribution.
+                </div>
+            </div>
+
+            <!-- Quadrant Strategy Card -->
+            <div class="panel-box">
+                <div class="panel-title" id="strategy-panel-title">
+                    <span>Zone Breakdown</span>
+                </div>
+
+                <div class="strategy-content" id="strategy-content">
+                    <!-- Populated dynamically by JS -->
+                </div>
+            </div>
+
+            <!-- Session Summary Exporter -->
+            <div class="panel-box">
+                <div class="panel-title">
+                    <span>Session Notes</span>
+                </div>
+                <p style="font-size:0.85rem; color:var(--grey); margin-bottom:10px;">
+                    Generate a clean plain-text summary of your current grid to copy into therapy notes.
+                </p>
+                <button type="button" class="btn btn-secondary" style="width:100%;" onclick="copySessionSummary()">
+                    📋 Copy Summary to Clipboard
+                </button>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <!-- Footer Disclaimer -->
+    <footer class="disclaimer-footer">
+        This tool is intended for psychoeducational purposes only. It does not constitute medical advice, diagnosis, or treatment. The information presented is a simplified representation of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.
+    </footer>
+
+</div>
+
+<script>
+    /* State Management */
+    /* Strategy Content Database - Aligned with Rosier's Book & Workbook */
+    const strategyData = {
+        yellow: {
+            title: 'Yellow: The Friction Zone',
+            tagClass: 'tag-yellow',
+            tagText: 'Low Dopamine / Low Urgency (Gradual Battery Drain)',
+            mechanism: 'Yellow tasks lack intrinsic dopamine and urgency signals. While Yellow causes only gradual battery drain, the brain perceives the initiation friction as massive.',
+            strategies: [
+                'Lower the Activation Threshold: Shrink the initial task to a 5-minute micro-step or set a 20-minute timer.',
+                'Body Doubling: Work alongside a live or virtual partner to establish low-stakes momentum.',
+                'Dopamine Anchoring: Pair the mundane task with a Green element (a favorite podcast or special beverage).'
+            ],
+            diagnostic: `
+                <div style="margin-top:10px; padding:10px; background:#ffffff; border-radius:6px; border:1px solid var(--stone);">
+                    <strong style="font-size:0.82rem; color:var(--forest); text-transform:uppercase; letter-spacing:0.5px;">Rosier's 3-Blocker Diagnostic (Appendix A):</strong>
+                    <p style="font-size:0.82rem; margin-top:4px; color:var(--text);">If stuck on a Yellow task, identify your specific block:</p>
+                    <ul style="font-size:0.82rem; padding-left:14px; margin-top:4px; color:var(--text);">
+                        <li><strong>Emotional Block:</strong> "I hate this task." <em>Fix: Take a timed 10-min Blue break, then reset.</em></li>
+                        <li><strong>Technical Block:</strong> "I lack tools or info." <em>Fix: Add acquiring the tool as Step 1 on your list.</em></li>
+                        <li><strong>Cognitive Block:</strong> "I don't know how to do this." <em>Fix: Identify the learning gap or ask for guidance.</em></li>
+                    </ul>
+                </div>
+            `
+        },
+        red: {
+            title: 'Red: The Rocket Fuel Zone',
+            tagClass: 'tag-red',
+            tagText: 'High Urgency / Low Dopamine (Rapid Battery Drain)',
+            mechanism: 'Red tasks use anxiety, panic, and shame as "rocket fuel." Operating in Red delivers short-term results but rapidly drains your metabolic battery and risks burnout.',
+            strategies: [
+                'Nervous System Down-Regulation: Take 2 deep physiological sighs before starting to lower panic baseline.',
+                'De-escalate Shame Narratives: Reframe "I should have done this sooner" to "My brain needed urgency to trigger chemical activation."',
+                'Scope Reduction: Cut deliverables down to the bare viable 10% needed right now.'
+            ]
+        },
+        green: {
+            title: 'Green: The Spark Zone',
+            tagClass: 'tag-green',
+            tagText: 'High Dopamine / High Urgency (Fast Battery Recharge)',
+            mechanism: 'Green tasks offer clear dopamine signals, deep engagement, and joy. Spending time in Green is the fastest way to restore a depleted emotional battery.',
+            strategies: [
+                'Set Pacing Timers: Schedule hydration and movement breaks before physical fatigue sets in.',
+                'Dopamine Bridge: Channel momentum from Green tasks directly into an adjacent Yellow task before stopping.',
+                'Boundary Checks: Protect against overcommitting to too many new passion projects at once.'
+            ]
+        },
+        blue: {
+            title: 'Blue: Recharge & Trap Zone',
+            tagClass: 'tag-blue',
+            tagText: 'Low Dopamine / Low Urgency (Slow Recharge or Trap)',
+            mechanism: 'Blue provides restorative rest in healthy doses. However, when crashing out of Red or avoiding Yellow, Blue can turn into a sticky "molasses swamp" trap.',
+            strategies: [
+                'Rest Audit: Check whether this activity feels genuinely restorative or like avoidance numbing.',
+                'Permissible Rest: Give explicit permission for genuine guilt-free recovery without keeping task lists in mind.',
+                'Gentle Transition: Change physical location or position to break out of involuntary scroll-paralysis.'
+            ]
+        }
+    };
+
+    const loopExplanations = {
+        fire: '<strong>Playing with Fire:</strong> Ignoring Yellow friction tasks until they creep into Red emergency fires. Scrambling to finish under high panic creates unnecessary stress and battery depletion.',
+        redblue: '<strong>Red, Blue & Back Again:</strong> Sprinting frantically in Red until your battery dies, flopping into Blue exhaustion, and then using panic to jump straight back into Red.',
+        blueonly: '<strong>Nothin\' but Blue:</strong> Staying entrenched in Blue to protect against Yellow friction and Red panic, which leaves goals unfulfilled and fuels self-criticism.',
+        anchor: '<strong>The Sustainable Bridge:</strong> Pairing Yellow tasks with Green dopamine anchors, followed by planned, restorative Blue rest.'
+    };
+
+    const loopExplanations = {
+        panic: '<strong>The Panic Cycle:</strong> Tasks linger in Yellow due to low activation dopamine until panic pushes them into Red. The massive adrenaline rush completes the task but forces an involuntary burnout crash straight into Blue.',
+        burnout: '<strong>The Hyperfocus Drain:</strong> Spending extended periods in Green hyperfocus without pacing drains metabolic reserves, causing an abrupt collapse into Blue numbing/recovery.',
+        anchor: '<strong>The Sustainable Bridge:</strong> By pairing Yellow friction tasks with Green dopamine anchors, activation becomes smoother, protecting energy and leading to intentional, guilt-free Blue rest.'
+    };
+
+    /* Render Functions */
+    function render() {
+        renderTasks();
+        renderStrategy();
+        updateMetabolicMeter();
+        updateLoopHighlights();
+    }
+
+    function renderTasks() {
+        // Clear lists
+        document.getElementById('list-red').innerHTML = '';
+        document.getElementById('list-green').innerHTML = '';
+        document.getElementById('list-yellow').innerHTML = '';
+        document.getElementById('list-blue').innerHTML = '';
+
+        tasks.forEach(task => {
+            const card = document.createElement('div');
+            card.className = `task-card ${selectedTaskID === task.id ? 'selected' : ''}`;
+            card.onclick = (e) => {
+                e.stopPropagation();
+                selectTask(task.id);
+            };
+
+            const nameEl = document.createElement('span');
+            nameEl.className = 'task-name';
+            nameEl.textContent = task.name;
+
+            const delBtn = document.createElement('button');
+            delBtn.className = 'task-delete';
+            delBtn.innerHTML = '&times;';
+            delBtn.title = 'Remove task';
+            delBtn.onclick = (e) => {
+                e.stopPropagation();
+                deleteTask(task.id);
+            };
+
+            card.appendChild(nameEl);
+            card.appendChild(delBtn);
+
+            const targetList = document.getElementById(`list-${task.quad}`);
+            if (targetList) {
+                targetList.appendChild(card);
+            }
+        });
+    }
+
+    function selectQuadrant(quad) {
+        activeQuadrant = quad;
+        selectedTaskID = null;
+        render();
+    }
+
+    function selectTask(id) {
+        selectedTaskID = id;
+        const task = tasks.find(t => t.id === id);
+        if (task) {
+            activeQuadrant = task.quad;
+        }
+        render();
+    }
+
+    function handleAddTask(e) {
+        e.preventDefault();
+        const input = document.getElementById('task-name');
+        const select = document.getElementById('task-quadrant');
+        const name = input.value.trim();
+        
+        if (name) {
+            const newTask = {
+                id: Date.now().toString(),
+                name: name,
+                quad: select.value
+            };
+            tasks.push(newTask);
+            activeQuadrant = select.value;
+            selectedTaskID = newTask.id;
+            input.value = '';
+            render();
+        }
+    }
+
+    function addPreset(name, quad) {
+        const newTask = {
+            id: Date.now().toString(),
+            name: name,
+            quad: quad
+        };
+        tasks.push(newTask);
+        activeQuadrant = quad;
+        selectedTaskID = newTask.id;
+        render();
+    }
+
+    function deleteTask(id) {
+        tasks = tasks.filter(t => t.id !== id);
+        if (selectedTaskID === id) {
+            selectedTaskID = null;
+        }
+        render();
+    }
+
+    function setLoopMode(mode) {
+        currentLoopMode = mode;
+        
+        // Update active class on loop buttons
+        document.getElementById('btn-loop-none').classList.toggle('active', mode === 'none');
+        document.getElementById('btn-loop-fire').classList.toggle('active', mode === 'fire');
+        document.getElementById('btn-loop-redblue').classList.toggle('active', mode === 'redblue');
+        document.getElementById('btn-loop-blueonly').classList.toggle('active', mode === 'blueonly');
+        document.getElementById('btn-loop-anchor').classList.toggle('active', mode === 'anchor');
+
+        render();
+    }
+
+    function updateLoopHighlights() {
+        // Reset highlights
+        ['red', 'green', 'yellow', 'blue'].forEach(q => {
+            document.getElementById(`quad-${q}`).classList.remove('highlight-loop');
+        });
+
+        const svg = document.getElementById('svg-overlay');
+        svg.innerHTML = '';
+
+        if (currentLoopMode === 'none') return;
+
+        let activeQuads = [];
+        if (currentLoopMode === 'fire') {
+            activeQuads = ['yellow', 'red'];
+            drawSvgArrow('quad-yellow', 'quad-red');
+        } else if (currentLoopMode === 'redblue') {
+            activeQuads = ['red', 'blue'];
+            drawSvgArrow('quad-red', 'quad-blue');
+            drawSvgArrow('quad-blue', 'quad-red');
+        } else if (currentLoopMode === 'blueonly') {
+            activeQuads = ['blue'];
+        } else if (currentLoopMode === 'anchor') {
+            activeQuads = ['yellow', 'green', 'blue'];
+            drawSvgArrow('quad-yellow', 'quad-green');
+            drawSvgArrow('quad-green', 'quad-blue');
+        }
+
+        activeQuads.forEach(q => {
+            const el = document.getElementById(`quad-${q}`);
+            if (el) el.classList.add('highlight-loop');
+        });
+    }
+
+    function drawSvgArrow(fromId, toId) {
+        const svg = document.getElementById('svg-overlay');
+        const grid = document.getElementById('grid-element');
+        const fromEl = document.getElementById(fromId);
+        const toEl = document.getElementById(toId);
+
+        if (!grid || !fromEl || !toEl) return;
+
+        const gridRect = grid.getBoundingClientRect();
+        const fromRect = fromEl.getBoundingClientRect();
+        const toRect = toEl.getBoundingClientRect();
+
+        const x1 = (fromRect.left + fromRect.width / 2) - gridRect.left;
+        const y1 = (fromRect.top + fromRect.height / 2) - gridRect.top;
+        const x2 = (toRect.left + toRect.width / 2) - gridRect.left;
+        const y2 = (toRect.top + toRect.height / 2) - gridRect.top;
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const cx = x1 + dx / 2 + (dy > 0 ? -20 : 20);
+        const cy = y1 + dy / 2 + (dx > 0 ? 20 : -20);
+
+        path.setAttribute('d', `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`);
+        path.setAttribute('class', 'loop-path');
+        svg.appendChild(path);
+    }
+
+    function renderStrategy() {
+        const data = strategyData[activeQuadrant];
+        const contentContainer = document.getElementById('strategy-content');
+        
+        let html = `
+            <div>
+                <span class="strategy-tag ${data.tagClass}">${data.tagText}</span>
+                <p style="margin-top:6px; font-size:0.88rem;">${data.mechanism}</p>
+            </div>
+            <div>
+                <strong style="font-size:0.85rem; color:var(--forest); text-transform:uppercase; letter-spacing:0.5px;">Recommended Micro-Interventions:</strong>
+                <ul class="strategy-list" style="margin-top:6px;">
+                    ${data.strategies.map(s => `<li>${s}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+
+        if (data.diagnostic) {
+            html += data.diagnostic;
+        }
+
+        if (currentLoopMode !== 'none' && loopExplanations[currentLoopMode]) {
+            html += `
+                <div class="loop-explanation">
+                    ${loopExplanations[currentLoopMode]}
+                </div>
+            `;
+        }
+
+        contentContainer.innerHTML = html;
+    }
+
+    function updateMetabolicMeter() {
+        const countRed = tasks.filter(t => t.quad === 'red').length;
+        const countYellow = tasks.filter(t => t.quad === 'yellow').length;
+        const countGreen = tasks.filter(t => t.quad === 'green').length;
+        const countBlue = tasks.filter(t => t.quad === 'blue').length;
+
+        // Weightings: Red = 3 (rapid drain), Yellow = 2 (gradual drain), Green = 0.5 (recharge), Blue = 0
+        const totalPoints = (countRed * 3) + (countYellow * 2) + (countGreen * 0.5);
+        const totalTasks = tasks.length || 1;
+        
+        let fillPercent = Math.min(100, Math.round((totalPoints / (totalTasks * 3)) * 100));
+        
+        const fillBar = document.getElementById('fuel-bar');
+        const statusText = document.getElementById('fuel-status');
+
+        if (tasks.length === 0) {
+            fillBar.style.width = '10%';
+            fillBar.style.backgroundColor = 'var(--green)';
+            statusText.textContent = 'Grid is clear.';
+            return;
+        }
+
+        fillBar.style.width = `${fillPercent}%`;
+
+        if (fillPercent > 65) {
+            fillBar.style.backgroundColor = '#8c3223';
+            statusText.textContent = 'Rapid Drain Risk: High concentration in Red / Yellow zones. Battery depleting quickly.';
+        } else if (fillPercent > 35) {
+            fillBar.style.backgroundColor = '#87621c';
+            statusText.textContent = 'Moderate Battery Expenditure: Balanced mixture of friction and active tasks.';
+        } else {
+            fillBar.style.backgroundColor = 'var(--green)';
+            statusText.textContent = 'Sustainable Battery Reserve: Good Green/Blue restorative balance in place.';
+        }
+    }
+
+    function copySessionSummary() {
+        const redTasks = tasks.filter(t => t.quad === 'red').map(t => t.name).join(', ') || 'None';
+        const greenTasks = tasks.filter(t => t.quad === 'green').map(t => t.name).join(', ') || 'None';
+        const yellowTasks = tasks.filter(t => t.quad === 'yellow').map(t => t.name).join(', ') || 'None';
+        const blueTasks = tasks.filter(t => t.quad === 'blue').map(t => t.name).join(', ') || 'None';
+
+        const summaryText = `SECOND ARROW COUNSELING - SOLVE-IT GRID SUMMARY
+--------------------------------------------------
+Yellow (Friction Zone): ${yellowTasks}
+Red (Rocket Fuel Zone): ${redTasks}
+Green (Spark Zone): ${greenTasks}
+Blue (Recharge/Trap Zone): ${blueTasks}
+
+ACTIVE ENERGY PATTERN: ${currentLoopMode.toUpperCase()}
+ACTIVE FOCUS ZONE: ${strategyData[activeQuadrant].title}
+
+RECOMMENDED MICRO-INTERVENTIONS:
+- ${strategyData[activeQuadrant].strategies.join('\n- ')}
+--------------------------------------------------
+Intentional systems, not character flaws.`;
+
+        navigator.clipboard.writeText(summaryText).then(() => {
+            alert('Session summary copied to clipboard!');
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    }
+
+    // Initial Render
+    window.addEventListener('DOMContentLoaded', () => {
+        render();
+    });
+
+    // Handle window resize for dynamic SVG recalculation
+    window.addEventListener('resize', () => {
+        updateLoopHighlights();
+    });
+</script>
+
+</body>
+</html>
