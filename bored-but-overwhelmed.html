@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bored but Overwhelmed Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#45735d; --gold:#ba945e; --terra:#b68d76; --forest:#35361c;
+  --text:#222a26; --grey:#6d7873; --bg:#faf8f5; --accent-bg:#F5F3EF;
+  --stone:#bdb7a2; --cool-grey:#a6aea6;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:'Nunito Sans',sans-serif; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1100px; margin:0 auto; padding:0 20px 40px;}
+.topbar{padding:16px 20px 0; max-width:1100px; margin:0 auto;}
+.topbar a{
+  font-family:'Libre Baskerville',serif; color:var(--forest);
+  text-decoration:none; font-size:15px; letter-spacing:.02em;
+}
+.topbar a:hover{color:var(--green);}
+.topbar .brainmark{width:22px; height:22px; vertical-align:-4px; margin-right:8px;}
+
+.header{
+  background:var(--accent-bg); border:1px solid var(--stone);
+  border-radius:16px; padding:26px 30px; margin-top:14px;
+  box-shadow:0 4px 6px rgba(0,0,0,0.06);
+}
+.header h1{
+  font-family:'Libre Baskerville',serif; font-weight:700;
+  margin:0 0 6px; font-size:30px; color:var(--forest); letter-spacing:.01em;
+}
+.header .sub{color:var(--grey); font-size:15.5px; max-width:760px; margin:0 0 18px;}
+.profiles{display:flex; gap:10px; flex-wrap:wrap;}
+.pbtn{
+  font-family:'Nunito Sans',sans-serif; font-weight:700; font-size:14px;
+  border:1.5px solid var(--stone); background:#fff; color:var(--grey);
+  padding:8px 18px; border-radius:999px; cursor:pointer; transition:all .18s ease;
+  letter-spacing:.01em;
+}
+.pbtn:hover{border-color:var(--cool-grey);}
+.pbtn .dot{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; vertical-align:0;}
+.pbtn.active{color:#fff; border-color:transparent;}
+.pbtn.active.NT{background:var(--green);}
+.pbtn.active.ADHD{background:var(--terra);}
+.pbtn.active.ASD{background:var(--gold);}
+.pbtn.active.AuDHD{background:var(--forest);}
+
+.grid{
+  display:grid; grid-template-columns:250px 1fr 280px; gap:18px; margin-top:18px;
+}
+.panel{
+  background:var(--accent-bg); border:1px solid var(--stone);
+  border-radius:16px; padding:20px; box-shadow:0 4px 6px rgba(0,0,0,0.06);
+}
+.panel h3{
+  font-family:'Libre Baskerville',serif; font-size:15px; color:var(--forest);
+  margin:0 0 12px; letter-spacing:.02em;
+}
+.hint{font-size:13px; color:var(--grey); margin:0 0 16px;}
+
+.scenarios{display:flex; flex-direction:column; gap:8px;}
+.schip{
+  text-align:left; font-family:'Nunito Sans',sans-serif; font-size:12.5px; font-weight:600;
+  border:1.5px solid var(--stone); background:#fff; color:var(--text);
+  padding:9px 12px; border-radius:10px; cursor:pointer; transition:all .16s ease; line-height:1.3;
+}
+.schip:hover{border-color:var(--green);}
+.schip small{display:block; color:var(--cool-grey); font-weight:600; font-size:11px; margin-top:2px;}
+
+.mapwrap{background:#fff; border:1px solid var(--stone); border-radius:16px; padding:8px; box-shadow:0 4px 6px rgba(0,0,0,0.06);}
+#map{width:100%; height:auto; display:block; touch-action:none;}
+.qlabel{font-family:'Libre Baskerville',serif; fill:var(--stone); font-size:12px; letter-spacing:.14em; text-transform:uppercase;}
+.axtitle{font-family:'Nunito Sans',sans-serif; fill:var(--grey); font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;}
+.axend{font-family:'Nunito Sans',sans-serif; fill:var(--cool-grey); font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;}
+.glowlabel{font-family:'Nunito Sans',sans-serif; font-size:10.5px; font-weight:800; letter-spacing:.04em;}
+
+.reading{text-align:center; padding:6px 0 14px; border-bottom:1px dashed var(--stone); margin-bottom:14px;}
+.reading .state{font-family:'Libre Baskerville',serif; font-size:20px; font-weight:700; line-height:1.15; margin:2px 0;}
+.reading .who{font-size:12px; color:var(--grey); font-weight:700; letter-spacing:.08em; text-transform:uppercase;}
+
+.gauge{margin-bottom:15px;}
+.gauge .glabel{display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:var(--grey); margin-bottom:5px;}
+.gauge .glabel b{color:var(--text); font-weight:800;}
+.track{position:relative; height:12px; background:#ece8e1; border-radius:999px; border:1px solid var(--stone);}
+.fill{position:absolute; left:0; top:0; bottom:0; border-radius:999px; transition:width .35s ease, background .3s ease;}
+.tick{position:absolute; top:-4px; width:2px; height:20px; background:var(--forest); opacity:.55;}
+.tick::after{content:attr(data-l); position:absolute; top:-14px; left:50%; transform:translateX(-50%); font-size:8.5px; font-weight:800; color:var(--forest); white-space:nowrap; letter-spacing:.03em;}
+
+.narr{font-size:14px; color:var(--text); background:#fff; border:1px solid var(--stone); border-left-width:5px; border-radius:10px; padding:13px 15px; margin-top:10px; transition:border-color .3s ease;}
+
+.compare{margin-top:18px;}
+.compare .ctitle{font-family:'Libre Baskerville',serif; font-size:15px; color:var(--forest); margin:0 0 4px;}
+.compare .csub{font-size:12.5px; color:var(--grey); margin:0 0 12px;}
+.cgrid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+.card{background:#fff; border:1px solid var(--stone); border-top-width:4px; border-radius:12px; padding:12px 13px;}
+.card .cwho{font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--grey); margin-bottom:3px;}
+.card .cstate{font-family:'Libre Baskerville',serif; font-size:14.5px; font-weight:700; line-height:1.15; margin-bottom:8px; min-height:34px;}
+.card .cdrain{font-size:10.5px; font-weight:700; color:var(--cool-grey); letter-spacing:.04em; text-transform:uppercase; margin-top:2px;}
+.minitrack{height:7px; background:#ece8e1; border-radius:999px; overflow:hidden; border:1px solid var(--stone);}
+.minifill{height:100%; border-radius:999px; transition:width .35s ease;}
+
+.disclaimer{font-size:11.5px; color:var(--cool-grey); text-align:center; margin-top:26px; line-height:1.55; max-width:820px; margin-left:auto; margin-right:auto;}
+
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr;}
+  .cgrid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="https://secondarrow.net" target="_blank" rel="noopener">
+    <svg class="brainmark" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8.5 3.5c-1.9 0-3.2 1.3-3.4 2.9C3.6 6.7 2.7 7.9 2.7 9.4c0 .9.4 1.7 1 2.2-.5.5-.8 1.2-.8 2 0 1.4 1 2.6 2.4 2.9.1 1.6 1.5 2.9 3.2 2.9 1 0 1.9-.5 2.5-1.2V5.2C10.4 4.2 9.5 3.5 8.5 3.5z" fill="#b68d76"/>
+      <path d="M15.5 3.5c1.9 0 3.2 1.3 3.4 2.9 1.5.3 2.4 1.5 2.4 3 0 .9-.4 1.7-1 2.2.5.5.8 1.2.8 2 0 1.4-1 2.6-2.4 2.9-.1 1.6-1.5 2.9-3.2 2.9-1 0-1.9-.5-2.5-1.2V5.2c.6-1 1.5-1.7 2.5-1.7z" fill="#a3735a"/>
+    </svg>
+    Second Arrow Counseling
+  </a>
+</div>
+
+<div class="wrap">
+  <div class="header">
+    <h1>The Bored but Overwhelmed Map</h1>
+    <p class="sub">The AuDHD paradox isn't a midpoint between ADHD and Autism - it's a third place. Drop yourself into an environment below and watch how each nervous system reads the exact same room. Drag the marker, or pick a real-life scene.</p>
+    <div class="profiles" id="profiles">
+      <button class="pbtn NT" data-p="NT"><span class="dot" style="background:#45735d"></span>Neurotypical</button>
+      <button class="pbtn ADHD" data-p="ADHD"><span class="dot" style="background:#b68d76"></span>ADHD</button>
+      <button class="pbtn ASD" data-p="ASD"><span class="dot" style="background:#ba945e"></span>Autism</button>
+      <button class="pbtn AuDHD active" data-p="AuDHD"><span class="dot" style="background:#35361c"></span>AuDHD</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <h3>Drop into a scene</h3>
+      <p class="hint">Each of these shows up in the lesson. Click one, then switch profiles to feel the difference.</p>
+      <div class="scenarios" id="scenarios"></div>
+    </div>
+
+    <div class="mapwrap">
+      <svg id="map" viewBox="0 0 560 540" role="img" aria-label="Two-axis map of stimulation versus structure">
+        <defs>
+          <radialGradient id="g-green"><stop offset="0%" stop-color="#45735d" stop-opacity="0.42"/><stop offset="70%" stop-color="#45735d" stop-opacity="0.10"/><stop offset="100%" stop-color="#45735d" stop-opacity="0"/></radialGradient>
+          <radialGradient id="g-terra"><stop offset="0%" stop-color="#b68d76" stop-opacity="0.44"/><stop offset="70%" stop-color="#b68d76" stop-opacity="0.11"/><stop offset="100%" stop-color="#b68d76" stop-opacity="0"/></radialGradient>
+          <radialGradient id="g-gold"><stop offset="0%" stop-color="#ba945e" stop-opacity="0.44"/><stop offset="70%" stop-color="#ba945e" stop-opacity="0.11"/><stop offset="100%" stop-color="#ba945e" stop-opacity="0"/></radialGradient>
+          <radialGradient id="g-forest"><stop offset="0%" stop-color="#35361c" stop-opacity="0.30"/><stop offset="70%" stop-color="#35361c" stop-opacity="0.08"/><stop offset="100%" stop-color="#35361c" stop-opacity="0"/></radialGradient>
+        </defs>
+
+        <rect x="70" y="30" width="460" height="440" rx="10" fill="#fdfcfa" stroke="#e4dfd4"/>
+        <line x1="300" y1="30" x2="300" y2="470" stroke="#e4dfd4" stroke-dasharray="4 5"/>
+        <line x1="70" y1="250" x2="530" y2="250" stroke="#e4dfd4" stroke-dasharray="4 5"/>
+
+        <text class="qlabel" x="120" y="60">Calm &amp; Structured</text>
+        <text class="qlabel" x="380" y="60">Structured Novelty</text>
+        <text class="qlabel" x="120" y="452">Flat &amp; Chaotic</text>
+        <text class="qlabel" x="392" y="452">Intense &amp; Chaotic</text>
+
+        <g id="glows"></g>
+
+        <g id="marker">
+          <circle id="mk-glow" r="26" fill="url(#g-forest)"/>
+          <circle id="mk-ring" r="15" fill="none" stroke="#35361c" stroke-opacity="0.35" stroke-width="1.5"/>
+          <circle id="mk-dot" r="8.5" fill="#35361c" stroke="#fff" stroke-width="2.5"/>
+        </g>
+
+        <text class="axtitle" x="300" y="500" text-anchor="middle">Stimulation / Novelty</text>
+        <text class="axend" x="78" y="486">Calm &middot; Same</text>
+        <text class="axend" x="522" y="486" text-anchor="end">Novel &middot; Intense</text>
+        <text class="axtitle" x="0" y="0" text-anchor="middle" transform="translate(30,250) rotate(-90)">Structure / Predictability</text>
+        <text class="axend" x="0" y="0" transform="translate(52,466) rotate(-90)">Chaotic</text>
+        <text class="axend" x="0" y="0" text-anchor="end" transform="translate(52,42) rotate(-90)">Structured</text>
+
+        <rect id="hit" x="70" y="30" width="460" height="440" fill="transparent" style="cursor:crosshair"/>
+      </svg>
+    </div>
+
+    <div class="panel">
+      <div class="reading">
+        <div class="who" id="r-who">AuDHD reads this as</div>
+        <div class="state" id="r-state">Regulated</div>
+      </div>
+
+      <div class="gauge">
+        <div class="glabel"><span>Dopamine</span><b id="g-stim-v">50</b></div>
+        <div class="track"><div class="fill" id="g-stim" style="width:50%;background:#b68d76"></div>
+          <div class="tick" id="t-famine" data-l="famine" style="left:40%"></div>
+          <div class="tick" id="t-flood" data-l="flood" style="left:82%"></div>
+        </div>
+      </div>
+      <div class="gauge">
+        <div class="glabel"><span>Sensory safety</span><b id="g-pred-v">50</b></div>
+        <div class="track"><div class="fill" id="g-pred" style="width:50%;background:#45735d"></div>
+          <div class="tick" id="t-safe" data-l="safe line" style="left:30%"></div>
+        </div>
+      </div>
+      <div class="gauge">
+        <div class="glabel"><span>Energy drain</span><b id="g-drain-v">low</b></div>
+        <div class="track"><div class="fill" id="g-drain" style="width:10%;background:#45735d"></div></div>
+      </div>
+
+      <div class="narr" id="narr">Drag the marker to read the room.</div>
+    </div>
+  </div>
+
+  <div class="panel compare">
+    <div class="ctitle">Same room, four nervous systems</div>
+    <div class="csub" id="csub">Everyone is standing in the exact same spot on the map. Watch how differently the room lands.</div>
+    <div class="cgrid" id="cgrid"></div>
+  </div>
+
+  <p class="disclaimer">This tool is intended for psychoeducational purposes only. It does not constitute medical advice, diagnosis, or treatment. The information presented is a simplified representation of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.</p>
+</div>
+
+<script>
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+const PROFILES={
+  NT:  {name:'Neurotypical', hex:'#45735d', dopaNeed:40, sensoryCap:82, predNeed:30, k:0.2,
+        glows:[{x:50,y:55,r:150,c:'g-green'}]},
+  ADHD:{name:'ADHD', hex:'#b68d76', dopaNeed:68, sensoryCap:90, predNeed:15, k:0.2,
+        glows:[{x:80,y:32,r:155,c:'g-terra'}]},
+  ASD: {name:'Autism', hex:'#ba945e', dopaNeed:25, sensoryCap:50, predNeed:68, k:0.5,
+        glows:[{x:27,y:82,r:135,c:'g-gold'}]},
+  AuDHD:{name:'AuDHD', hex:'#35361c', dopaNeed:66, sensoryCap:48, predNeed:66, k:0.6,
+        glows:[
+          {x:80,y:30,r:118,c:'g-terra',label:'The Searcher',lc:'#a3735a'},
+          {x:24,y:82,r:118,c:'g-gold',label:'The Guardian',lc:'#9a7842'},
+          {x:74,y:84,r:74,c:'g-green',label:'Built-in novelty',lc:'#3c6350'}
+        ]}
+};
+
+const STATE_COLOR={reg:'#45735d', under:'#b68d76', over:'#ba945e', unsafe:'#a3805a', floodunsafe:'#35361c', paradox:'#35361c'};
+
+const NARR={
+  NT:{
+    reg:"Comfortable. Enough going on to stay engaged, predictable enough to relax. The volume knob still works.",
+    under:"A little bored, easily topped up. Boredom here is mild, not painful.",
+    over:"Getting loud, but recoverable. The filter is holding.",
+    unsafe:"Thrown by the surprise, but adapts fairly quickly. The routine breaking is annoying, not destabilizing.",
+    floodunsafe:"Genuinely overwhelmed - both loud and unpredictable at once. Even a typical system has a ceiling.",
+    paradox:"Overloaded and restless at once, but this takes an extreme environment to reach."
+  },
+  ADHD:{
+    reg:"Engaged. Enough stimulation to stay switched on.",
+    under:"Under-arousal. The brain can't find the ignition - this is the fog, not a lack of caring.",
+    over:"Lots happening and still riding it. ADHD tolerates chaos better than most - novelty is fuel.",
+    unsafe:"Unpredictability barely registers as a threat here. ADHD is fairly chaos-tolerant.",
+    floodunsafe:"Even for ADHD this is a lot, but it reads as 'exciting mess' more than danger.",
+    paradox:"Wired and scattered - activated but can't lock onto any one thing."
+  },
+  ASD:{
+    reg:"Regulated. Calm, structured, sensory-safe. The predictive loop is quiet and the Guardian is at rest.",
+    under:"Quiet, and that's usually fine. Low stimulation reads as safety, not boredom.",
+    over:"Sensory flood. The volume is turned up on everything at once and there's no gate to close.",
+    unsafe:"Prediction errors. The routine broke and the system is scrambling to re-model reality in real time.",
+    floodunsafe:"Meltdown territory - too loud and too unpredictable at the same time.",
+    paradox:"Overwhelmed on multiple channels at once."
+  },
+  AuDHD:{
+    reg:"Rare air. Enough novelty to feed the Searcher, enough structure to keep the Guardian calm. This 'built-in novelty' zone is small and worth designing your life around.",
+    under:"Dopamine famine. The Guardian feels safe, but the Searcher is itching. Day four of the same routine feels exactly like this - safe, and slowly unbearable.",
+    over:"Activated but flooded. The Searcher finally got its hit, but the sensory volume is past what the Guardian can filter. This is agitated exhaustion - the coffee-shop trap.",
+    unsafe:"The floor moved. Novelty arrived as unpredictability, and the Guardian is firing prediction errors faster than you can process them.",
+    floodunsafe:"Too much, too unpredictable. Sensory flood plus prediction errors - this is where meltdown or shutdown lives.",
+    paradox:"The signature bind. Bored AND overwhelmed at the same time - gas and brakes both floored. This is high-arousal paralysis, not laziness, and not a choice."
+  }
+};
+
+const SCENARIOS=[
+  {name:"Quiet home, routine day 1", note:"low stimulation, high structure", x:26, y:86},
+  {name:"Same routine, day 4", note:"novelty has worn off", x:12, y:88},
+  {name:"Busy coffee shop", note:"the novelty trap", x:80, y:36},
+  {name:"Chaotic open-plan office", note:"loud and unpredictable", x:86, y:22},
+  {name:"New project, familiar tools", note:"structured novelty", x:72, y:82},
+  {name:"Body-doubling session", note:"help, but extra monitoring", x:58, y:46}
+];
+
+const PX0=70, PY0=30, PW=460, PH=440;
+const toX=s=>PX0+s/100*PW;
+const toY=p=>PY0+PH-p/100*PH;
+const fromX=x=>clamp((x-PX0)/PW*100,0,100);
+const fromY=y=>clamp((PY0+PH-y)/PH*100,0,100);
+
+let current='AuDHD';
+let stim=50, pred=50;
+
+function compute(pk){
+  const P=PROFILES[pk];
+  const effCap=clamp(P.sensoryCap+(pred-50)*P.k,0,100);
+  const understim = stim < P.dopaNeed-8;
+  const overwhelm = stim > effCap+5;
+  const unsafe = pred < P.predNeed-8;
+  let state,label;
+  if(understim&&(overwhelm||unsafe)){state='paradox'; label='Bored AND Overwhelmed';}
+  else if(understim){state='under'; label='Under-stimulated';}
+  else if(overwhelm&&unsafe){state='floodunsafe'; label='Overwhelmed &amp; On Edge';}
+  else if(overwhelm){state='over'; label='Overstimulated';}
+  else if(unsafe){state='unsafe'; label='On Edge';}
+  else {state='reg'; label='Regulated';}
+  let drain=8;
+  if(understim) drain+=(P.dopaNeed-stim)*0.55;
+  if(overwhelm) drain+=(stim-effCap)*0.85;
+  if(unsafe) drain+=(P.predNeed-pred)*0.70;
+  drain=clamp(drain,0,100);
+  return {state,label,drain,effCap};
+}
+
+function renderGlows(){
+  const g=document.getElementById('glows');
+  g.innerHTML='';
+  const P=PROFILES[current];
+  P.glows.forEach(gl=>{
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',toX(gl.x)); c.setAttribute('cy',toY(gl.y)); c.setAttribute('r',gl.r);
+    c.setAttribute('fill','url(#'+gl.c+')');
+    g.appendChild(c);
+    if(gl.label){
+      const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x',toX(gl.x)); t.setAttribute('y',toY(gl.y));
+      t.setAttribute('text-anchor','middle');
+      t.setAttribute('class','glowlabel'); t.setAttribute('fill',gl.lc);
+      t.textContent=gl.label;
+      g.appendChild(t);
+    }
+  });
+}
+
+function drainWord(d){ return d<28?'low':d<55?'building':d<78?'high':'severe'; }
+function drainColor(d){ return d<28?'#45735d':d<55?'#ba945e':d<78?'#b68d76':'#35361c'; }
+
+function render(){
+  const P=PROFILES[current];
+  const mx=toX(stim), my=toY(pred);
+  document.getElementById('marker').setAttribute('transform','translate('+mx+','+my+')');
+  const r=compute(current);
+  const col=STATE_COLOR[r.state];
+  document.getElementById('mk-dot').setAttribute('fill',col);
+  document.getElementById('mk-ring').setAttribute('stroke',col);
+
+  document.getElementById('r-who').textContent=P.name+' reads this as';
+  document.getElementById('r-state').innerHTML=r.label;
+  document.getElementById('r-state').style.color=col;
+
+  document.getElementById('g-stim').style.width=stim+'%';
+  document.getElementById('g-stim').style.background=P.hex;
+  document.getElementById('g-stim-v').textContent=Math.round(stim);
+  document.getElementById('g-pred').style.width=pred+'%';
+  document.getElementById('g-pred').style.background=P.hex;
+  document.getElementById('g-pred-v').textContent=Math.round(pred);
+  document.getElementById('t-famine').style.left=P.dopaNeed+'%';
+  document.getElementById('t-flood').style.left=clamp(r.effCap,0,100)+'%';
+  document.getElementById('t-safe').style.left=P.predNeed+'%';
+
+  document.getElementById('g-drain').style.width=r.drain+'%';
+  document.getElementById('g-drain').style.background=drainColor(r.drain);
+  document.getElementById('g-drain-v').textContent=drainWord(r.drain);
+
+  const narr=document.getElementById('narr');
+  narr.textContent=NARR[current][r.state];
+  narr.style.borderLeftColor=col;
+
+  renderCompare();
+}
+
+function renderCompare(){
+  const grid=document.getElementById('cgrid');
+  grid.innerHTML='';
+  ['NT','ADHD','ASD','AuDHD'].forEach(pk=>{
+    const r=compute(pk);
+    const col=STATE_COLOR[r.state];
+    const card=document.createElement('div');
+    card.className='card';
+    card.style.borderTopColor=PROFILES[pk].hex;
+    if(pk===current) card.style.boxShadow='0 0 0 2px '+PROFILES[pk].hex+'55';
+    card.innerHTML='<div class="cwho">'+PROFILES[pk].name+'</div>'+
+      '<div class="cstate" style="color:'+col+'">'+r.label+'</div>'+
+      '<div class="minitrack"><div class="minifill" style="width:'+r.drain+'%;background:'+drainColor(r.drain)+'"></div></div>'+
+      '<div class="cdrain">drain: '+drainWord(r.drain)+'</div>';
+    grid.appendChild(card);
+  });
+}
+
+document.querySelectorAll('.pbtn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.pbtn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    current=b.dataset.p;
+    renderGlows(); render();
+  });
+});
+
+const scWrap=document.getElementById('scenarios');
+SCENARIOS.forEach(sc=>{
+  const btn=document.createElement('button');
+  btn.className='schip';
+  btn.innerHTML=sc.name+'<small>'+sc.note+'</small>';
+  btn.addEventListener('click',()=>{ stim=sc.x; pred=sc.y; render(); });
+  scWrap.appendChild(btn);
+});
+
+const svg=document.getElementById('map');
+let dragging=false;
+function ptmove(e){
+  const p=svg.createSVGPoint();
+  const src=e.touches?e.touches[0]:e;
+  p.x=src.clientX; p.y=src.clientY;
+  const loc=p.matrixTransform(svg.getScreenCTM().inverse());
+  stim=fromX(loc.x); pred=fromY(loc.y);
+  render();
+}
+function down(e){ dragging=true; ptmove(e); e.preventDefault(); }
+function move(e){ if(dragging) ptmove(e); }
+function up(){ dragging=false; }
+document.getElementById('hit').addEventListener('pointerdown',down);
+document.getElementById('marker').addEventListener('pointerdown',down);
+window.addEventListener('pointermove',move);
+window.addEventListener('pointerup',up);
+
+renderGlows();
+render();
+</script>
+</body>
+</html>
