@@ -46,6 +46,7 @@ body{
   letter-spacing:.01em;
 }
 .pbtn:hover{border-color:var(--cool-grey);}
+.pbtn:focus-visible{outline:2px solid var(--forest); outline-offset:2px;}
 .pbtn .dot{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; vertical-align:0;}
 .pbtn.active{color:#fff; border-color:transparent;}
 .pbtn.active.NT{background:var(--green);}
@@ -73,17 +74,19 @@ body{
   padding:9px 12px; border-radius:10px; cursor:pointer; transition:all .16s ease; line-height:1.3;
 }
 .schip:hover{border-color:var(--green);}
+.schip:focus-visible{outline:2px solid var(--forest); outline-offset:2px;}
 .schip small{display:block; color:var(--cool-grey); font-weight:600; font-size:11px; margin-top:2px;}
 
 .mapwrap{background:#fff; border:1px solid var(--stone); border-radius:16px; padding:8px; box-shadow:0 4px 6px rgba(0,0,0,0.06);}
 #map{width:100%; height:auto; display:block; touch-action:none;}
+#map:focus-visible{outline:2px solid var(--forest); outline-offset:2px; border-radius:8px;}
 .qlabel{font-family:'Libre Baskerville',serif; fill:var(--stone); font-size:11px; letter-spacing:.08em; text-transform:uppercase;}
 .axtitle{font-family:'Nunito Sans',sans-serif; fill:var(--grey); font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;}
 .axend{font-family:'Nunito Sans',sans-serif; fill:var(--cool-grey); font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;}
 .glowlabel{font-family:'Nunito Sans',sans-serif; font-size:10.5px; font-weight:800; letter-spacing:.04em;}
 
 .reading{text-align:center; padding:6px 0 14px; border-bottom:1px dashed var(--stone); margin-bottom:14px;}
-.reading .state{font-family:'Libre Baskerville',serif; font-size:20px; font-weight:700; line-height:1.15; margin:2px 0;}
+.reading .state{font-family:'Libre Baskerville',serif; font-size:20px; font-weight:700; line-height:1.15; margin:2px 0; transition:color .3s ease;}
 .reading .who{font-size:12px; color:var(--grey); font-weight:700; letter-spacing:.08em; text-transform:uppercase;}
 
 .gauge{margin-bottom:32px;}
@@ -133,8 +136,8 @@ body{
 <div class="wrap">
   <div class="header">
     <h1>The Bored but Overwhelmed Map</h1>
-    <p class="sub">The AuDHD paradox isn't a midpoint between ADHD and Autism - it's a third place. Drop yourself into an environment below and watch how each nervous system reads the exact same room. Drag the marker, or pick a real-life scene.</p>
-    <div class="profiles" id="profiles">
+    <p class="sub">The AuDHD paradox is not a midpoint between ADHD and Autism. It is a third place. Drop yourself into an environment below and watch how each nervous system reads the exact same room. Drag the marker, or pick a real-life scene.</p>
+    <div class="profiles" id="profiles" role="group" aria-label="Select Neurological Profile">
       <button class="pbtn NT" data-p="NT"><span class="dot" style="background:#45735d"></span>Neurotypical</button>
       <button class="pbtn ADHD" data-p="ADHD"><span class="dot" style="background:#b68d76"></span>ADHD</button>
       <button class="pbtn ASD" data-p="ASD"><span class="dot" style="background:#ba945e"></span>Autism</button>
@@ -150,7 +153,7 @@ body{
     </div>
 
     <div class="mapwrap">
-      <svg id="map" viewBox="0 0 560 540" role="img" aria-label="Two-axis map of stimulation versus structure">
+      <svg id="map" tabindex="0" viewBox="0 0 560 540" role="application" aria-label="Two-axis map of stimulation versus structure. Use arrow keys to move the marker.">
         <defs>
           <radialGradient id="g-green"><stop offset="0%" stop-color="#45735d" stop-opacity="0.42"/><stop offset="70%" stop-color="#45735d" stop-opacity="0.10"/><stop offset="100%" stop-color="#45735d" stop-opacity="0"/></radialGradient>
           <radialGradient id="g-terra"><stop offset="0%" stop-color="#b68d76" stop-opacity="0.44"/><stop offset="70%" stop-color="#b68d76" stop-opacity="0.11"/><stop offset="100%" stop-color="#b68d76" stop-opacity="0"/></radialGradient>
@@ -187,7 +190,7 @@ body{
     </div>
 
     <div class="panel">
-      <div class="reading">
+      <div class="reading" aria-live="polite">
         <div class="who" id="r-who">AuDHD reads this as</div>
         <div class="state" id="r-state">Regulated</div>
       </div>
@@ -210,7 +213,7 @@ body{
         <div class="track"><div class="fill" id="g-drain" style="width:10%;background:#45735d"></div></div>
       </div>
 
-      <div class="narr" id="narr">Drag the marker to read the room.</div>
+      <div class="narr" id="narr" aria-live="polite">Drag the marker to read the room.</div>
     </div>
   </div>
 
@@ -249,32 +252,32 @@ const NARR={
     under:"A little bored, easily topped up. Boredom here is mild, not painful.",
     over:"Getting loud, but recoverable. The filter is holding.",
     unsafe:"Thrown by the surprise, but adapts fairly quickly. The routine breaking is annoying, not destabilizing.",
-    floodunsafe:"Genuinely overwhelmed - both loud and unpredictable at once. Even a typical system has a ceiling.",
-    paradox:"Overloaded and restless at once, but this takes an extreme environment to reach."
+    floodunsafe:"Genuinely overwhelmed. Both loud and unpredictable at once. Even a typical system has a ceiling.",
+    paradox:"Overloaded and restless at once. This takes an extreme environment to reach."
   },
   ADHD:{
     reg:"Engaged. Enough stimulation to stay switched on.",
-    under:"Under-arousal. The brain can't find the ignition - this is the fog, not a lack of caring.",
-    over:"Lots happening and still riding it. ADHD tolerates chaos better than most - novelty is fuel.",
+    under:"Under-arousal. The brain can't find the ignition. This is the fog, not a lack of caring.",
+    over:"Lots happening and still riding it. ADHD tolerates chaos better than most. Novelty is fuel.",
     unsafe:"Unpredictability barely registers as a threat here. ADHD is fairly chaos-tolerant.",
-    floodunsafe:"Even for ADHD this is a lot, but it reads as 'exciting mess' more than danger.",
-    paradox:"Wired and scattered - activated but can't lock onto any one thing."
+    floodunsafe:"Even for ADHD this is a lot. It reads as an exciting mess more than danger.",
+    paradox:"Wired and scattered. Activated but unable to lock onto any one thing."
   },
   ASD:{
     reg:"Regulated. Calm, structured, sensory-safe. The predictive loop is quiet and the Guardian is at rest.",
-    under:"Quiet, and that's usually fine. Low stimulation reads as safety, not boredom.",
-    over:"Sensory flood. The volume is turned up on everything at once and there's no gate to close.",
+    under:"Quiet, and that is usually fine. Low stimulation reads as safety, not boredom.",
+    over:"Sensory flood. The volume is turned up on everything at once and there is no gate to close.",
     unsafe:"Prediction errors. The routine broke and the system is scrambling to re-model reality in real time.",
-    floodunsafe:"Meltdown territory - too loud and too unpredictable at the same time.",
+    floodunsafe:"Meltdown territory. Too loud and too unpredictable at the same time.",
     paradox:"Overwhelmed on multiple channels at once."
   },
   AuDHD:{
-    reg:"Rare air. Enough novelty to feed the Searcher, enough structure to keep the Guardian calm. This 'built-in novelty' zone is small and worth designing your life around.",
-    under:"Dopamine famine. The Guardian feels safe, but the Searcher is itching. Day four of the same routine feels exactly like this - safe, and slowly unbearable.",
-    over:"Activated but flooded. The Searcher finally got its hit, but the sensory volume is past what the Guardian can filter. This is agitated exhaustion - the coffee-shop trap.",
+    reg:"Rare air. Enough novelty to feed the Searcher, enough structure to keep the Guardian calm. This built-in novelty zone is small and worth designing your life around.",
+    under:"Dopamine famine. The Guardian feels safe, but the Searcher is itching. Day four of the same routine feels exactly like this. Safe, and slowly unbearable.",
+    over:"Activated but flooded. The Searcher finally got its hit, but the sensory volume is past what the Guardian can filter. This is agitated exhaustion; the coffee shop trap.",
     unsafe:"The floor moved. Novelty arrived as unpredictability, and the Guardian is firing prediction errors faster than you can process them.",
-    floodunsafe:"Too much, too unpredictable. Sensory flood plus prediction errors - this is where meltdown or shutdown lives.",
-    paradox:"The signature bind. Bored AND overwhelmed at the same time - gas and brakes both floored. This is high-arousal paralysis, not laziness, and not a choice."
+    floodunsafe:"Too much, too unpredictable. Sensory flood plus prediction errors. This is where meltdown or shutdown lives.",
+    paradox:"The signature bind. Bored and overwhelmed at the same time. Gas and brakes both floored. This is high-arousal paralysis, not laziness, and not a choice."
   }
 };
 
@@ -305,7 +308,7 @@ function compute(pk){
   let state,label;
   if(understim&&(overwhelm||unsafe)){state='paradox'; label='Bored AND Overwhelmed';}
   else if(understim){state='under'; label='Under-stimulated';}
-  else if(overwhelm&&unsafe){state='floodunsafe'; label='Overwhelmed &amp; On Edge';}
+  else if(overwhelm&&unsafe){state='floodunsafe'; label='Overwhelmed & On Edge';}
   else if(overwhelm){state='over'; label='Overstimulated';}
   else if(unsafe){state='unsafe'; label='On Edge';}
   else {state='reg'; label='Regulated';}
@@ -399,6 +402,7 @@ function renderCompare(){
   });
 }
 
+// Interactivity Initialization
 document.querySelectorAll('.pbtn').forEach(b=>{
   b.addEventListener('click',()=>{
     document.querySelectorAll('.pbtn').forEach(x=>x.classList.remove('active'));
@@ -417,6 +421,7 @@ SCENARIOS.forEach(sc=>{
   scWrap.appendChild(btn);
 });
 
+// Map Pointer / Dragging Events
 const svg=document.getElementById('map');
 let dragging=false;
 function ptmove(e){
@@ -427,7 +432,7 @@ function ptmove(e){
   stim=fromX(loc.x); pred=fromY(loc.y);
   render();
 }
-function down(e){ dragging=true; ptmove(e); e.preventDefault(); }
+function down(e){ dragging=true; ptmove(e); e.preventDefault(); svg.focus(); }
 function move(e){ if(dragging) ptmove(e); }
 function up(){ dragging=false; }
 document.getElementById('hit').addEventListener('pointerdown',down);
@@ -435,6 +440,23 @@ document.getElementById('marker').addEventListener('pointerdown',down);
 window.addEventListener('pointermove',move);
 window.addEventListener('pointerup',up);
 
+// Keyboard Navigation for the Map
+svg.addEventListener('keydown', (e) => {
+  const step = 5;
+  let changed = false;
+  
+  if(e.key === 'ArrowUp') { pred = Math.min(100, pred + step); changed = true; }
+  else if(e.key === 'ArrowDown') { pred = Math.max(0, pred - step); changed = true; }
+  else if(e.key === 'ArrowRight') { stim = Math.min(100, stim + step); changed = true; }
+  else if(e.key === 'ArrowLeft') { stim = Math.max(0, stim - step); changed = true; }
+  
+  if(changed) {
+    e.preventDefault();
+    render();
+  }
+});
+
+// Initial Render
 renderGlows();
 render();
 </script>
