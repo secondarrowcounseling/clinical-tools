@@ -95,6 +95,8 @@ body{
 .tick::after{content:attr(data-l); position:absolute; top:18px; left:50%; transform:translateX(-50%); font-size:8.5px; font-weight:800; color:var(--forest); opacity:.85; white-space:nowrap; letter-spacing:.03em;}
 #t-flood{height:29px;}
 #t-flood::after{top:29px;}
+.tick.edge-left::after{left:0; transform:none;}
+.tick.edge-right::after{left:auto; right:0; transform:none;}
 
 .narr{font-size:14px; color:var(--text); background:#fff; border:1px solid var(--stone); border-left-width:5px; border-radius:10px; padding:13px 15px; margin-top:10px; transition:border-color .3s ease;}
 
@@ -191,14 +193,14 @@ body{
       </div>
 
       <div class="gauge">
-        <div class="glabel"><span>Dopamine</span><b id="g-stim-v">50</b></div>
+        <div class="glabel"><span>Dopamine</span><b id="g-stim-v">fed</b></div>
         <div class="track"><div class="fill" id="g-stim" style="width:50%;background:#b68d76"></div>
           <div class="tick" id="t-famine" data-l="famine" style="left:40%"></div>
           <div class="tick" id="t-flood" data-l="flood" style="left:82%"></div>
         </div>
       </div>
       <div class="gauge">
-        <div class="glabel"><span>Sensory safety</span><b id="g-pred-v">50</b></div>
+        <div class="glabel"><span>Sensory safety</span><b id="g-pred-v">safe</b></div>
         <div class="track"><div class="fill" id="g-pred" style="width:50%;background:#45735d"></div>
           <div class="tick" id="t-safe" data-l="safe line" style="left:30%"></div>
         </div>
@@ -312,7 +314,7 @@ function compute(pk){
   if(overwhelm) drain+=(stim-effCap)*0.85;
   if(unsafe) drain+=(P.predNeed-pred)*0.70;
   drain=clamp(drain,0,100);
-  return {state,label,drain,effCap};
+  return {state,label,drain,effCap,understim,overwhelm,unsafe};
 }
 
 function renderGlows(){
@@ -338,6 +340,13 @@ function renderGlows(){
 function drainWord(d){ return d<28?'low':d<55?'building':d<78?'high':'severe'; }
 function drainColor(d){ return d<28?'#45735d':d<55?'#ba945e':d<78?'#b68d76':'#35361c'; }
 
+function setTick(id,pct){
+  const el=document.getElementById(id);
+  el.style.left=pct+'%';
+  el.classList.toggle('edge-left', pct<12);
+  el.classList.toggle('edge-right', pct>88);
+}
+
 function render(){
   const P=PROFILES[current];
   const mx=toX(stim), my=toY(pred);
@@ -353,13 +362,13 @@ function render(){
 
   document.getElementById('g-stim').style.width=stim+'%';
   document.getElementById('g-stim').style.background=P.hex;
-  document.getElementById('g-stim-v').textContent=Math.round(stim);
+  document.getElementById('g-stim-v').textContent = r.understim?'starved':(r.overwhelm?'flooded':'fed');
   document.getElementById('g-pred').style.width=pred+'%';
   document.getElementById('g-pred').style.background=P.hex;
-  document.getElementById('g-pred-v').textContent=Math.round(pred);
-  document.getElementById('t-famine').style.left=P.dopaNeed+'%';
-  document.getElementById('t-flood').style.left=clamp(r.effCap,0,100)+'%';
-  document.getElementById('t-safe').style.left=P.predNeed+'%';
+  document.getElementById('g-pred-v').textContent = r.unsafe?'on edge':'safe';
+  setTick('t-famine', P.dopaNeed);
+  setTick('t-flood', clamp(r.effCap,0,100));
+  setTick('t-safe', P.predNeed);
 
   document.getElementById('g-drain').style.width=r.drain+'%';
   document.getElementById('g-drain').style.background=drainColor(r.drain);
