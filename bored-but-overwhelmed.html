@@ -86,13 +86,15 @@ body{
 .reading .state{font-family:'Libre Baskerville',serif; font-size:20px; font-weight:700; line-height:1.15; margin:2px 0;}
 .reading .who{font-size:12px; color:var(--grey); font-weight:700; letter-spacing:.08em; text-transform:uppercase;}
 
-.gauge{margin-bottom:26px;}
+.gauge{margin-bottom:32px;}
 .gauge .glabel{display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:var(--grey); margin-bottom:5px;}
 .gauge .glabel b{color:var(--text); font-weight:800;}
 .track{position:relative; height:12px; background:#ece8e1; border-radius:999px; border:1px solid var(--stone);}
 .fill{position:absolute; left:0; top:0; bottom:0; border-radius:999px; transition:width .35s ease, background .3s ease;}
 .tick{position:absolute; top:-3px; width:2px; height:18px; background:var(--forest); opacity:.5;}
 .tick::after{content:attr(data-l); position:absolute; top:18px; left:50%; transform:translateX(-50%); font-size:8.5px; font-weight:800; color:var(--forest); opacity:.85; white-space:nowrap; letter-spacing:.03em;}
+#t-flood{height:29px;}
+#t-flood::after{top:29px;}
 
 .narr{font-size:14px; color:var(--text); background:#fff; border:1px solid var(--stone); border-left-width:5px; border-radius:10px; padding:13px 15px; margin-top:10px; transition:border-color .3s ease;}
 
