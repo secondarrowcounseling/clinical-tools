@@ -1,0 +1,614 @@
+Here is the complete, single-panel interactive tool. It incorporates the visual dimmer switch, radar ping, and mixing board mechanics to keep the client anchored in observation.
+
+All text adheres strictly to the Second Arrow framework. Sentences are short. The focus remains entirely on metabolic cost, system bandwidth, and biological architecture. The mandatory standard disclaimer is included at the bottom.
+
+### `6fs-control-board.html`
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 6 Fs Control Board | Second Arrow Counseling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;1,6..12,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #45735d;
+  --gold: #ba945e;
+  --terra: #b68d76;
+  --forest: #35361c;
+  --text: #222a26;
+  --grey: #6d7873;
+  --bg: #faf8f5;
+  --accent-bg: #F5F3EF;
+  --stone: #bdb7a2;
+  --cool-grey: #a6aea6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Nunito Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  position: relative;
+}
+
+/* The Dimmer Switch Overlay */
+#dimmer-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.1s ease;
+}
+
+.content-wrapper {
+  z-index: 2;
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.brand-bar {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 4px 12px;
+}
+
+.brand-bar a {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 20px;
+  color: var(--forest);
+  text-decoration: none;
+  letter-spacing: .01em;
+  opacity: .9;
+}
+
+.brand-bar a:hover { opacity: 1; }
+
+.header {
+  background: var(--accent-bg);
+  padding: 20px 24px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,.08);
+  width: 100%;
+  margin-bottom: 20px;
+  border-left: 6px solid var(--forest);
+}
+
+.header h2 {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.4em;
+  color: var(--forest);
+  margin-bottom: 8px;
+}
+
+.header p {
+  color: var(--grey);
+  font-size: .95em;
+  line-height: 1.6;
+}
+
+/* Progress Tracker */
+.progress-tracker {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--stone);
+  transition: all 0.3s;
+}
+
+.dot.active {
+  background: var(--gold);
+  transform: scale(1.3);
+}
+
+.dot.completed {
+  background: var(--green);
+}
+
+/* Panel Layout */
+.panel-container {
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+  min-height: 400px;
+}
+
+.step-panel {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  background: var(--accent-bg);
+  border: 1.5px solid var(--gold);
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 6px 12px rgba(186,148,94,.15);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+
+.step-panel.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.step-number {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 0.85em;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.step-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.3em;
+  color: var(--forest);
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.step-desc {
+  font-size: 0.9em;
+  color: var(--text);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* Interactive Elements */
+.interactive-area {
+  background: #fff;
+  border: 1px solid var(--stone);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+/* Step 1: Radar */
+#radar-box {
+  width: 100%;
+  height: 150px;
+  background: var(--bg);
+  border: 1px dashed var(--stone);
+  border-radius: 6px;
+  position: relative;
+  cursor: crosshair;
+  overflow: hidden;
+}
+.radar-pin {
+  width: 14px;
+  height: 14px;
+  background: var(--terra);
+  border-radius: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px var(--terra);
+}
+
+/* Sliders */
+input[type=range] {
+  width: 100%;
+  margin: 10px 0;
+  accent-color: var(--gold);
+}
+.slider-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8em;
+  font-weight: 700;
+  color: var(--grey);
+  margin-top: 8px;
+}
+
+/* Threat Pills */
+.pill-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.threat-pill {
+  background: var(--accent-bg);
+  border: 1px solid var(--stone);
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.8em;
+  cursor: pointer;
+  color: var(--text);
+  transition: 0.2s;
+}
+.threat-pill:hover { border-color: var(--gold); }
+.data-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--stone);
+  border-radius: 4px;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.9em;
+  background: var(--bg);
+}
+
+/* Buttons */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+.btn {
+  background: var(--gold);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn:hover { background: #a38150; }
+.btn-alt {
+  background: var(--accent-bg);
+  color: var(--grey);
+  border: 1px solid var(--stone);
+}
+.btn-alt:hover { color: var(--forest); border-color: var(--grey); }
+
+.disclaimer {
+  width: 100%;
+  text-align: center;
+  font-size: .75em;
+  color: var(--cool-grey);
+  line-height: 1.55;
+  margin-top: auto;
+  padding-top: 40px;
+}
+
+/* Battery Pulse */
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.8; fill: var(--terra); }
+  50% { transform: scale(1.05); opacity: 1; fill: #d36952; }
+  100% { transform: scale(1); opacity: 0.8; fill: var(--terra); }
+}
+.battery-pulse { animation: pulse 1.5s infinite; }
+</style>
+</head>
+<body>
+
+<div id="dimmer-overlay"></div>
+
+<div class="content-wrapper">
+  
+  <div class="brand-bar">
+    <a href="https://www.secondarrow.net" target="_blank" rel="noopener">Second Arrow Counseling</a>
+  </div>
+
+  <div class="header">
+    <h2>The System Spotlight</h2>
+    <p>Your internal system uses protective parts to manage metabolic load. When a part reacts with high intensity, it is trying to prevent a system collapse. Use this control board to isolate a specific part. We will gather data on how it operates without getting swept up in its energy.</p>
+  </div>
+
+  <div class="progress-tracker" id="tracker">
+    <div class="dot active" id="dot-1"></div>
+    <div class="dot" id="dot-2"></div>
+    <div class="dot" id="dot-3"></div>
+    <div class="dot" id="dot-4"></div>
+    <div class="dot" id="dot-5"></div>
+    <div class="dot" id="dot-6"></div>
+  </div>
+
+  <div class="panel-container">
+    
+    <!-- Step 1 -->
+    <div class="step-panel active" id="step-1">
+      <span class="step-number">Step 1</span>
+      <h3 class="step-title">Find (The Radar Ping)</h3>
+      <p class="step-desc">Locate the specific physical signal in your body. Notice where the energy spikes, feels heavy, or creates tension. Click the radar grid below to mark the location.</p>
+      
+      <div class="interactive-area">
+        <div id="radar-box" onclick="dropPin(event)">
+          <p style="text-align:center; padding-top:60px; color:var(--cool-grey); font-size:0.85em; pointer-events:none;">Click to drop a pin.</p>
+        </div>
+      </div>
+
+      <div class="nav-buttons" style="justify-content: flex-end;">
+        <button class="btn" id="btn-next-1" onclick="goToStep(2)" disabled style="opacity:0.5;">Next Step</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-panel" id="step-2">
+      <span class="step-number">Step 2</span>
+      <h3 class="step-title">Focus (The Dimmer Switch)</h3>
+      <p class="step-desc">Direct your attention bandwidth entirely toward this specific part. Use the slider below to visually dim the rest of your internal network. Do not try to change the part. Just watch it run.</p>
+      
+      <div class="interactive-area">
+        <label class="slider-label">Background Noise <span id="dim-val">100%</span></label>
+        <input type="range" min="0" max="85" value="0" oninput="updateDimmer(this.value)">
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-alt" onclick="goToStep(1)">Back</button>
+        <button class="btn" onclick="goToStep(3)">Bandwidth Directed</button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-panel" id="step-3">
+      <span class="step-number">Step 3</span>
+      <h3 class="step-title">Flesh Out (Data Collection)</h3>
+      <p class="step-desc">Observe the mechanical output. Use the mixing board to log the sensory data of this protective part.</p>
+      
+      <div class="interactive-area">
+        <label class="slider-label">Visual Weight <span>Heavy</span></label>
+        <input type="range" min="1" max="100" value="50">
+        
+        <label class="slider-label">Speed <span>Fast</span></label>
+        <input type="range" min="1" max="100" value="80">
+        
+        <label class="slider-label">Energy Drain <span>High</span></label>
+        <input type="range" min="1" max="100" value="75">
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-alt" onclick="goToStep(2)">Back</button>
+        <button class="btn" onclick="goToStep(4)">Data Logged</button>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-panel" id="step-4">
+      <span class="step-number">Step 4</span>
+      <h3 class="step-title">Feel Toward (The Anchor Check)</h3>
+      <p class="step-desc">Check your starting point. Move the gauge to reflect how you currently feel toward this part.</p>
+      
+      <div class="interactive-area" style="text-align: center;">
+        <label class="slider-label" style="justify-content: center; margin-bottom: 12px;" id="anchor-status">Neutral & Anchored</label>
+        <input type="range" min="0" max="100" value="100" id="anchor-gauge" oninput="checkAnchor(this.value)">
+        <div style="display:flex; justify-content:space-between; font-size:0.75em; color:var(--grey); margin-top:4px;">
+          <span>Urgent / Annoyed</span>
+          <span>Curious / Anchored</span>
+        </div>
+      </div>
+
+      <!-- Pivot Protocol UI -->
+      <div id="pivot-ui" style="display: none; border-left: 4px solid var(--terra); background: rgba(182, 141, 118, 0.08); padding: 12px; border-radius: 0 6px 6px 0; margin-bottom: 16px;">
+        <p class="step-desc" style="font-weight:700; color:var(--terra); margin-bottom:6px;">Another part is driving.</p>
+        <p class="step-desc" style="font-size:0.85em;">This urgency is an adaptive response. Ask this new protector if it can lower its intensity so we can look at the original target.</p>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+          <button class="btn btn-alt" style="flex:1; font-size:0.75em;" onclick="resolveAnchor(true)">It Stepped Back</button>
+          <button class="btn" style="flex:1; background:var(--terra); font-size:0.75em;" onclick="resolveAnchor(false)">Investigate New Protector</button>
+        </div>
+      </div>
+
+      <div class="nav-buttons" id="step-4-nav">
+        <button class="btn btn-alt" onclick="goToStep(3)">Back</button>
+        <button class="btn" id="btn-next-4" onclick="goToStep(5)">System is Anchored</button>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step-panel" id="step-5">
+      <span class="step-number">Step 5</span>
+      <h3 class="step-title">Befriend (The Debrief)</h3>
+      <p class="step-desc">Acknowledge the work this part is doing. Validate the massive metabolic cost required to keep this specific strategy running. This is an adaptive response, not a problem behavior.</p>
+      
+      <div class="interactive-area" style="text-align: center; padding: 30px 16px;">
+        <svg id="battery-icon" class="battery-pulse" width="60" height="40" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="5" width="50" height="30" rx="4" stroke="var(--stone)" stroke-width="3" fill="none"/>
+          <rect x="54" y="15" width="4" height="10" rx="2" fill="var(--stone)"/>
+          <rect x="6" y="9" width="12" height="22" rx="2" id="bat-fill"/>
+        </svg>
+        <br><br>
+        <button class="btn btn-alt" id="ack-btn" onclick="acknowledgeCost()">Acknowledge Metabolic Cost</button>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-alt" onclick="goToStep(4)">Back</button>
+        <button class="btn" id="btn-next-5" onclick="goToStep(6)" disabled style="opacity:0.5;">Next Step</button>
+      </div>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="step-panel" id="step-6">
+      <span class="step-number">Step 6</span>
+      <h3 class="step-title">Fear (The Threat Assessment)</h3>
+      <p class="step-desc">Identify the core mechanism. What specific system collapse or sensory flooding is this part actively trying to prevent?</p>
+      
+      <div class="interactive-area">
+        <div class="pill-container">
+          <div class="threat-pill" onclick="fillThreat('Sensory Flooding')">Sensory Flooding</div>
+          <div class="threat-pill" onclick="fillThreat('Social Rejection')">Social Rejection</div>
+          <div class="threat-pill" onclick="fillThreat('Total System Collapse')">Total System Collapse</div>
+          <div class="threat-pill" onclick="fillThreat('Loss of Autonomy')">Loss of Autonomy</div>
+        </div>
+        <input type="text" id="threat-input" class="data-input" placeholder="The perceived threat is...">
+      </div>
+
+      <div class="nav-buttons">
+        <button class="btn btn-alt" onclick="goToStep(5)">Back</button>
+        <button class="btn" onclick="resetBoard()">Complete & Reset</button>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="disclaimer">
+    This tool is intended for psychoeducational purposes only. It does not constitute medical advice, diagnosis, or treatment. The information presented is a simplified representation of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.
+  </p>
+</div>
+
+<script>
+  let currentStep = 1;
+  const totalSteps = 6;
+
+  function goToStep(step) {
+    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.dot').forEach((d, index) => {
+      d.classList.remove('active');
+      if (index + 1 < step) d.classList.add('completed');
+      else d.classList.remove('completed');
+    });
+
+    document.getElementById(`step-${step}`).classList.add('active');
+    document.getElementById(`dot-${step}`).classList.add('active');
+    currentStep = step;
+  }
+
+  // Step 1: Radar Ping
+  function dropPin(e) {
+    const box = document.getElementById('radar-box');
+    const rect = box.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Clear old pin
+    const oldPin = box.querySelector('.radar-pin');
+    if (oldPin) oldPin.remove();
+    // Hide text
+    box.querySelector('p').style.display = 'none';
+
+    const pin = document.createElement('div');
+    pin.className = 'radar-pin';
+    pin.style.left = `${x}px`;
+    pin.style.top = `${y}px`;
+    box.appendChild(pin);
+
+    const nextBtn = document.getElementById('btn-next-1');
+    nextBtn.disabled = false;
+    nextBtn.style.opacity = '1';
+  }
+
+  // Step 2: Dimmer Switch
+  function updateDimmer(val) {
+    const overlay = document.getElementById('dimmer-overlay');
+    overlay.style.opacity = val / 100;
+    const inv = 100 - Math.round((val / 85) * 100);
+    document.getElementById('dim-val').innerText = `${inv}%`;
+  }
+
+  // Step 4: Anchor Check / Pivot Logic
+  function checkAnchor(val) {
+    const label = document.getElementById('anchor-status');
+    const gauge = document.getElementById('anchor-gauge');
+    const pivotUI = document.getElementById('pivot-ui');
+    const nav = document.getElementById('step-4-nav');
+
+    if (val < 50) {
+      label.innerText = "Urgent Protector Active";
+      label.style.color = "var(--terra)";
+      gauge.style.accentColor = "var(--terra)";
+      pivotUI.style.display = "block";
+      nav.style.display = "none";
+    } else {
+      label.innerText = "Neutral & Anchored";
+      label.style.color = "var(--forest)";
+      gauge.style.accentColor = "var(--gold)";
+      pivotUI.style.display = "none";
+      nav.style.display = "flex";
+    }
+  }
+
+  function resolveAnchor(steppedBack) {
+    if (steppedBack) {
+      document.getElementById('anchor-gauge').value = 80;
+      checkAnchor(80);
+    } else {
+      resetBoard();
+      // Add a brief notice
+      const headerP = document.querySelector('.header p');
+      const originalText = headerP.innerText;
+      headerP.innerHTML = "<span style='color:var(--terra); font-weight:700;'>New Target Acquired:</span> We have pivoted to investigate the protector that just stepped in. It requires our attention first.";
+      setTimeout(() => { headerP.innerText = originalText; }, 8000);
+    }
+  }
+
+  // Step 5: Validate Cost
+  function acknowledgeCost() {
+    const icon = document.getElementById('battery-icon');
+    icon.classList.remove('battery-pulse');
+    icon.style.fill = 'var(--green)';
+    
+    const btn = document.getElementById('ack-btn');
+    btn.innerText = "Cost Validated";
+    btn.style.background = "var(--green)";
+    btn.style.color = "#fff";
+    btn.style.borderColor = "var(--green)";
+
+    const nextBtn = document.getElementById('btn-next-5');
+    nextBtn.disabled = false;
+    nextBtn.style.opacity = '1';
+  }
+
+  // Step 6: Threat Assessment
+  function fillThreat(text) {
+    document.getElementById('threat-input').value = text;
+  }
+
+  // System Reset
+  function resetBoard() {
+    // Reset Dimmer
+    document.querySelector('input[type=range]').value = 0;
+    updateDimmer(0);
+    
+    // Reset Radar
+    const oldPin = document.querySelector('.radar-pin');
+    if (oldPin) oldPin.remove();
+    document.querySelector('#radar-box p').style.display = 'block';
+    const btn1 = document.getElementById('btn-next-1');
+    btn1.disabled = true; btn1.style.opacity = '0.5';
+
+    // Reset Anchor
+    document.getElementById('anchor-gauge').value = 100;
+    checkAnchor(100);
+
+    // Reset Battery
+    const icon = document.getElementById('battery-icon');
+    icon.classList.add('battery-pulse');
+    icon.style.fill = '';
+    const ackBtn = document.getElementById('ack-btn');
+    ackBtn.innerText = "Acknowledge Metabolic Cost";
+    ackBtn.style.background = "var(--accent-bg)";
+    ackBtn.style.color = "var(--grey)";
+    ackBtn.style.borderColor = "var(--stone)";
+    const btn5 = document.getElementById('btn-next-5');
+    btn5.disabled = true; btn5.style.opacity = '0.5';
+
+    // Reset Input
+    document.getElementById('threat-input').value = '';
+
+    // Go to step 1
+    goToStep(1);
+  }
+</script>
+</body>
+</html>
+
+```
