@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 6 Fs Control Board | Second Arrow Counseling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;1,6..12,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #45735d;
+  --gold: #ba945e;
+  --terra: #b68d76;
+  --forest: #35361c;
+  --text: #222a26;
+  --grey: #6d7873;
+  --bg: #faf8f5;
+  --accent-bg: #F5F3EF;
+  --stone: #bdb7a2;
+  --cool-grey: #a6aea6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Nunito Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+}
+
+.brand-bar {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 4px 12px;
+}
+
+.brand-bar a {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 20px;
+  color: var(--forest);
+  text-decoration: none;
+  letter-spacing: .01em;
+  opacity: .9;
+}
+
+.brand-bar a:hover { opacity: 1; }
+
+.header {
+  background: var(--accent-bg);
+  padding: 20px 24px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,.08);
+  width: 100%;
+  max-width: 1100px;
+  margin-bottom: 24px;
+  text-align: left;
+  border-left: 6px solid var(--forest);
+}
+
+.header h2 {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.4em;
+  color: var(--forest);
+  margin-bottom: 8px;
+}
+
+.header p {
+  color: var(--grey);
+  font-size: .95em;
+  line-height: 1.6;
+  max-width: 800px;
+}
+
+.board-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  width: 100%;
+  max-width: 1100px;
+  margin-bottom: 24px;
+}
+
+.step-panel {
+  background: var(--accent-bg);
+  border: 1.5px solid var(--stone);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,.04);
+  transition: all 0.3s ease;
+  position: relative;
+  opacity: 0.3; /* Shadowed by default */
+  pointer-events: none;
+}
+
+.step-panel.active {
+  opacity: 1;
+  pointer-events: auto;
+  border-color: var(--gold);
+  background: #fff;
+  box-shadow: 0 6px 12px rgba(186,148,94,.15);
+  transform: translateY(-2px);
+}
+
+.step-panel.completed {
+  opacity: 0.6;
+  pointer-events: auto;
+  border-color: var(--green);
+  background: var(--accent-bg);
+}
+
+.step-number {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 0.8em;
+  color: var(--grey);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.active .step-number { color: var(--gold); }
+.completed .step-number { color: var(--green); }
+
+.step-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.15em;
+  color: var(--forest);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.step-desc {
+  font-size: 0.85em;
+  color: var(--text);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.action-btn {
+  background: var(--accent-bg);
+  color: var(--forest);
+  border: 1.5px solid var(--stone);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.active .action-btn {
+  background: var(--gold);
+  color: #fff;
+  border-color: var(--gold);
+}
+
+.active .action-btn:hover {
+  background: #a38150;
+}
+
+.completed .action-btn {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
+}
+
+/* Form elements for data collection */
+.data-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+  border: 1px solid var(--stone);
+  border-radius: 4px;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.85em;
+  background: var(--bg);
+}
+
+.disclaimer {
+  max-width: 1100px;
+  width: 100%;
+  text-align: center;
+  font-size: .75em;
+  color: var(--cool-grey);
+  line-height: 1.55;
+  margin: 20px auto 10px;
+  padding: 16px;
+  border-top: 1px solid rgba(189, 183, 162, 0.4);
+}
+
+@media(max-width: 768px) {
+  .board-container { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="brand-bar">
+  <a href="https://www.secondarrow.net" target="_blank" rel="noopener">Second Arrow Counseling</a>
+</div>
+
+<div class="header">
+  <h2>The System Spotlight</h2>
+  <p>Your internal system uses protective parts to manage metabolic load. When a part reacts with high intensity, it is trying to prevent a system collapse. Use this control board to isolate a specific part. We will gather data on how it operates without getting swept up in its energy.</p>
+</div>
+
+<div class="board-container">
+  
+  <!-- Step 1 -->
+  <div class="step-panel active" id="step-1">
+    <span class="step-number">Step 1</span>
+    <h3 class="step-title">Find (The Radar Ping)</h3>
+    <p class="step-desc">Locate the specific physical signal in your body. Notice where the energy spikes, feels heavy, or creates tension. This moves the part from an abstract thought to a measurable reality.</p>
+    <button class="action-btn" onclick="nextStep(1)">Signal Located</button>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step-panel" id="step-2">
+    <span class="step-number">Step 2</span>
+    <h3 class="step-title">Focus (The Dimmer Switch)</h3>
+    <p class="step-desc">Direct your attention bandwidth entirely toward this specific part. Visually dim the rest of your internal network. Do not try to change the part. Just watch it run.</p>
+    <button class="action-btn" onclick="nextStep(2)">Background Dimmed</button>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step-panel" id="step-3">
+    <span class="step-number">Step 3</span>
+    <h3 class="step-title">Flesh Out (Data Collection)</h3>
+    <p class="step-desc">Observe the mechanical output. What does this part look or sound like? What is its current energy drain on your battery?</p>
+    <input type="text" class="data-input" placeholder="Sensory or physical output...">
+    <button class="action-btn" onclick="nextStep(3)">Data Logged</button>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="step-panel" id="step-4">
+    <span class="step-number">Step 4</span>
+    <h3 class="step-title">Feel Toward (The Anchor Check)</h3>
+    <p class="step-desc">Check your starting point. Do you feel urgency, annoyance, or frustration toward this part? If yes, another protective part is driving. Pause until you return to a neutral anchor.</p>
+    <button class="action-btn" onclick="nextStep(4)">System is Anchored</button>
+  </div>
+
+  <!-- Step 5 -->
+  <div class="step-panel" id="step-5">
+    <span class="step-number">Step 5</span>
+    <h3 class="step-title">Biefriend (The Debrief)</h3>
+    <p class="step-desc">Acknowledge the work this part is doing. Validate the massive metabolic cost required to keep this specific strategy running. This is an adaptive response, not a problem behavior.</p>
+    <button class="action-btn" onclick="nextStep(5)">Cost Validated</button>
+  </div>
+
+  <!-- Step 6 -->
+  <div class="step-panel" id="step-6">
+    <span class="step-number">Step 6</span>
+    <h3 class="step-title">Fear (The Threat Assessment)</h3>
+    <p class="step-desc">Identify the core mechanism. What specific system collapse or sensory flooding is this part actively trying to prevent?</p>
+    <input type="text" class="data-input" placeholder="The perceived threat is...">
+    <button class="action-btn" onclick="nextStep(6)">Assessment Complete</button>
+  </div>
+
+</div>
+
+<p class="disclaimer">
+  This tool is intended for psychoeducational purposes only. It does not constitute medical advice, diagnosis, or treatment. The information presented is a simplified representation of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.
+</p>
+
+<script>
+  function nextStep(currentStep) {
+    const currentPanel = document.getElementById(`step-${currentStep}`);
+    const nextPanel = document.getElementById(`step-${currentStep + 1}`);
+    const btn = currentPanel.querySelector('.action-btn');
+
+    // Mark current as completed
+    currentPanel.classList.remove('active');
+    currentPanel.classList.add('completed');
+    btn.textContent = 'Completed';
+
+    // Activate next if it exists
+    if (nextPanel) {
+      nextPanel.classList.add('active');
+      // Smooth scroll to the newly activated panel
+      nextPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+</script>
+
+</body>
+</html>
