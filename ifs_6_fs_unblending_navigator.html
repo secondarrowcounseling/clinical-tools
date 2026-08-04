@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFS 6 Fs Unblending Navigator | Second Arrow Counseling</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --green:     #45735d;  /* Forest Green / Primary */
+            --gold:      #ba945e;  /* Warm Gold / Accent */
+            --terra:     #b68d76;  /* Terracotta / Neutral Warm */
+            --forest:    #35361c;  /* Dark Forest / Deep Anchor */
+            --text:      #222a26;  /* Dark Slate Text */
+            --grey:      #6d7873;  /* Warm Grey */
+            --bg:        #faf8f5;  /* Page Background */
+            --accent-bg: #F5F3EF;  /* Panel Background */
+            --stone:     #bdb7a2;  /* Borders & Dividers */
+            --cool-grey: #a6aea6;
+            --white:     #ffffff;
+            --shadow:    0 4px 6px rgba(0, 0, 0, 0.08);
+            --radius:    10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .brand-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--stone);
+        }
+
+        .brand-link {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--forest);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-link:hover, .brand-link:focus {
+            opacity: 0.85;
+            outline: none;
+        }
+
+        .tool-title-header {
+            background-color: var(--accent-bg);
+            border: 1px solid var(--stone);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .tool-title-header h1 {
+            font-family: 'Libre Baskerville', serif;
+            color: var(--forest);
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+        }
+
+        .tool-title-header p {
+            color: var(--grey);
+            font-size: 0.95rem;
+        }
+
+        .target-part-bar {
+            background-color: var(--white);
+            border: 2px solid var(--terra);
+            border-radius: var(--radius);
+            padding: 15px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+        }
+
+        .active-part-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .active-part-input-group label {
+            font-weight: 700;
+            color: var(--forest);
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .active-part-input-group input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--stone);
+            border-radius: 6px;
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: 1rem;
+            color: var(--text);
+            background-color: var(--bg);
+        }
+
+        .active-part-input-group input:focus {
+            outline: 2px solid var(--green);
+            background-color: var(--white);
+        }
+
+        .pivot-button {
+            background-color: var(--terra);
+            color: var(--white);
+            border: none;
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pivot-button:hover, .pivot-button:focus {
+            background-color: #a07863;
+            outline: none;
+        }
+
+        .pivot-button:active {
+            transform: scale(0.98);
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr 300px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background-color: var(--accent-bg);
+            border: 1px solid var(--stone);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .panel-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.1rem;
+            color: var(--forest);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .waiting-room-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .waiting-card {
+            background-color: var(--white);
+            border: 1px solid var(--stone);
+            border-left: 4px solid var(--gold);
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+        }
+
+        .waiting-card-title {
+            font-weight: 700;
+            color: var(--forest);
+            margin-bottom: 4px;
+        }
+
+        .waiting-card-meta {
+            font-size: 0.8rem;
+            color: var(--grey);
+            margin-bottom: 8px;
+        }
+
+        .swap-button {
+            background-color: var(--green);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            padding: 4px 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .swap-button:hover, .swap-button:focus {
+            background-color: #385d4b;
+        }
+
+        .empty-waiting-notice {
+            font-size: 0.85rem;
+            color: var(--grey);
+            font-style: italic;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        .step-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--stone);
+            padding-bottom: 8px;
+        }
+
+        .step-tab {
+            background-color: var(--white);
+            border: 1px solid var(--stone);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--grey);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .step-tab:hover, .step-tab:focus {
+            border-color: var(--green);
+            color: var(--green);
+            outline: none;
+        }
+
+        .step-tab.active {
+            background-color: var(--green);
+            color: var(--white);
+            border-color: var(--green);
+        }
+
+        .step-content {
+            display: none;
+            background-color: var(--white);
+            border: 1px solid var(--stone);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .step-header {
+            margin-bottom: 15px;
+        }
+
+        .step-header h2 {
+            font-family: 'Libre Baskerville', serif;
+            color: var(--forest);
+            font-size: 1.25rem;
+            margin-bottom: 4px;
+        }
+
+        .step-objective {
+            font-size: 0.9rem;
+            color: var(--grey);
+            margin-bottom: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--forest);
+            margin-bottom: 6px;
+        }
+
+        .hint-text {
+            font-size: 0.82rem;
+            color: var(--grey);
+            margin-bottom: 6px;
+        }
+
+        select, textarea, input[type="text"] {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid var(--stone);
+            border-radius: 6px;
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: 0.92rem;
+            color: var(--text);
+            background-color: var(--bg);
+        }
+
+        select:focus, textarea:focus, input[type="text"]:focus {
+            outline: 2px solid var(--green);
+            background-color: var(--white);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .chip-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .chip {
+            background-color: var(--accent-bg);
+            border: 1px solid var(--stone);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .chip:hover {
+            border-color: var(--green);
+        }
+
+        .chip.selected-self {
+            background-color: var(--green);
+            color: var(--white);
+            border-color: var(--green);
+        }
+
+        .chip.selected-reactive {
+            background-color: var(--terra);
+            color: var(--white);
+            border-color: var(--terra);
+        }
+
+        .secondary-alert-box {
+            background-color: #fdf5f0;
+            border: 1px solid var(--terra);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .secondary-alert-box.active {
+            display: block;
+        }
+
+        .secondary-alert-title {
+            font-weight: 700;
+            color: var(--terra);
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .secondary-alert-box p {
+            font-size: 0.88rem;
+            margin-bottom: 10px;
+        }
+
+        .summary-card {
+            background-color: var(--white);
+            border: 1px solid var(--stone);
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        .summary-item {
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--stone);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .summary-label {
+            font-weight: 700;
+            color: var(--forest);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-value {
+            color: var(--text);
+            margin-top: 2px;
+            white-space: pre-wrap;
+        }
+
+        .action-button {
+            background-color: var(--forest);
+            color: var(--white);
+            border: none;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+
+        .action-button:hover, .action-button:focus {
+            background-color: #242513;
+            outline: none;
+        }
+
+        .copy-toast {
+            font-size: 0.8rem;
+            color: var(--green);
+            text-align: center;
+            margin-top: 6px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .copy-toast.show {
+            opacity: 1;
+        }
+
+        footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid var(--stone);
+            font-size: 0.8rem;
+            color: var(--grey);
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .subtle-badge {
+            display: inline-block;
+            background-color: var(--accent-bg);
+            border: 1px solid var(--stone);
+            color: var(--grey);
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .secondary-btn {
+            background-color: var(--accent-bg);
+            border: 1px solid var(--stone);
+            color: var(--text);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .secondary-btn:hover {
+            background-color: var(--stone);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="brand-bar">
+        <a href="https://secondarrow.net" class="brand-link" target="_blank" rel="noopener">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+                <path d="M12 6v6l4 2"/>
+            </svg>
+            Second Arrow Counseling
+        </a>
+        <span style="font-size: 0.85rem; color: var(--grey); font-weight: 600;">Clinical Unblending Tool</span>
+    </header>
+
+    <section class="tool-title-header">
+        <h1>IFS 6 Fs Unblending Navigator</h1>
+        <p>A neurodiversity-affirming protocol for differentiating protective parts, verifying Self-energy, and assessing systemic fears without assuming standard somatic or visual processing styles.</p>
+    </section>
+
+    <section class="target-part-bar" aria-label="Active Target Part Selection">
+        <div class="active-part-input-group">
+            <label for="active-part-name">Active Target Part:</label>
+            <input type="text" id="active-part-name" value="Anxious Task-Switching Protector" placeholder="e.g., Inner Critic, Masking Monitor, Chest Pressure" aria-label="Active Target Part Name">
+        </div>
+        <button type="button" class="pivot-button" id="pivot-btn" aria-label="Pivot Target Part and Move to Waiting Room">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/><path d="M6 16L2 12L6 8"/></svg>
+            Pivot Target Part (Move to Waiting Room)
+        </button>
+    </section>
+
+    <main class="main-layout">
+        <!-- LEFT COLUMN: Waiting Room & System Tracker -->
+        <aside class="panel" aria-label="Internal Waiting Room Sidebar">
+            <div class="panel-title">
+                <span>Waiting Room</span>
+                <span class="subtle-badge" id="waiting-count">0 Parked</span>
+            </div>
+            <p style="font-size: 0.82rem; color: var(--grey); margin-bottom: 10px;">
+                When a secondary reactive part emerges during unblending, park the active part here and pivot to the secondary protector.
+            </p>
+            <div id="waiting-room-container" class="waiting-room-list">
+                <div class="empty-waiting-notice" id="empty-waiting-msg">No parts currently in the waiting room.</div>
+            </div>
+        </aside>
+
+        <!-- CENTER COLUMN: Interactive 6 Fs Step Workspace -->
+        <section class="panel" aria-label="6 Fs Navigation Workspace" style="padding: 15px;">
+            <nav class="step-tabs" role="tablist" aria-label="IFS 6 Fs Steps">
+                <button class="step-tab active" role="tab" aria-selected="true" id="tab-find" aria-controls="step-find" onclick="switchStep('find')">1. Find</button>
+                <button class="step-tab" role="tab" aria-selected="false" id="tab-focus" aria-controls="step-focus" onclick="switchStep('focus')">2. Focus</button>
+                <button class="step-tab" role="tab" aria-selected="false" id="tab-flesh" aria-controls="step-flesh" onclick="switchStep('flesh')">3. Flesh Out</button>
+                <button class="step-tab" role="tab" aria-selected="false" id="tab-feel" aria-controls="step-feel" onclick="switchStep('feel')">4. Feel Toward</button>
+                <button class="step-tab" role="tab" aria-selected="false" id="tab-befriend" aria-controls="step-befriend" onclick="switchStep('befriend')">5. Befriend</button>
+                <button class="step-tab" role="tab" aria-selected="false" id="tab-fear" aria-controls="step-fear" onclick="switchStep('fear')">6. Fear</button>
+            </nav>
+
+            <!-- STEP 1: FIND -->
+            <div id="step-find" class="step-content active" role="tabpanel" aria-labelledby="tab-find">
+                <div class="step-header">
+                    <h2>Step 1: Find</h2>
+                    <p class="step-objective">Objective: Target identification and spatial localization. Anchor the part somatically, spatially, or behaviorally.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="find-anchor-type">Localization Anchor Style:</label>
+                    <p class="hint-text">Choose the anchor mode that fits best. Bodily signals, external space, and executive function hooks are equally valid.</p>
+                    <select id="find-anchor-type" onchange="updateSummary()">
+                        <option value="Somatic / Internal Body Signal">Somatic / Internal Body Signal (Chest pressure, stomach knot, jaw tightness)</option>
+                        <option value="Peripersonal / Spatial (Outside Body)">Peripersonal / Spatial (Floating beside shoulder, standing behind, overhead)</option>
+                        <option value="Executive Function / Monotropic Anchor">Executive Function / Monotropic Anchor (Task-switching brake, masking monitor, hyper-fixation engine)</option>
+                        <option value="Behavioral / Recent Trigger Trailhead">Behavioral / Recent Trigger Trailhead (Recent conflict, hyper-fixated thought, overwhelm event)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="find-location-desc">Spatial & Sensory Description:</label>
+                    <textarea id="find-location-desc" placeholder="Where is this part located or felt? (e.g., 'Sitting like a heavy stone 2 inches outside my left shoulder' or 'A sudden brake feeling when trying to switch tasks')" oninput="updateSummary()"></textarea>
+                </div>
+
+                <div class="form-group" style="background-color: var(--accent-bg); padding: 10px; border-radius: 6px;">
+                    <label style="font-size: 0.85rem; margin-bottom: 2px;">Numbing or Dissociation Stall Check:</label>
+                    <p style="font-size: 0.82rem; color: var(--grey);">
+                        If feeling blank or numb, treat "the blankness" as an active protector keeping things safe rather than an absence of parts.
+                    </p>
+                </div>
+            </div>
+
+            <!-- STEP 2: FOCUS -->
+            <div id="step-focus" class="step-content" role="tabpanel" aria-labelledby="tab-focus">
+                <div class="step-header">
+                    <h2>Step 2: Focus</h2>
+                    <p class="step-objective">Objective: Attentional stabilization. Give dedicated internal time without trying to alter, fix, or analyze it.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="focus-medium">Attentional Anchor Mode:</label>
+                    <p class="hint-text">Closing eyes is never required. Pick a sensory path that maintains gentle attention without overload.</p>
+                    <select id="focus-medium" onchange="updateSummary()">
+                        <option value="Soft Gaze / Neutral External Object">Soft Gaze / Neutral External Object (Looking at a neutral spot in the room)</option>
+                        <option value="Motor Stimming & Tactile Regulation">Motor Stimming & Tactile Regulation (Fidgeting, pacing, rocking, tactile object)</option>
+                        <option value="External Drawing / Sketching">External Drawing / Sketching (Doodling or mapping shape on paper)</option>
+                        <option value="Internal Focused Spotlight">Internal Focused Spotlight (Traditional internal attention)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="focus-notes">Focus Observations & Thoughts:</label>
+                    <textarea id="focus-notes" placeholder="What happens as you hold gentle attention here? Allow whatever is emerging to just be there." oninput="updateSummary()"></textarea>
+                </div>
+            </div>
+
+            <!-- STEP 3: FLESH OUT -->
+            <div id="step-flesh" class="step-content" role="tabpanel" aria-labelledby="tab-flesh">
+                <div class="step-header">
+                    <h2>Step 3: Flesh Out</h2>
+                    <p class="step-objective">Objective: Phenomenological profiling. Explore unique sensory qualities, distance, texture, pitch, or energy state.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="flesh-primary-mode">Primary Experience Modality (Aphantasia-Friendly):</label>
+                    <p class="hint-text">If visual imagery is absent, focus entirely on auditory, tactile, or abstract conceptual qualities.</p>
+                    <select id="flesh-primary-mode" onchange="updateSummary()">
+                        <option value="Tactile / Kinesthetic (Weight, texture, density, temperature)">Tactile / Kinesthetic (Weight, texture, density, temperature, pressure)</option>
+                        <option value="Auditory (Pitch, volume, inner voice monologue pace)">Auditory (Pitch, volume, internal monologue pace, tone)</option>
+                        <option value="Conceptual / Abstract (Geometric shape, energy field, mathematical construct)">Conceptual / Abstract (Geometric shape, energy field, construct)</option>
+                        <option value="Visual (Shape, color, posture, appearance)">Visual (Shape, color, posture, age, appearance)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="flesh-details">Qualitative Profile Notes:</label>
+                    <textarea id="flesh-details" placeholder="Describe the part's characteristics (e.g., 'A dense, cool marble sphere', 'A rapid, whispery internal monologue', or 'An intense red static energy')" oninput="updateSummary()"></textarea>
+                </div>
+
+                <div class="button-row">
+                    <button type="button" class="secondary-btn" onclick="suggestProximityAdjust()">Request Distance ("Step back 2 paces")</button>
+                </div>
+            </div>
+
+            <!-- STEP 4: FEEL TOWARD -->
+            <div id="step-feel" class="step-content" role="tabpanel" aria-labelledby="tab-feel">
+                <div class="step-header">
+                    <h2>Step 4: Feel Toward</h2>
+                    <p class="step-objective">Objective: Diagnostic check ("Geiger counter") for Self-energy vs. secondary blended protectors.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>How do you feel toward this part right now?</label>
+                    <p class="hint-text">Select the qualities that best match your stance toward the active target part:</p>
+
+                    <div class="chip-group" id="self-chips">
+                        <div class="chip" onclick="toggleChip(this, 'self')">Curiosity</div>
+                        <div class="chip" onclick="toggleChip(this, 'self')">Calm</div>
+                        <div class="chip" onclick="toggleChip(this, 'self')">Clarity</div>
+                        <div class="chip" onclick="toggleChip(this, 'self')">Compassion</div>
+                        <div class="chip" onclick="toggleChip(this, 'self')">Confidence</div>
+                        <div class="chip" onclick="toggleChip(this, 'self')">Courage</div>
+                        <div class="chip" onclick="toggleChip(this, 'self')">Creativity</div>
+                        <div class="chip" onclick="toggleChip(this, 'self')">Connectedness</div>
+                        <div class="chip" onclick="toggleChip(this, 'self')">Objective Openness (Self-Calm)</div>
+                    </div>
+
+                    <p class="hint-text" style="margin-top: 12px; font-weight: 700; color: var(--terra);">Or are secondary reactive feelings present?</p>
+                    <div class="chip-group" id="reactive-chips">
+                        <div class="chip" onclick="toggleChip(this, 'reactive')">Frustrated / Annoyed</div>
+                        <div class="chip" onclick="toggleChip(this, 'reactive')">Fearful / Anxious</div>
+                        <div class="chip" onclick="toggleChip(this, 'reactive')">Urge to Fix / Control</div>
+                        <div class="chip" onclick="toggleChip(this, 'reactive')">Analytical / Evaluating</div>
+                        <div class="chip" onclick="toggleChip(this, 'reactive')">Critical / Judgmental</div>
+                    </div>
+                </div>
+
+                <!-- Secondary Part Alert Box -->
+                <div id="secondary-alert" class="secondary-alert-box">
+                    <div class="secondary-alert-title">Secondary Blended Protector Detected</div>
+                    <p>You reported a reactive stance (e.g., frustration, fear, or urge to fix). This means a secondary protective part has blended to manage the target part.</p>
+                    <p style="font-weight: 600;">Recommended Protocol: Direct address & pivot.</p>
+                    <button type="button" class="pivot-button" onclick="executePivotFromFeel()">
+                        Pivot Now: Park Active Part & Work with Secondary Part
+                    </button>
+                </div>
+
+                <div class="form-group" style="margin-top: 15px;">
+                    <label for="feel-relational-notes">Relational Stance Notes:</label>
+                    <textarea id="feel-relational-notes" placeholder="e.g., 'I am curious to hear what it needs', or 'A part of me wants this to stop immediately'" oninput="updateSummary()"></textarea>
+                </div>
+            </div>
+
+            <!-- STEP 5: BEFRIEND -->
+            <div id="step-befriend" class="step-content" role="tabpanel" aria-labelledby="tab-befriend">
+                <div class="step-header">
+                    <h2>Step 5: Befriend</h2>
+                    <p class="step-objective">Objective: Establish trust. Investigate positive protective origin, historical burden, and current efficacy.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="befriend-role-type">Protective Role Archetype:</label>
+                    <select id="befriend-role-type" onchange="updateSummary()">
+                        <option value="Masking Manager (Social norm calibrator, eye-contact monitor, script writer)">Masking Manager (Social norm calibrator, script writer, fatigue suppressor)</option>
+                        <option value="Sensory Firefighter (Overload brake, shut-down monitor, stim generator)">Sensory Firefighter (Overload brake, shut-down monitor, meltdown generator)</option>
+                        <option value="Task & Urgency Manager (Adrenaline-driven executive function engine)">Task & Urgency Manager (Adrenaline-driven executive function engine)</option>
+                        <option value="Perfectionist / Error-Prevention Protector">Perfectionist / Error-Prevention Protector</option>
+                        <option value="Custom / Unspecified Protector">Custom / Unspecified Protector</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="befriend-origin-notes">Origin & Protective Intentions:</label>
+                    <textarea id="befriend-origin-notes" placeholder="How did this part get this job? What has it been protecting the system from?" oninput="updateSummary()"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="befriend-perceived-age">Perceived System Age:</label>
+                    <p class="hint-text">How old does this part think you are? Many protectors are stuck in historical time warps.</p>
+                    <input type="text" id="befriend-perceived-age" placeholder="e.g., 'Thinks I am 8 years old during elementary school meltdown'" oninput="updateSummary()">
+                </div>
+
+                <div class="button-row">
+                    <button type="button" class="secondary-btn" onclick="updateTimeOrientation()">Update Part's Time Orientation ("Show adult hands / current year")</button>
+                </div>
+            </div>
+
+            <!-- STEP 6: FEAR -->
+            <div id="step-fear" class="step-content" role="tabpanel" aria-labelledby="tab-fear">
+                <div class="step-header">
+                    <h2>Step 6: Fear</h2>
+                    <p class="step-objective">Objective: Threat assessment. Identify catastrophic fears, guarded Exiles, and polarizations.</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="fear-threat-type">Nature of Catastrophic Fear:</label>
+                    <select id="fear-threat-type" onchange="updateSummary()">
+                        <option value="Real-World Systemic / Environmental Threat (Ostracization, burnout, job loss)">Real-World Systemic / Environmental Threat (Ostracization, sensory burnout, job loss)</option>
+                        <option value="Historical Trauma Memory Exile Protection">Historical Trauma Memory Exile Protection (Guarding a young, overwhelmed Exile)</option>
+                        <option value="Polarization with another Protector (Fear of another part taking over)">Polarization with another Protector (Fear of another extreme protector taking over)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="fear-details">Catastrophic Fear Description:</label>
+                    <textarea id="fear-details" placeholder="What is this part scared would happen if it stopped doing this job right now?" oninput="updateSummary()"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="fear-conditions">Conditions Required for Safety:</label>
+                    <textarea id="fear-conditions" placeholder="What does this part need to feel safe? (e.g., 'Guaranteed sensory accommodation', 'Clear boundaries', 'Explicit permission from the analyzing manager')" oninput="updateSummary()"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- RIGHT COLUMN: Session Summary & Clinical Notes -->
+        <aside class="panel" aria-label="Session Summary & Map">
+            <div class="panel-title">
+                <span>Parts Map Summary</span>
+            </div>
+            
+            <div class="summary-card" id="summary-display">
+                <div class="summary-item">
+                    <div class="summary-label">Target Part</div>
+                    <div class="summary-value" id="sum-part-name">Anxious Task-Switching Protector</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">1. Find</div>
+                    <div class="summary-value" id="sum-find">Not specified</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">2. Focus</div>
+                    <div class="summary-value" id="sum-focus">Not specified</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">3. Flesh Out</div>
+                    <div class="summary-value" id="sum-flesh">Not specified</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">4. Feel Toward</div>
+                    <div class="summary-value" id="sum-feel">Not specified</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">5. Befriend</div>
+                    <div class="summary-value" id="sum-befriend">Not specified</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">6. Fear</div>
+                    <div class="summary-value" id="sum-fear">Not specified</div>
+                </div>
+            </div>
+
+            <button type="button" class="action-button" onclick="copySessionNotes()">Copy Clinical Session Notes</button>
+            <div id="copy-toast" class="copy-toast">Session notes copied to clipboard!</div>
+        </aside>
+    </main>
+
+    <footer>
+        <p>This tool is intended for psychoeducational purposes only. It does not constitute medical advice, diagnosis, or treatment. The information presented is a simplified representation of complex neurobiological processes and should not replace consultation with a licensed healthcare or mental health professional.</p>
+        <p style="margin-top: 6px; font-weight: 600;">Second Arrow Counseling &bull; Austin, TX &bull; <a href="https://secondarrow.net" style="color: var(--forest);" target="_blank" rel="noopener">secondarrow.net</a></p>
+    </footer>
+</div>
+
+<script>
+    const state = {
+        activePart: {
+            name: "Anxious Task-Switching Protector",
+            findAnchor: "Somatic / Internal Body Signal",
+            findDesc: "",
+            focusMedium: "Soft Gaze / Neutral External Object",
+            focusNotes: "",
+            fleshMode: "Tactile / Kinesthetic (Weight, texture, density, temperature)",
+            fleshDetails: "",
+            feelSelfChips: [],
+            feelReactiveChips: [],
+            feelNotes: "",
+            befriendRole: "Masking Manager (Social norm calibrator, script writer, fatigue suppressor)",
+            befriendOrigin: "",
+            befriendAge: "",
+            fearThreat: "Real-World Systemic / Environmental Threat (Ostracization, sensory burnout, job loss)",
+            fearDetails: "",
+            fearConditions: ""
+        },
+        waitingRoom: []
+    };
+
+    function switchStep(stepKey) {
+        // Update tab buttons
+        const tabs = document.querySelectorAll('.step-tab');
+        tabs.forEach(tab => {
+            tab.classList.remove('active');
+            tab.setAttribute('aria-selected', 'false');
+        });
+        const activeTab = document.getElementById(`tab-${stepKey}`);
+        if (activeTab) {
+            activeTab.classList.add('active');
+            activeTab.setAttribute('aria-selected', 'true');
+        }
+
+        // Update step panels
+        const panels = document.querySelectorAll('.step-content');
+        panels.forEach(panel => {
+            panel.classList.remove('active');
+        });
+        const activePanel = document.getElementById(`step-${stepKey}`);
+        if (activePanel) {
+            activePanel.classList.add('active');
+        }
+    }
+
+    function toggleChip(chipEl, type) {
+        chipEl.classList.toggle(type === 'self' ? 'selected-self' : 'selected-reactive');
+        
+        // Check if reactive chips are selected
+        const selectedReactive = document.querySelectorAll('#reactive-chips .chip.selected-reactive');
+        const alertBox = document.getElementById('secondary-alert');
+        
+        if (selectedReactive.length > 0) {
+            alertBox.classList.add('active');
+        } else {
+            alertBox.classList.remove('active');
+        }
+
+        updateSummary();
+    }
+
+    document.getElementById('pivot-btn').addEventListener('click', pivotTargetPart);
+
+    function pivotTargetPart() {
+        const currentName = document.getElementById('active-part-name').value.trim() || "Unnamed Protector";
+        
+        // Save snapshot to waiting room
+        const parkedPart = {
+            id: Date.now(),
+            name: currentName,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            data: JSON.parse(JSON.stringify(state.activePart))
+        };
+
+        state.waitingRoom.push(parkedPart);
+
+        // Prompt for new secondary part name
+        const newPartName = prompt(`Parked "${currentName}" in the Waiting Room.\n\nWhat is the name or feeling of the secondary reactive part that stepped in?`, "Secondary Reactive Protector");
+
+        // Reset active part form for new target
+        document.getElementById('active-part-name').value = newPartName ? newPartName.trim() : "Secondary Reactive Protector";
+        clearFormInputs();
+        
+        // Render waiting room list
+        renderWaitingRoom();
+
+        // Switch to Step 1 Find for new target
+        switchStep('find');
+        updateSummary();
+    }
+
+    function executePivotFromFeel() {
+        const selectedReactiveChips = Array.from(document.querySelectorAll('#reactive-chips .chip.selected-reactive')).map(c => c.textContent);
+        const suggestionName = selectedReactiveChips.length > 0 ? `${selectedReactiveChips[0]} Part` : "Secondary Blended Part";
+        
+        const currentName = document.getElementById('active-part-name').value.trim() || "Target Part";
+        
+        // Save snapshot
+        const parkedPart = {
+            id: Date.now(),
+            name: currentName,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            data: JSON.parse(JSON.stringify(state.activePart))
+        };
+        state.waitingRoom.push(parkedPart);
+
+        document.getElementById('active-part-name').value = suggestionName;
+        clearFormInputs();
+        renderWaitingRoom();
+        switchStep('find');
+        updateSummary();
+    }
+
+    function renderWaitingRoom() {
+        const container = document.getElementById('waiting-room-container');
+        const countBadge = document.getElementById('waiting-count');
+        
+        countBadge.textContent = `${state.waitingRoom.length} Parked`;
+
+        if (state.waitingRoom.length === 0) {
+            container.innerHTML = `<div class="empty-waiting-notice" id="empty-waiting-msg">No parts currently in the waiting room.</div>`;
+            return;
+        }
+
+        container.innerHTML = '';
+        state.waitingRoom.forEach(part => {
+            const card = document.createElement('div');
+            card.className = 'waiting-card';
+            card.innerHTML = `
+                <div class="waiting-card-title">${escapeHtml(part.name)}</div>
+                <div class="waiting-card-meta">Parked at ${part.timestamp}</div>
+                <button type="button" class="swap-button" onclick="swapFromWaitingRoom(${part.id})">Resume Work with This Part</button>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function swapFromWaitingRoom(partId) {
+        const index = state.waitingRoom.findIndex(p => p.id === partId);
+        if (index === -1) return;
+
+        // Current active becomes parked if named
+        const currentActiveName = document.getElementById('active-part-name').value.trim();
+        const newlyParked = {
+            id: Date.now(),
+            name: currentActiveName || "Parked Protector",
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            data: JSON.parse(JSON.stringify(state.activePart))
+        };
+
+        const retrieved = state.waitingRoom.splice(index, 1)[0];
+        state.waitingRoom.push(newlyParked);
+
+        // Load retrieved part
+        document.getElementById('active-part-name').value = retrieved.name;
+        state.activePart = retrieved.data;
+
+        // Populate fields back
+        populateFormFromState();
+        renderWaitingRoom();
+        updateSummary();
+    }
+
+    function clearFormInputs() {
+        document.getElementById('find-location-desc').value = '';
+        document.getElementById('focus-notes').value = '';
+        document.getElementById('flesh-details').value = '';
+        document.getElementById('feel-relational-notes').value = '';
+        document.getElementById('befriend-origin-notes').value = '';
+        document.getElementById('befriend-perceived-age').value = '';
+        document.getElementById('fear-details').value = '';
+        document.getElementById('fear-conditions').value = '';
+
+        // Clear chips
+        document.querySelectorAll('.chip').forEach(c => {
+            c.classList.remove('selected-self', 'selected-reactive');
+        });
+        document.getElementById('secondary-alert').classList.remove('active');
+    }
+
+    function populateFormFromState() {
+        const ap = state.activePart;
+        document.getElementById('find-anchor-type').value = ap.findAnchor || "Somatic / Internal Body Signal";
+        document.getElementById('find-location-desc').value = ap.findDesc || "";
+        document.getElementById('focus-medium').value = ap.focusMedium || "Soft Gaze / Neutral External Object";
+        document.getElementById('focus-notes').value = ap.focusNotes || "";
+        document.getElementById('flesh-primary-mode').value = ap.fleshMode || "Tactile / Kinesthetic (Weight, texture, density, temperature)";
+        document.getElementById('flesh-details').value = ap.fleshDetails || "";
+        document.getElementById('feel-relational-notes').value = ap.feelNotes || "";
+        document.getElementById('befriend-role-type').value = ap.befriendRole || "Masking Manager (Social norm calibrator, script writer, fatigue suppressor)";
+        document.getElementById('befriend-origin-notes').value = ap.befriendOrigin || "";
+        document.getElementById('befriend-perceived-age').value = ap.befriendAge || "";
+        document.getElementById('fear-threat-type').value = ap.fearThreat || "Real-World Systemic / Environmental Threat (Ostracization, sensory burnout, job loss)";
+        document.getElementById('fear-details').value = ap.fearDetails || "";
+        document.getElementById('fear-conditions').value = ap.fearConditions || "";
+    }
+
+    function suggestProximityAdjust() {
+        const currentDesc = document.getElementById('flesh-details').value;
+        const note = " [Proximity Note: Requested part to step back 2 paces or project onto a screen to lower intensity]";
+        document.getElementById('flesh-details').value = currentDesc + note;
+        updateSummary();
+    }
+
+    function updateTimeOrientation() {
+        const currentAge = document.getElementById('befriend-perceived-age').value;
+        const note = " [Time Orientation Updated: Showed part adult hands, present living space, and current year]";
+        document.getElementById('befriend-perceived-age').value = currentAge + note;
+        updateSummary();
+    }
+
+    function updateSummary() {
+        const activeName = document.getElementById('active-part-name').value.trim() || "Unnamed Target Part";
+        document.getElementById('sum-part-name').textContent = activeName;
+
+        // Find
+        const findAnchor = document.getElementById('find-anchor-type').value;
+        const findDesc = document.getElementById('find-location-desc').value.trim();
+        document.getElementById('sum-find').textContent = findDesc ? `${findAnchor}\n"${findDesc}"` : findAnchor;
+
+        // Focus
+        const focusMedium = document.getElementById('focus-medium').value;
+        const focusNotes = document.getElementById('focus-notes').value.trim();
+        document.getElementById('sum-focus').textContent = focusNotes ? `${focusMedium}\n"${focusNotes}"` : focusMedium;
+
+        // Flesh Out
+        const fleshMode = document.getElementById('flesh-primary-mode').value;
+        const fleshDetails = document.getElementById('flesh-details').value.trim();
+        document.getElementById('sum-flesh').textContent = fleshDetails ? `${fleshMode}\n"${fleshDetails}"` : fleshMode;
+
+        // Feel Toward
+        const selfChips = Array.from(document.querySelectorAll('#self-chips .chip.selected-self')).map(c => c.textContent);
+        const reactiveChips = Array.from(document.querySelectorAll('#reactive-chips .chip.selected-reactive')).map(c => c.textContent);
+        const feelNotes = document.getElementById('feel-relational-notes').value.trim();
+
+        let feelSummary = "";
+        if (selfChips.length > 0) feelSummary += `Self Energy: ${selfChips.join(', ')}\n`;
+        if (reactiveChips.length > 0) feelSummary += `Reactive Stance: ${reactiveChips.join(', ')}\n`;
+        if (feelNotes) feelSummary += `Notes: "${feelNotes}"`;
+        document.getElementById('sum-feel').textContent = feelSummary || "Pending evaluation";
+
+        // Befriend
+        const befriendRole = document.getElementById('befriend-role-type').value;
+        const befriendOrigin = document.getElementById('befriend-origin-notes').value.trim();
+        const befriendAge = document.getElementById('befriend-perceived-age').value.trim();
+        let befriendSummary = `Role: ${befriendRole}`;
+        if (befriendOrigin) befriendSummary += `\nOrigin: "${befriendOrigin}"`;
+        if (befriendAge) befriendSummary += `\nPerceived Age: ${befriendAge}`;
+        document.getElementById('sum-befriend').textContent = befriendSummary;
+
+        // Fear
+        const fearThreat = document.getElementById('fear-threat-type').value;
+        const fearDetails = document.getElementById('fear-details').value.trim();
+        const fearConditions = document.getElementById('fear-conditions').value.trim();
+        let fearSummary = `Threat: ${fearThreat}`;
+        if (fearDetails) fearSummary += `\nFear: "${fearDetails}"`;
+        if (fearConditions) fearSummary += `\nSafety Needs: "${fearConditions}"`;
+        document.getElementById('sum-fear').textContent = fearSummary;
+
+        // Save into current state
+        state.activePart.name = activeName;
+        state.activePart.findAnchor = findAnchor;
+        state.activePart.findDesc = findDesc;
+        state.activePart.focusMedium = focusMedium;
+        state.activePart.focusNotes = focusNotes;
+        state.activePart.fleshMode = fleshMode;
+        state.activePart.fleshDetails = fleshDetails;
+        state.activePart.feelNotes = feelNotes;
+        state.activePart.befriendRole = befriendRole;
+        state.activePart.befriendOrigin = befriendOrigin;
+        state.activePart.befriendAge = befriendAge;
+        state.activePart.fearThreat = fearThreat;
+        state.activePart.fearDetails = fearDetails;
+        state.activePart.fearConditions = fearConditions;
+    }
+
+    function copySessionNotes() {
+        const activeName = document.getElementById('active-part-name').value.trim() || "Target Part";
+        
+        let notesText = `SECOND ARROW COUNSELING - IFS 6 Fs UNBLENDING NOTES\n`;
+        notesText += `Date: ${new Date().toLocaleDateString()}\n`;
+        notesText += `--------------------------------------------------\n`;
+        notesText += `ACTIVE TARGET PART: ${activeName}\n\n`;
+        
+        notesText += `1. FIND:\n${document.getElementById('sum-find').textContent}\n\n`;
+        notesText += `2. FOCUS:\n${document.getElementById('sum-focus').textContent}\n\n`;
+        notesText += `3. FLESH OUT:\n${document.getElementById('sum-flesh').textContent}\n\n`;
+        notesText += `4. FEEL TOWARD:\n${document.getElementById('sum-feel').textContent}\n\n`;
+        notesText += `5. BEFRIEND:\n${document.getElementById('sum-befriend').textContent}\n\n`;
+        notesText += `6. FEAR:\n${document.getElementById('sum-fear').textContent}\n\n`;
+
+        if (state.waitingRoom.length > 0) {
+            notesText += `--------------------------------------------------\n`;
+            notesText += `PARKED WAITING ROOM PROTECTORS:\n`;
+            state.waitingRoom.forEach((p, idx) => {
+                notesText += `${idx + 1}. ${p.name} (Parked at ${p.timestamp})\n`;
+            });
+        }
+
+        // Executive copy using textarea fallback
+        const textArea = document.createElement("textarea");
+        textArea.value = notesText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            const toast = document.getElementById('copy-toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        } catch (err) {
+            console.error('Copy fallback failed', err);
+        }
+        document.body.removeChild(textArea);
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    // Initialize summary on load
+    window.onload = function() {
+        updateSummary();
+        renderWaitingRoom();
+    };
+</script>
+</body>
+</html>
